@@ -188,24 +188,38 @@ export const LiveInterviewRoom: React.FC = () => {
           </div>
 
           {/* Webcam / AI Interviewer */}
-          <div className="flex-1 flex flex-col items-center justify-center relative">
+          <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden bg-slate-950">
             {isCameraOn ? (
-              <video ref={videoRef} autoPlay muted playsInline className="absolute inset-0 w-full h-full object-cover opacity-30" />
-            ) : null}
-            <div className="relative z-10 flex flex-col items-center">
-              <div className="relative w-48 h-48 flex items-center justify-center">
-                <div className={`absolute w-full h-full rounded-full border border-indigo-500/20 ${isMicOn ? 'animate-ping' : ''}`} />
-                <div className="absolute w-36 h-36 rounded-full border-2 border-indigo-500/30" />
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[0_0_60px_20px_rgba(99,102,241,0.4)] flex items-center justify-center">
-                  <Bot className="w-10 h-10 text-white" />
-                </div>
+              <video
+                ref={videoRef}
+                autoPlay
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover z-0"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center text-slate-500 space-y-2">
+                <VideoOff className="w-12 h-12" />
+                <p className="text-xs">Camera is turned off</p>
               </div>
-              <h2 className="text-xl font-bold text-white mt-6 mb-1">AI Interviewer</h2>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-                <span className="text-xs font-bold tracking-widest text-indigo-400 uppercase">
-                  {isMicOn ? 'Listening...' : session.status === 'completed' ? 'COMPLETED' : 'Ready'}
-                </span>
+            )}
+
+            {/* AI Interviewer Badge Floating Overlay */}
+            <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 p-3 bg-slate-900/90 backdrop-blur-xl border border-indigo-500/30 rounded-2xl shadow-xl">
+              <div className="relative">
+                <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ${isMicOn ? 'animate-pulse' : ''}`}>
+                  <Bot className="w-5 h-5 text-white" />
+                </div>
+                {isMicOn && <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-slate-900 animate-ping" />}
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                  AI Interviewer
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                </h4>
+                <p className="text-[10px] text-indigo-300 font-medium">
+                  {isMicOn ? 'Listening to response...' : session.status === 'completed' ? 'Interview Finished' : 'Speaking / Ready'}
+                </p>
               </div>
             </div>
           </div>
