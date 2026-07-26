@@ -120,6 +120,10 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ problem, onTestResults
     }
   }, [code, language, problem, onTestResults, saveSubmission]);
 
+  // Keep shortcut refs in sync with latest closures
+  useEffect(() => { runTestsRef.current = runTests; }, [runTests]);
+  useEffect(() => { submitCodeRef.current = submitCode; }, [submitCode]);
+
   const switchLanguage = (lang: Language) => {
     setLanguage(lang);
     setShowLangMenu(false);
