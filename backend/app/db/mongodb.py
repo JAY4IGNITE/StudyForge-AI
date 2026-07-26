@@ -6,6 +6,10 @@ from app.models.user import User, RefreshToken, EmailOTP
 from app.models.practice import Topic, Question, PracticeSession, Attempt, MasteryProfile, InterviewSession, LearningResource
 from app.models.feedback import Feedback, UserRoadmap
 
+# Monkeypatch for Beanie 2.1.0 + PyMongo 4.x compatibility
+if not hasattr(AsyncIOMotorClient, "append_metadata"):
+    setattr(AsyncIOMotorClient, "append_metadata", lambda self, *args, **kwargs: None)
+
 db_client: AsyncIOMotorClient = None
 
 async def init_db():

@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Layout } from '../../components/layout/Layout';
+import React, { useState, useEffect, useRef } from 'react';
 import { apiClient } from '../../lib/axios';
-import { Award, Send, CheckCircle2, User, Bot, Mic, MicOff, MessageSquare } from 'lucide-react';
+import { Bot, User, Mic, MicOff, VideoOff, PhoneOff, CheckCircle2 } from 'lucide-react';
 import { FeedbackModal } from '../feedback/FeedbackModal';
 
 export const MockInterview: React.FC = () => {
   const [targetRole, setTargetRole] = useState('Software Engineer');
-  const [interviewType, setInterviewType] = useState('technical');
+  const [interviewType, setInterviewType] = useState('behavioral');
   const [interview, setInterview] = useState<any>(null);
   const [currentTurn, setCurrentTurn] = useState<any>(null);
   const [userAnswer, setUserAnswer] = useState('');
@@ -14,6 +13,31 @@ export const MockInterview: React.FC = () => {
   const [isListening, setIsListening] = useState(false);
   const [recognition, setRecognition] = useState<any>(null);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [timer, setTimer] = useState(0);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (interview && interview.status === 'active') {
+      interval = setInterval(() => {
+        setTimer((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [interview]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `00:${m}:${s}`;
+  };
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [interview?.turns, userAnswer]);
 
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -27,7 +51,7 @@ export const MockInterview: React.FC = () => {
           transcript += event.results[i][0].transcript;
         }
         if (transcript) {
-          setUserAnswer((prev) => (prev ? prev + ' ' + transcript : transcript));
+          setUserAnswer(transcript);
         }
       };
       rec.onend = () => setIsListening(false);
@@ -41,6 +65,7 @@ export const MockInterview: React.FC = () => {
       recognition.stop();
       setIsListening(false);
     } else {
+      setUserAnswer('');
       recognition.start();
       setIsListening(true);
     }
@@ -53,7 +78,6 @@ export const MockInterview: React.FC = () => {
         target_role: targetRole,
         interview_type: interviewType,
       });
-      // Handle both full object response and turn data
       const interviewData = res.data.interview || {
         id: res.data.interview_id,
         interview_id: res.data.interview_id,
@@ -64,6 +88,7 @@ export const MockInterview: React.FC = () => {
       };
       setInterview(interviewData);
       setCurrentTurn(res.data.turn);
+      setTimer(0);
     } catch (err) {
       console.error('Failed to start interview', err);
     } finally {
@@ -93,162 +118,229 @@ export const MockInterview: React.FC = () => {
     }
   };
 
-  return (
-    <Layout>
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-extrabold text-slate-100">AI Mock Interview</h1>
-            <p className="text-slate-400 mt-1">Multi-turn interviewer practice with real-time feedback</p>
+  if (!interview) {
+    return (
+      <div className="min-h-screen bg-[#0B0F19] text-slate-200 flex items-center justify-center p-6">
+        <div className="w-full max-w-md p-8 bg-[#151923] border border-[#1E2532] rounded-3xl space-y-6">
+          <div className="flex flex-col items-center mb-8">
+             <div className="w-20 h-20 rounded-full bg-cyan-500/10 flex items-center justify-center mb-4">
+                <Bot className="w-10 h-10 text-cyan-400" />
+             </div>
+             <h2 className="text-2xl font-bold text-white">Setup Mock Interview</h2>
           </div>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-1.5">Target Role</label>
+              <input
+                type="text"
+                value={targetRole}
+                onChange={(e) => setTargetRole(e.target.value)}
+                className="w-full px-4 py-3 bg-[#0B0F19] border border-[#1E2532] rounded-xl focus:ring-1 focus:ring-cyan-500 focus:outline-none text-slate-100"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-400 mb-1.5">Interview Type</label>
+              <select
+                value={interviewType}
+                onChange={(e) => setInterviewType(e.target.value)}
+                className="w-full px-4 py-3 bg-[#0B0F19] border border-[#1E2532] rounded-xl focus:ring-1 focus:ring-cyan-500 focus:outline-none text-slate-100"
+              >
+                <option value="technical">Technical & System Architecture</option>
+                <option value="behavioral">Behavioral & STAR Method</option>
+                <option value="situational">Situational Problem Solving</option>
+              </select>
+            </div>
+          </div>
+
           <button
-            onClick={() => setIsFeedbackOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition-colors"
+            onClick={handleStartInterview}
+            disabled={loading}
+            className="w-full py-4 mt-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl transition-all disabled:opacity-50"
           >
-            <MessageSquare className="w-4 h-4 text-indigo-400" /> Give Feedback
+            {loading ? 'Connecting to Interviewer...' : 'Start Session'}
           </button>
         </div>
+      </div>
+    );
+  }
 
-        {!interview && (
-          <div className="p-8 bg-slate-900/90 border border-slate-800 rounded-3xl space-y-6">
-            <h2 className="text-xl font-bold text-slate-200">Configure Interview Setup</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Target Role</label>
-                <input
-                  type="text"
-                  value={targetRole}
-                  onChange={(e) => setTargetRole(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100"
-                />
-              </div>
+  const latestFeedback = interview.turns?.slice().reverse().find((t: any) => t.feedback)?.feedback;
 
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-1.5">Interview Type</label>
-                <select
-                  value={interviewType}
-                  onChange={(e) => setInterviewType(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100"
-                >
-                  <option value="technical">Technical & System Architecture</option>
-                  <option value="behavioral">Behavioral & STAR Method</option>
-                  <option value="situational">Situational Problem Solving</option>
-                </select>
-              </div>
+  return (
+    <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-200 overflow-hidden font-sans">
+      <div className="h-10 bg-[#0B0F19] border-b border-[#1E2532] flex items-center px-4 overflow-hidden shrink-0">
+        <p className="text-xs text-cyan-400 whitespace-nowrap overflow-hidden text-ellipsis w-full font-mono">
+          [AI Analysis] {latestFeedback || "System initialized. Preparing adaptive questioning logic..."}
+        </p>
+      </div>
+
+      <div className="flex flex-1 overflow-hidden">
+        
+        <div className="w-1/2 flex flex-col border-r border-[#1E2532] bg-[#0B0F19] relative">
+          <div className="absolute top-6 left-6 p-4 border border-[#1E2532] rounded-xl bg-[#0F1219]">
+            <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Confidence</p>
+            <div className="w-24 h-1 bg-slate-800 rounded-full overflow-hidden">
+               <div className="h-full bg-cyan-400 w-3/4 rounded-full"></div>
             </div>
-
-            <button
-              onClick={handleStartInterview}
-              disabled={loading}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
-            >
-              <Award className="w-5 h-5" />
-              {loading ? 'Initializing Interviewer...' : 'Start Mock Interview'}
-            </button>
           </div>
-        )}
 
-        {interview && (
-          <div className="space-y-6">
-            {/* Conversation History */}
-            <div className="space-y-4">
+          <div className="flex-1 flex flex-col items-center justify-center">
+             <div className="relative w-64 h-64 flex items-center justify-center">
+                <div className={`absolute w-full h-full rounded-full border border-cyan-500/20 ${isListening ? 'animate-ping duration-1000' : ''}`}></div>
+                <div className="absolute w-48 h-48 rounded-full border 2 border-cyan-500/30"></div>
+                <div className="absolute w-32 h-32 rounded-full border-4 border-cyan-500/40"></div>
+                <div className="w-16 h-16 rounded-full bg-cyan-400 shadow-[0_0_50px_20px_rgba(6,182,212,0.5)] z-10"></div>
+             </div>
+             
+             <div className="mt-12 flex flex-col items-center">
+                <h2 className="text-2xl font-bold text-white mb-2">Interviewer AI</h2>
+                <div className="flex items-center gap-2">
+                   <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                   <span className="text-sm font-semibold tracking-widest text-cyan-400 uppercase">LISTENING</span>
+                </div>
+             </div>
+          </div>
+
+          <div className="h-24 bg-[#111621] border-t border-[#1E2532] flex items-center justify-center gap-8 shrink-0">
+             <button className="flex flex-col items-center gap-2 group">
+                <div className="w-12 h-12 rounded-full bg-[#1E2532] group-hover:bg-[#2A3441] flex items-center justify-center transition-colors">
+                   <VideoOff className="w-5 h-5 text-slate-400" />
+                </div>
+                <span className="text-[10px] text-slate-400 font-semibold">Stop Video</span>
+             </button>
+             
+             <button 
+                onClick={toggleListening}
+                className="flex flex-col items-center gap-2 group"
+             >
+                <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors border-2 ${isListening ? 'bg-cyan-500/20 border-cyan-500' : 'bg-[#1E2532] border-transparent group-hover:bg-[#2A3441]'}`}>
+                   {isListening ? <Mic className="w-6 h-6 text-cyan-400" /> : <MicOff className="w-6 h-6 text-slate-400" />}
+                </div>
+                <span className="text-[10px] text-slate-400 font-semibold">{isListening ? 'Mute Mic' : 'Unmute Mic'}</span>
+             </button>
+
+             <button 
+                onClick={() => setInterview({ ...interview, status: 'completed' })}
+                className="flex flex-col items-center gap-2 group"
+             >
+                <div className="w-12 h-12 rounded-full bg-rose-500/10 group-hover:bg-rose-500/20 flex items-center justify-center transition-colors border border-rose-500/30">
+                   <PhoneOff className="w-5 h-5 text-rose-500" />
+                </div>
+                <span className="text-[10px] text-slate-400 font-semibold">End Interview</span>
+             </button>
+          </div>
+        </div>
+
+        <div className="w-1/2 flex flex-col bg-[#111621] relative">
+           <div className="flex items-center justify-between p-6 border-b border-[#1E2532] shrink-0">
+              <h2 className="text-xl font-bold text-white">Live Transcript</h2>
+              <div className="px-3 py-1 rounded-md bg-[#1E2532] text-xs font-mono text-slate-300">
+                {formatTime(timer)}
+              </div>
+           </div>
+
+           <div className="flex-1 overflow-y-auto p-6 space-y-6" ref={scrollRef}>
               {interview.turns?.map((t: any, idx: number) => (
-                <div key={idx} className="space-y-3">
-                  {/* Interviewer Prompt */}
-                  <div className="flex gap-4 p-5 bg-slate-900/80 border border-slate-800 rounded-2xl">
-                    <div className="p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl h-fit">
-                      <Bot className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">
-                        Interviewer • Turn {t.turn}
-                      </p>
-                      <p className="text-slate-200 text-sm">{t.question}</p>
-                    </div>
-                  </div>
-
-                  {/* User Response if submitted */}
-                  {t.answer && (
-                    <div className="flex gap-4 p-5 bg-indigo-950/40 border border-indigo-900/50 rounded-2xl ml-6">
-                      <div className="p-2.5 bg-purple-600/20 text-purple-400 rounded-xl h-fit">
-                        <User className="w-5 h-5" />
+                <div key={idx} className="space-y-6">
+                   <div className="flex gap-4">
+                      <div className="w-10 h-10 shrink-0 rounded-full bg-[#1E2532] flex items-center justify-center">
+                         <Bot className="w-5 h-5 text-cyan-400" />
                       </div>
-                      <div>
-                        <p className="text-xs font-semibold text-purple-400 uppercase tracking-wider mb-1">
-                          You
-                        </p>
-                        <p className="text-slate-200 text-sm">{t.answer}</p>
+                      <div className="flex-1 bg-[#1E2532] border border-[#2A3441] rounded-2xl rounded-tl-sm p-5">
+                         <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs font-bold text-cyan-400">Interviewer AI</span>
+                            <span className="text-[10px] text-slate-500">{(new Date()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                         </div>
+                         <p className="text-sm text-slate-300 leading-relaxed">{t.question}</p>
                       </div>
-                    </div>
-                  )}
+                   </div>
 
-                  {/* Feedback on response */}
-                  {t.feedback && (
-                    <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl ml-6 text-xs text-emerald-300">
-                      <span className="font-bold">Turn Feedback: </span>{t.feedback}
-                    </div>
-                  )}
+                   {t.answer && (
+                      <div className="flex gap-4 flex-row-reverse">
+                         <div className="w-10 h-10 shrink-0 rounded-full bg-[#1E2532] flex items-center justify-center">
+                            <User className="w-5 h-5 text-slate-400" />
+                         </div>
+                         <div className="flex-1 bg-[#0F1219] border border-[#1E2532] rounded-2xl rounded-tr-sm p-5">
+                            <div className="flex items-center justify-end gap-2 mb-2">
+                               <span className="text-[10px] text-slate-500">{(new Date()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                               <span className="text-xs font-bold text-slate-300">You</span>
+                            </div>
+                            <p className="text-sm text-slate-300 leading-relaxed text-right">{t.answer}</p>
+                         </div>
+                      </div>
+                   )}
                 </div>
               ))}
-            </div>
 
-            {/* Answer Input if interview is ongoing */}
-            {interview.status !== 'completed' && (
-              <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
-                    Your Response
-                  </label>
-                  {recognition && (
-                    <button
-                      type="button"
-                      onClick={toggleListening}
-                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all ${
-                        isListening
-                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
-                          : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
-                      }`}
-                    >
-                      {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-                      {isListening ? 'Stop Listening' : 'Voice Dictate'}
-                    </button>
-                  )}
+              {interview.status !== 'completed' && (
+                <div className="flex gap-4 flex-row-reverse mt-6">
+                   <div className="w-10 h-10 shrink-0 rounded-full bg-[#1E2532] flex items-center justify-center">
+                      <div className="relative">
+                         <User className="w-5 h-5 text-slate-400" />
+                         {isListening && <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-pulse"></div>}
+                      </div>
+                   </div>
+                   <div className="flex-1 border border-dashed border-[#2A3441] bg-[#0F1219]/50 rounded-2xl p-5 relative">
+                      <div className="flex items-center justify-end gap-2 mb-2">
+                         <span className="text-xs font-bold text-slate-400">Now • You</span>
+                      </div>
+                      
+                      {isListening ? (
+                         <p className="text-sm text-slate-300 leading-relaxed text-right">
+                           {userAnswer || <span className="text-slate-500 animate-pulse">Listening...</span>}
+                         </p>
+                      ) : (
+                         <div className="flex flex-col gap-3">
+                           <textarea
+                             rows={2}
+                             value={userAnswer}
+                             onChange={(e) => setUserAnswer(e.target.value)}
+                             onKeyDown={(e) => {
+                               if (e.key === 'Enter' && !e.shiftKey) {
+                                 e.preventDefault();
+                                 handleSubmitTurn();
+                               }
+                             }}
+                             placeholder="Type your response or enable mic..."
+                             className="w-full bg-transparent border-none focus:ring-0 text-sm text-slate-300 text-right resize-none placeholder-slate-600 outline-none"
+                           />
+                           <div className="flex justify-end">
+                             <button 
+                               onClick={handleSubmitTurn}
+                               disabled={!userAnswer.trim() || loading}
+                               className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300 disabled:opacity-50 transition-colors"
+                             >
+                               Send (Enter)
+                             </button>
+                           </div>
+                         </div>
+                      )}
+                      
+                   </div>
                 </div>
-                <textarea
-                  rows={4}
-                  value={userAnswer}
-                  onChange={(e) => setUserAnswer(e.target.value)}
-                  placeholder="Type or dictate your response to the interviewer..."
-                  className="w-full p-4 bg-slate-800/60 border border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
-                />
-                <button
-                  onClick={handleSubmitTurn}
-                  disabled={loading || !userAnswer.trim()}
-                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  <Send className="w-5 h-5" />
-                  {loading ? 'Submitting Turn...' : 'Submit Interview Turn'}
-                </button>
-              </div>
-            )}
+              )}
 
-            {/* Final Evaluation summary */}
-            {interview.status === 'completed' && (
-              <div className="p-8 bg-emerald-950/40 border border-emerald-900/60 rounded-3xl space-y-4">
-                <div className="flex items-center gap-3 text-emerald-400">
-                  <CheckCircle2 className="w-6 h-6" />
-                  <h3 className="text-xl font-bold">Interview Completed!</h3>
+              {interview.status === 'completed' && (
+                <div className="p-6 mt-8 bg-cyan-950/20 border border-cyan-900/30 rounded-2xl text-center">
+                   <CheckCircle2 className="w-8 h-8 text-cyan-500 mx-auto mb-3" />
+                   <h3 className="text-lg font-bold text-cyan-400 mb-2">Interview Completed</h3>
+                   <p className="text-sm text-slate-400 mb-4">
+                     Great job! The AI has finished its evaluation. Check the feedback dashboard for a comprehensive review.
+                   </p>
+                   <button
+                     onClick={() => setIsFeedbackOpen(true)}
+                     className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-bold rounded-lg transition-colors"
+                   >
+                     View Feedback
+                   </button>
                 </div>
-                <p className="text-slate-300 text-sm">
-                  {interview.final_evaluation?.overall_summary || 'Great effort completing this mock interview!'}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-
-        <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
+              )}
+           </div>
+        </div>
       </div>
-    </Layout>
+
+      <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
+    </div>
   );
 };
