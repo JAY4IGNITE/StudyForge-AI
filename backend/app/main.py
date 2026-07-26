@@ -1,7 +1,10 @@
 import time
 import uuid
 from contextlib import asynccontextmanager
+import os
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.logging import setup_logging, logger
@@ -63,3 +66,15 @@ async def health_check():
 @app.get("/ready", tags=["Health"])
 async def ready_check():
     return {"status": "ready", "database": "connected"}
+
+# Serve frontend static files
+frontend_dist = os.path.join(os.path.dirname(__file__), "../../frontend/dist")
+if os.path.isdir(frontend_dist):
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+    
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_frontend(full_path: str):
+        file_path = os.path.join(frontend_dist, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(frontend_dist, "index.html"))
