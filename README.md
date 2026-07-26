@@ -176,12 +176,6 @@ The repository includes a standardized `render.yaml` configuration for automated
 
 ---
 
-## License
-
-This project is distributed under the [MIT License](LICENSE).
-
----
-
 ## Author & Contact
 
 **Jaya Sai Krishna Vasamsetti**  
