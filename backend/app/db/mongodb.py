@@ -1,3 +1,4 @@
+import certifi
 from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from app.core.config import settings
@@ -16,7 +17,11 @@ async def init_db():
     global db_client
     logger.info(f"Connecting to MongoDB at: {settings.MONGODB_URI}")
     try:
-        db_client = AsyncIOMotorClient(settings.MONGODB_URI, serverSelectionTimeoutMS=3000)
+        kwargs = {"serverSelectionTimeoutMS": 5000}
+        if "mongodb+srv://" in settings.MONGODB_URI or "tls=true" in settings.MONGODB_URI.lower():
+            kwargs["tlsCAFile"] = certifi.where()
+        
+        db_client = AsyncIOMotorClient(settings.MONGODB_URI, **kwargs)
         await init_beanie(
             database=db_client[settings.MONGODB_DATABASE],
             document_models=[
