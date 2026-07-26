@@ -20,7 +20,10 @@ async def register(req: UserRegisterRequest):
 
 @router.post("/login", response_model=TokenResponse)
 async def login(req: UserLoginRequest):
-    return await auth_service.authenticate_user(req)
+    tokens = await auth_service.authenticate_user(req)
+    # Trigger security login alert
+    await email_service.send_security_login_alert(req.email.lower())
+    return tokens
 
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh(refresh_token: str):
@@ -36,6 +39,9 @@ async def verify_email_confirm(req: OTPVerifyRequest):
     if user:
         user.email_verified_at = datetime.now(timezone.utc)
         await user.save()
+        # Trigger welcome email upon successful email verification
+        await email_service.send_welcome_email(user.email, user.display_name)
+        
     return {"message": "Email verified successfully."}
 
 @router.post("/password/forgot")
@@ -55,4 +61,7 @@ async def reset_password(req: ResetPasswordRequest):
         
     user.password_hash = hash_password(req.new_password)
     await user.save()
+    
+    # Send confirmation email
+    await email_service.send_password_changed_email(user.email)
     return {"message": "Password reset successfully."}
