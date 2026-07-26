@@ -2,7 +2,7 @@ import asyncio
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.core.config import settings
 
-async def test():
+async def run_test():
     client = AsyncIOMotorClient(settings.MONGODB_URI)
     db = client[settings.MONGODB_DATABASE]
     try:
@@ -15,4 +15,4 @@ async def test():
     except Exception as e:
         print("APPEND_METADATA:", type(e), str(e))
 
-asyncio.run(test())
+asyncio.run(run_test())
