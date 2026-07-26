@@ -12,6 +12,8 @@ import {
   ArrowLeft,
   Keyboard,
   Wifi,
+  Timer,
+  RotateCcw,
 } from 'lucide-react';
 
 /**
@@ -31,6 +33,29 @@ export const CodingPracticePage: React.FC = () => {
   const [isSubmission, setIsSubmission] = useState(false);
   const [sidebarView, setSidebarView] = useState<'list' | 'detail'>('list');
 
+  // Session timer
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setElapsedSeconds(prev => prev + 1);
+    }, 1000);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [selectedProblem.id]); // Reset timer on problem change
+
+  const resetTimer = useCallback(() => {
+    setElapsedSeconds(0);
+  }, []);
+
+  const formatTime = (totalSec: number) => {
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  };
+
   // Resizable panes
   const [leftWidth, setLeftWidth] = useState(28); // percentage
   const [rightWidth, setRightWidth] = useState(32); // percentage
@@ -43,6 +68,7 @@ export const CodingPracticePage: React.FC = () => {
     setSidebarView('detail');
     setTestResults([]);
     setIsSubmission(false);
+    setElapsedSeconds(0);
   }, []);
 
   const handleTestResults = useCallback((results: TestRunResult[], submission: boolean) => {
@@ -123,7 +149,21 @@ export const CodingPracticePage: React.FC = () => {
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* Session Timer */}
+          <div className="flex items-center gap-1.5 bg-slate-800/80 border border-slate-700/50 rounded-lg px-2.5 py-1">
+            <Timer className="w-3.5 h-3.5 text-indigo-400" />
+            <span className="text-xs font-mono font-bold text-slate-200 tabular-nums">
+              {formatTime(elapsedSeconds)}
+            </span>
+            <button
+              onClick={resetTimer}
+              className="p-0.5 text-slate-500 hover:text-amber-400 transition-colors rounded"
+              title="Reset timer"
+            >
+              <RotateCcw className="w-3 h-3" />
+            </button>
+          </div>
           <button
             onClick={() => setShowSidebar(!showSidebar)}
             className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors rounded-md hover:bg-slate-800"
