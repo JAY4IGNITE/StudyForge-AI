@@ -85,12 +85,22 @@ export const LiveInterviewRoom: React.FC = () => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [session?.turns, userAnswer]);
 
-  // Simulated vision metrics update
+  const [visionMetrics, setVisionMetrics] = useState({
+    eye_contact_percentage: 87,
+    head_pose_stability: 92,
+    posture_score: 94,
+    shoulder_alignment_score: 95,
+    attention_score: 90,
+  });
+
+  // Simulated vision & posture metrics update
   useEffect(() => {
     const iv = setInterval(() => {
       setVisionMetrics({
         eye_contact_percentage: Math.min(100, Math.max(60, 85 + Math.random() * 10 - 5)),
         head_pose_stability: Math.min(100, Math.max(70, 90 + Math.random() * 8 - 4)),
+        posture_score: Math.min(100, Math.max(75, 92 + Math.random() * 6 - 3)),
+        shoulder_alignment_score: Math.min(100, Math.max(80, 94 + Math.random() * 4 - 2)),
         attention_score: Math.min(100, Math.max(65, 88 + Math.random() * 8 - 4)),
       });
     }, 3000);
@@ -164,11 +174,12 @@ export const LiveInterviewRoom: React.FC = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* Left: Video & Vision HUD */}
         <div className="w-1/2 flex flex-col border-r border-[#1E2532] bg-[#0B0F19] relative">
-          {/* Vision Metrics HUD */}
+          {/* Vision & Posture Metrics HUD */}
           <div className="absolute top-4 left-4 z-20 space-y-2">
             {[
+              { label: 'Posture', value: visionMetrics.posture_score, icon: Activity, color: 'text-indigo-400' },
               { label: 'Eye Contact', value: visionMetrics.eye_contact_percentage, icon: Eye, color: 'text-cyan-400' },
-              { label: 'Posture', value: visionMetrics.head_pose_stability, icon: Activity, color: 'text-emerald-400' },
+              { label: 'Posture Alignment', value: visionMetrics.shoulder_alignment_score, icon: Activity, color: 'text-emerald-400' },
               { label: 'Attention', value: visionMetrics.attention_score, icon: Brain, color: 'text-purple-400' },
             ].map((m, i) => (
               <div key={i} className="flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur-sm border border-slate-800 rounded-lg">

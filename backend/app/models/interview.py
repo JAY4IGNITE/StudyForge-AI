@@ -4,17 +4,22 @@ from beanie import Document, Indexed
 from pydantic import BaseModel, Field
 
 class VisionTelemetry(BaseModel):
-    eye_contact_percentage: float = 85.0
+    eye_contact_percentage: float = 87.0
     head_pose_stability: float = 90.0
-    smile_frequency: float = 12.0
+    posture_score: float = 92.0
+    slouch_count: int = 0
+    shoulder_alignment_score: float = 94.0
     attention_score: float = 88.0
     looking_away_count: int = 2
+    hand_gesture_count: int = 5
 
 class VoiceTelemetry(BaseModel):
     speaking_speed_wpm: float = 140.0
     pause_count: int = 4
     filler_word_count: int = 3
+    filler_word_breakdown: Dict[str, int] = Field(default_factory=dict)
     speech_clarity_score: float = 92.0
+    average_pause_seconds: float = 1.2
 
 class TurnTurnData(BaseModel):
     turn_index: int
