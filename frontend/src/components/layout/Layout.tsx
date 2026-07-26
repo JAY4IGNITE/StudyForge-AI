@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../app/AuthProvider';
-import { BookOpen, Award, Compass, BarChart2, User as UserIcon, LogOut, Flame, Map, MessageSquare } from 'lucide-react';
+import { BookOpen, Award, Compass, BarChart2, User as UserIcon, LogOut, Flame, Map, MessageSquare, Code2 } from 'lucide-react';
 import { FeedbackModal } from '../../features/feedback/FeedbackModal';
 import { LyzrChatbot } from '../ui/LyzrChatbot';
 
@@ -20,6 +20,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     { label: 'Dashboard', path: '/dashboard', icon: BarChart2 },
     { label: 'Practice Loop', path: '/practice', icon: BookOpen },
     { label: 'Mock Interview', path: '/interview', icon: Award },
+    { label: 'Coding Practice', path: '/coding-practice', icon: Code2 },
     { label: 'Learning Roadmap', path: '/roadmap', icon: Map },
     { label: 'Resource Library', path: '/resources', icon: Compass },
     { label: 'Profile', path: '/profile', icon: UserIcon },
