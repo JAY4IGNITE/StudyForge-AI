@@ -14,6 +14,7 @@ import { InterviewSetup } from '../features/interviews/InterviewSetup';
 import { LiveInterviewRoom } from '../features/interviews/LiveInterviewRoom';
 import { CodingInterviewRoom } from '../features/interviews/CodingInterviewRoom';
 import { InterviewReportView } from '../features/interviews/InterviewReportView';
+import { CodingPracticePage } from '../features/leetcode/components/CodingPracticePage';
 import { Roadmap } from '../features/roadmap/Roadmap';
 import { ResourceLibrary } from '../features/resources/ResourceLibrary';
 import { Profile } from '../features/profile/Profile';
@@ -137,6 +138,16 @@ export const AppRoutes: React.FC = () => {
             element={
               <ProtectedRoute>
                 <Profile />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* LeetCode-Style Coding Practice */}
+          <Route
+            path="/coding-practice"
+            element={
+              <ProtectedRoute>
+                <CodingPracticePage />
               </ProtectedRoute>
             }
           />
