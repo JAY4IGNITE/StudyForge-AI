@@ -43,6 +43,8 @@ class Settings(BaseSettings):
     OMNIROUTE_DEFAULT_MODEL: str = "claude-3-5-sonnet"
     OMNIROUTE_FALLBACK_MODELS: List[str] = ["gemini-1.5-pro", "llama-3-70b-instruct"]
 
+    NVIDIA_NIM_API_KEY: Optional[str] = None
+
     AI_MAX_RETRIES: int = 2
     AI_REQUEST_TIMEOUT_SECONDS: int = 30
     AI_MAX_DAILY_REQUESTS_PER_USER: int = 100
