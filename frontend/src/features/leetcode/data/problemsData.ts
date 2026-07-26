@@ -187,5 +187,253 @@ function maxSubArray(nums) {
     ],
     timeLimitMs: 1000,
     memoryLimitMb: 128
+  },
+  {
+    id: 'p4',
+    title: '344. Reverse String',
+    slug: 'reverse-string',
+    difficulty: 'Easy',
+    tags: ['String', 'Two Pointers'],
+    description: `Write a function that reverses a string. The input string is given as an array of characters \`s\`.
+
+You must do this by modifying the input array **in-place** with O(1) extra memory.
+
+Return the reversed array.`,
+    inputSpecification: 's: string[]',
+    outputSpecification: 'string[] (reversed)',
+    constraints: [
+      '1 <= s.length <= 10^5',
+      's[i] is a printable ASCII character.'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {string[]} s
+ * @return {string[]}
+ */
+function reverseString(s) {
+  // Write your code here
+
+}
+`,
+      typescript: `function reverseString(s: string[]): string[] {
+  // Write your code here
+  return s;
+}
+`,
+      python: `def reverseString(s: list[str]) -> list[str]:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '["h","e","l","l","o"]',
+        expectedOutput: '["o","l","l","e","h"]',
+        explanation: 'The reversed array is ["o","l","l","e","h"].',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '["H","a","n","n","a","h"]',
+        expectedOutput: '["h","a","n","n","a","H"]',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '["A"]',
+        expectedOutput: '["A"]',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
+  },
+  {
+    id: 'p5',
+    title: '217. Contains Duplicate',
+    slug: 'contains-duplicate',
+    difficulty: 'Easy',
+    tags: ['Array', 'Hash Table', 'Sorting'],
+    description: `Given an integer array \`nums\`, return \`true\` if any value appears **at least twice** in the array, and return \`false\` if every element is distinct.`,
+    inputSpecification: 'nums: number[]',
+    outputSpecification: 'boolean',
+    constraints: [
+      '1 <= nums.length <= 10^5',
+      '-10^9 <= nums[i] <= 10^9'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+function containsDuplicate(nums) {
+  // Write your code here
+
+}
+`,
+      typescript: `function containsDuplicate(nums: number[]): boolean {
+  // Write your code here
+  return false;
+}
+`,
+      python: `def containsDuplicate(nums: list[int]) -> bool:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '[1, 2, 3, 1]',
+        expectedOutput: 'true',
+        explanation: 'The element 1 appears at indices 0 and 3.',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '[1, 2, 3, 4]',
+        expectedOutput: 'false',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '[1, 1, 1, 3, 3, 4, 3, 2, 4, 2]',
+        expectedOutput: 'true',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
+  },
+  {
+    id: 'p6',
+    title: '121. Best Time to Buy and Sell Stock',
+    slug: 'best-time-to-buy-sell-stock',
+    difficulty: 'Easy',
+    tags: ['Array', 'Dynamic Programming'],
+    description: `You are given an array \`prices\` where \`prices[i]\` is the price of a given stock on the \`i\`th day.
+
+You want to maximize your profit by choosing a **single day** to buy one stock and choosing a **different day in the future** to sell that stock.
+
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return \`0\`.`,
+    inputSpecification: 'prices: number[]',
+    outputSpecification: 'number (maximum profit)',
+    constraints: [
+      '1 <= prices.length <= 10^5',
+      '0 <= prices[i] <= 10^4'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {number[]} prices
+ * @return {number}
+ */
+function maxProfit(prices) {
+  // Write your code here
+
+}
+`,
+      typescript: `function maxProfit(prices: number[]): number {
+  // Write your code here
+  return 0;
+}
+`,
+      python: `def maxProfit(prices: list[int]) -> int:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '[7, 1, 5, 3, 6, 4]',
+        expectedOutput: '5',
+        explanation: 'Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6 - 1 = 5.',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '[7, 6, 4, 3, 1]',
+        expectedOutput: '0',
+        explanation: 'No transaction yields a positive profit.',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '[2, 4, 1]',
+        expectedOutput: '2',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
+  },
+  {
+    id: 'p7',
+    title: '125. Valid Palindrome',
+    slug: 'valid-palindrome',
+    difficulty: 'Easy',
+    tags: ['String', 'Two Pointers'],
+    description: `A phrase is a **palindrome** if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string \`s\`, return \`true\` if it is a palindrome, or \`false\` otherwise.`,
+    inputSpecification: 's: string',
+    outputSpecification: 'boolean',
+    constraints: [
+      '1 <= s.length <= 2 * 10^5',
+      's consists only of printable ASCII characters.'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {string} s
+ * @return {boolean}
+ */
+function isPalindrome(s) {
+  // Write your code here
+
+}
+`,
+      typescript: `function isPalindrome(s: string): boolean {
+  // Write your code here
+  return false;
+}
+`,
+      python: `def isPalindrome(s: str) -> bool:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '"A man, a plan, a canal: Panama"',
+        expectedOutput: 'true',
+        explanation: '"amanaplanacanalpanama" is a palindrome.',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '"race a car"',
+        expectedOutput: 'false',
+        explanation: '"raceacar" is not a palindrome.',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '" "',
+        expectedOutput: 'true',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
   }
 ];
