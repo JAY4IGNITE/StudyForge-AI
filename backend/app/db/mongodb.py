@@ -4,7 +4,8 @@ from beanie import init_beanie
 from app.core.config import settings
 from app.core.logging import logger
 from app.models.user import User, RefreshToken, EmailOTP
-from app.models.practice import Topic, Question, PracticeSession, Attempt, MasteryProfile, InterviewSession, LearningResource
+from app.models.practice import Topic, Question, PracticeSession, Attempt, MasteryProfile, LearningResource
+from app.models.interview import InterviewSession, InterviewReport, ResumeAnalysis
 from app.models.feedback import Feedback, UserRoadmap
 
 # Monkeypatch for Beanie 2.1.0 + PyMongo 4.x compatibility
@@ -34,6 +35,8 @@ async def init_db():
                 Attempt,
                 MasteryProfile,
                 InterviewSession,
+                InterviewReport,
+                ResumeAnalysis,
                 LearningResource,
                 Feedback,
                 UserRoadmap,
