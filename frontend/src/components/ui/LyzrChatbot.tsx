@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Sparkles, User, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
+import { apiClient } from '../../lib/axios';
 
 interface Message {
   id: string;
@@ -20,7 +21,7 @@ export const LyzrChatbot: React.FC = () => {
     {
       id: 'welcome',
       sender: 'ai',
-      text: `Hello ${user?.display_name || 'there'}! 👋 I am your **StudyForge AI Mentor**.\n\nI can guide you through concepts, give progressive hints, or conduct mock interviews. What would you like to learn today?`,
+      text: `Hello ${user?.display_name || 'there'}! 👋 I am your **StudyForge AI Mentor** powered by NVIDIA NIM (Llama 3.1 70B).\n\nAsk me any question, request step-by-step problem solutions, or start a mock interview!`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -49,40 +50,23 @@ export const LyzrChatbot: React.FC = () => {
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
+    const currentHistory = messages.map((m) => ({
+      role: m.sender === 'user' ? 'user' : 'assistant',
+      content: m.text,
+    }));
+
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
     setIsLoading(true);
 
     try {
-      const apiKey = import.meta.env.VITE_LYZR_API_KEY;
-      
-      let replyText = "";
+      // Call backend FastAPI endpoint powered by NVIDIA NIM
+      const res = await apiClient.post('/ai/chat', {
+        message: userText,
+        history: currentHistory,
+      });
 
-      if (apiKey) {
-        const response = await fetch('https://api.lyzr.ai/v2/chat', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-          },
-          body: JSON.stringify({
-            user_id: user?.email || 'guest_user',
-            agent_id: LYZR_AGENT_ID,
-            message: userText,
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          replyText = data.response || data.message || "I'm processing your request using the StudyForge Knowledge Base.";
-        } else {
-          replyText = "I received your message! (Connect `VITE_LYZR_API_KEY` in `.env` for live API integration).";
-        }
-      } else {
-        // Fallback demo response when API key is pending
-        await new Promise((resolve) => setTimeout(resolve, 1200));
-        replyText = `Great question regarding "${userText}"! According to the StudyForge AI curriculum, let's break this down step by step:\n\n1. What is your current understanding of this topic?\n2. Would you like a quick hint, a code example, or a mini-quiz question?`;
-      }
+      const replyText = res.data.reply || "I am analyzing your request using NVIDIA NIM Llama 3.1.";
 
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -98,7 +82,7 @@ export const LyzrChatbot: React.FC = () => {
         {
           id: (Date.now() + 1).toString(),
           sender: 'ai',
-          text: "I encountered a network issue connecting to Lyzr Agent. Please verify your internet connection or API settings.",
+          text: "I encountered a network issue communicating with the NVIDIA NIM AI service. Please verify your backend server status.",
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
