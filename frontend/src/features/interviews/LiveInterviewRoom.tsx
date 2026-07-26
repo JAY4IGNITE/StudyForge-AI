@@ -87,14 +87,6 @@ export const LiveInterviewRoom: React.FC = () => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [session?.turns, userAnswer]);
 
-  const [visionMetrics, setVisionMetrics] = useState({
-    eye_contact_percentage: 87,
-    head_pose_stability: 92,
-    posture_score: 94,
-    shoulder_alignment_score: 95,
-    attention_score: 90,
-  });
-
   // Simulated vision & posture metrics update
   useEffect(() => {
     const iv = setInterval(() => {
