@@ -3,7 +3,7 @@ import { Layout } from '../../components/layout/Layout';
 import { apiClient } from '../../lib/axios';
 import { useAuth } from '../../app/AuthProvider';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Trophy, Target, BookOpen, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Trophy, Target, BookOpen, AlertTriangle, ArrowRight, Code2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Dashboard: React.FC = () => {
@@ -58,13 +58,22 @@ export const Dashboard: React.FC = () => {
               Target Role: <span className="font-semibold text-white">{user?.target_role || 'Software Engineer'}</span> | Target Mastery Goal: <span className="font-semibold text-white">85%+</span>
             </p>
           </div>
-          <Link
-            to="/practice"
-            className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/40 flex items-center gap-2"
-          >
-            Start Practice Session
-            <ArrowRight className="w-5 h-5" />
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              to="/practice"
+              className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/40 flex items-center gap-2"
+            >
+              Start Practice Session
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <Link
+              to="/coding-practice"
+              className="px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-emerald-600/40 flex items-center gap-2"
+            >
+              <Code2 className="w-5 h-5" />
+              Coding Practice
+            </Link>
+          </div>
         </div>
 
         {/* Stats Cards */}
