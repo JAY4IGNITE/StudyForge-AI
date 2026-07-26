@@ -435,5 +435,323 @@ function isPalindrome(s) {
     ],
     timeLimitMs: 1000,
     memoryLimitMb: 128
+  },
+  {
+    id: 'p8',
+    title: '49. Group Anagrams',
+    slug: 'group-anagrams',
+    difficulty: 'Medium',
+    tags: ['Array', 'Hash Table', 'String', 'Sorting'],
+    description: `Given an array of strings \`strs\`, group the **anagrams** together. You can return the answer in any order.
+
+An **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, using all the original letters exactly once.`,
+    inputSpecification: 'strs: string[]',
+    outputSpecification: 'string[][] (grouped anagrams)',
+    constraints: [
+      '1 <= strs.length <= 10^4',
+      '0 <= strs[i].length <= 100',
+      'strs[i] consists of lowercase English letters.'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {string[]} strs
+ * @return {string[][]}
+ */
+function groupAnagrams(strs) {
+  // Write your code here
+
+}
+`,
+      typescript: `function groupAnagrams(strs: string[]): string[][] {
+  // Write your code here
+  return [];
+}
+`,
+      python: `def groupAnagrams(strs: list[str]) -> list[list[str]]:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '["eat","tea","tan","ate","nat","bat"]',
+        expectedOutput: '[["bat"],["nat","tan"],["ate","eat","tea"]]',
+        explanation: 'The groups are: ["bat"], ["nat","tan"], ["ate","eat","tea"].',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '[""]',
+        expectedOutput: '[[""]]',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '["a"]',
+        expectedOutput: '[["a"]]',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
+  },
+  {
+    id: 'p9',
+    title: '238. Product of Array Except Self',
+    slug: 'product-of-array-except-self',
+    difficulty: 'Medium',
+    tags: ['Array', 'Prefix Sum'],
+    description: `Given an integer array \`nums\`, return an array \`answer\` such that \`answer[i]\` is equal to the product of all the elements of \`nums\` except \`nums[i]\`.
+
+The product of any prefix or suffix of \`nums\` is guaranteed to fit in a **32-bit** integer.
+
+You must write an algorithm that runs in **O(n)** time and without using the division operation.`,
+    inputSpecification: 'nums: number[]',
+    outputSpecification: 'number[]',
+    constraints: [
+      '2 <= nums.length <= 10^5',
+      '-30 <= nums[i] <= 30',
+      'The product of any prefix or suffix fits in a 32-bit integer.'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {number[]} nums
+ * @return {number[]}
+ */
+function productExceptSelf(nums) {
+  // Write your code here
+
+}
+`,
+      typescript: `function productExceptSelf(nums: number[]): number[] {
+  // Write your code here
+  return [];
+}
+`,
+      python: `def productExceptSelf(nums: list[int]) -> list[int]:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '[1, 2, 3, 4]',
+        expectedOutput: '[24,12,8,6]',
+        explanation: 'answer[0] = 2*3*4 = 24, answer[1] = 1*3*4 = 12, etc.',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '[-1, 1, 0, -3, 3]',
+        expectedOutput: '[0,0,9,0,0]',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '[2, 3]',
+        expectedOutput: '[3,2]',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
+  },
+  {
+    id: 'p10',
+    title: '3. Longest Substring Without Repeating Characters',
+    slug: 'longest-substring-without-repeating',
+    difficulty: 'Medium',
+    tags: ['String', 'Sliding Window', 'Hash Table'],
+    description: `Given a string \`s\`, find the length of the **longest substring** without repeating characters.`,
+    inputSpecification: 's: string',
+    outputSpecification: 'number (length of longest substring)',
+    constraints: [
+      '0 <= s.length <= 5 * 10^4',
+      's consists of English letters, digits, symbols, and spaces.'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {string} s
+ * @return {number}
+ */
+function lengthOfLongestSubstring(s) {
+  // Write your code here
+
+}
+`,
+      typescript: `function lengthOfLongestSubstring(s: string): number {
+  // Write your code here
+  return 0;
+}
+`,
+      python: `def lengthOfLongestSubstring(s: str) -> int:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '"abcabcbb"',
+        expectedOutput: '3',
+        explanation: 'The longest substring without repeating characters is "abc", length 3.',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '"bbbbb"',
+        expectedOutput: '1',
+        isSample: true
+      },
+      {
+        id: 'tc3',
+        input: '"pwwkew"',
+        expectedOutput: '3',
+        explanation: 'The answer is "wke", length 3.',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc4',
+        input: '""',
+        expectedOutput: '0',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
+  },
+  {
+    id: 'p11',
+    title: '23. Merge k Sorted Lists',
+    slug: 'merge-k-sorted-lists',
+    difficulty: 'Hard',
+    tags: ['Linked List', 'Divide and Conquer', 'Heap'],
+    description: `You are given an array of \`k\` linked-lists \`lists\`, each linked-list is sorted in ascending order.
+
+Merge all the linked-lists into one sorted linked-list and return it.
+
+**Note**: For this in-browser exercise, linked lists are represented as sorted arrays. Merge the arrays into a single sorted array.`,
+    inputSpecification: 'lists: number[][] (array of sorted arrays)',
+    outputSpecification: 'number[] (single merged sorted array)',
+    constraints: [
+      'k == lists.length',
+      '0 <= k <= 10^4',
+      '0 <= lists[i].length <= 500',
+      '-10^4 <= lists[i][j] <= 10^4',
+      'lists[i] is sorted in ascending order.'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {number[][]} lists
+ * @return {number[]}
+ */
+function mergeKLists(lists) {
+  // Write your code here
+
+}
+`,
+      typescript: `function mergeKLists(lists: number[][]): number[] {
+  // Write your code here
+  return [];
+}
+`,
+      python: `def mergeKLists(lists: list[list[int]]) -> list[int]:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '[[1,4,5],[1,3,4],[2,6]]',
+        expectedOutput: '[1,1,2,3,4,4,5,6]',
+        explanation: 'Merging [1,4,5], [1,3,4], [2,6] yields [1,1,2,3,4,4,5,6].',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '[]',
+        expectedOutput: '[]',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '[[]]',
+        expectedOutput: '[]',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
+  },
+  {
+    id: 'p12',
+    title: '42. Trapping Rain Water',
+    slug: 'trapping-rain-water',
+    difficulty: 'Hard',
+    tags: ['Array', 'Two Pointers', 'Stack', 'Dynamic Programming'],
+    description: `Given \`n\` non-negative integers representing an elevation map where the width of each bar is \`1\`, compute how much water it can trap after raining.`,
+    inputSpecification: 'height: number[]',
+    outputSpecification: 'number (units of trapped water)',
+    constraints: [
+      'n == height.length',
+      '1 <= n <= 2 * 10^4',
+      '0 <= height[i] <= 10^5'
+    ],
+    codeTemplates: {
+      javascript: `/**
+ * @param {number[]} height
+ * @return {number}
+ */
+function trap(height) {
+  // Write your code here
+
+}
+`,
+      typescript: `function trap(height: number[]): number {
+  // Write your code here
+  return 0;
+}
+`,
+      python: `def trap(height: list[int]) -> int:
+    # Write your code here
+    pass
+`
+    },
+    sampleCases: [
+      {
+        id: 'tc1',
+        input: '[0,1,0,2,1,0,1,3,2,1,2,1]',
+        expectedOutput: '6',
+        explanation: 'The elevation map traps 6 units of rain water.',
+        isSample: true
+      },
+      {
+        id: 'tc2',
+        input: '[4,2,0,3,2,5]',
+        expectedOutput: '9',
+        isSample: true
+      }
+    ],
+    hiddenCases: [
+      {
+        id: 'tc3',
+        input: '[4,2,3]',
+        expectedOutput: '1',
+        isSample: false
+      }
+    ],
+    timeLimitMs: 1000,
+    memoryLimitMb: 128
   }
 ];
