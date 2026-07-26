@@ -12,6 +12,7 @@ from app.core.errors import StudyForgeException, studyforge_exception_handler
 from app.db.mongodb import init_db, close_db
 from app.db.seed import seed_initial_data
 from app.api.router import api_router
+from app.api.routes.interview_ws import router as interview_ws_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -56,8 +57,9 @@ async def add_request_metadata(request: Request, call_next):
 # Register Exception Handlers
 app.add_exception_handler(StudyForgeException, studyforge_exception_handler)
 
-# Include API Router
+# Include API Router & WebSocket Router
 app.include_router(api_router, prefix="/api")
+app.include_router(interview_ws_router, prefix="/api/v1")
 
 @app.get("/health", tags=["Health"])
 async def health_check():
