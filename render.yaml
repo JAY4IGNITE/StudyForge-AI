@@ -1,44 +1,6 @@
 services:
-  # Backend Web Service (FastAPI)
   - type: web
-    name: studyforge-backend
-    runtime: python
-    buildCommand: cd backend && pip install -r requirements.txt
+    name: studyforge-ai
+    env: python
+    buildCommand: npm install --prefix frontend && npm run build --prefix frontend && pip install -r backend/requirements.txt
     startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.9
-      - key: MONGODB_URI
-        sync: false
-      - key: MONGODB_DATABASE
-        value: studyforge
-      - key: JWT_ACCESS_SECRET
-        generateValue: true
-      - key: JWT_REFRESH_SECRET
-        generateValue: true
-      - key: BREVO_API_KEY
-        sync: false
-      - key: BREVO_SENDER_EMAIL
-        value: aistudyforge@gmail.com
-      - key: BREVO_SENDER_NAME
-        value: StudyForge AI
-      - key: CORS_ORIGINS
-        value: '*'
-
-  # Frontend Static Site (React + Vite)
-  - type: web
-    name: studyforge-frontend
-    runtime: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: ./frontend/dist
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: studyforge-backend
-          property: url
-          suffix: /api/v1
