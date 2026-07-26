@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.core.logging import logger
 from app.models.user import User, RefreshToken, EmailOTP
 from app.models.practice import Topic, Question, PracticeSession, Attempt, MasteryProfile, InterviewSession, LearningResource
+from app.models.feedback import Feedback, UserRoadmap
 
 db_client: AsyncIOMotorClient = None
 
@@ -25,9 +26,11 @@ async def init_db():
             MasteryProfile,
             InterviewSession,
             LearningResource,
+            Feedback,
+            UserRoadmap,
         ],
     )
-    logger.info("Beanie initialized successfully.")
+    logger.info("Beanie initialized successfully with all document models.")
 
 async def close_db():
     global db_client

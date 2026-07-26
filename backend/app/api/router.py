@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.routes import auth, users, topics, practice, interview, resources, analytics
+from app.api.routes import auth, users, topics, practice, interview, resources, analytics, feedback, roadmap, adaptive
 
 api_router = APIRouter(prefix="/v1")
 
@@ -10,3 +10,6 @@ api_router.include_router(practice.router)
 api_router.include_router(interview.router)
 api_router.include_router(resources.router)
 api_router.include_router(analytics.router)
+api_router.include_router(feedback.router)
+api_router.include_router(roadmap.router)
+api_router.include_router(adaptive.router)
