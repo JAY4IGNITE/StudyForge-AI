@@ -1,7 +1,9 @@
 from app.models.practice import Topic, LearningResource
+from app.core.logging import logger
 
 async def seed_initial_data():
-    existing_topics = await Topic.find_all().to_list()
+    try:
+        existing_topics = await Topic.find_all().to_list()
     if not existing_topics:
         topics = [
             Topic(name="Python Fundamentals", slug="python-fundamentals", description="Core Python syntax, data structures, and functions", domain="programming"),
@@ -35,3 +37,5 @@ async def seed_initial_data():
             ]
             for r in resources:
                 await r.insert()
+    except Exception as e:
+        logger.error(f"Seeding initial data failed or skipped: {e}")

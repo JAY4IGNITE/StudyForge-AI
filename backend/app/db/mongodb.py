@@ -36,7 +36,8 @@ async def init_db():
         )
         logger.info("Beanie initialized successfully with all document models.")
     except Exception as e:
-        logger.warning(f"MongoDB initialization warning: {e}. Application running with database fallback capabilities.")
+        logger.error(f"MongoDB initialization failed: {e}. Check MONGODB_URI configuration.")
+        raise e
 
 async def close_db():
     global db_client
