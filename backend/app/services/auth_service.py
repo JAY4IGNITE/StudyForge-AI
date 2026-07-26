@@ -1,6 +1,7 @@
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from fastapi import status
+from app.core.config import settings
 from app.models.user import User, RefreshToken
 from app.schemas.auth import UserRegisterRequest, UserLoginRequest, TokenResponse, UserProfileUpdate
 from app.core.security import hash_password, verify_password, create_access_token, create_refresh_token, decode_refresh_token
@@ -38,11 +39,11 @@ class AuthService:
         refresh_token = create_refresh_token(subject=str(user.id), jti=jti)
         
         # Save refresh token
-        expires_at = datetime.now(timezone.utc) + (refresh_token.expiry - datetime.now(timezone.utc) if hasattr(refresh_token, 'expiry') else datetime.now(timezone.utc))
+        expires_at = datetime.now(timezone.utc) + timedelta(days=settings.JWT_REFRESH_TTL_DAYS)
         token_doc = RefreshToken(
             user_id=str(user.id),
             jti=jti,
-            expiry=datetime.now(timezone.utc)
+            expiry=expires_at
         )
         await token_doc.insert()
         return TokenResponse(access_token=access_token, refresh_token=refresh_token)

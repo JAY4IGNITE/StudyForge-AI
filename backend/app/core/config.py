@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import List, Optional
+from typing import List, Optional, Union, Any
+from pydantic import field_validator
 
 class Settings(BaseSettings):
     APP_NAME: str = "StudyForge AI"
@@ -18,7 +19,20 @@ class Settings(BaseSettings):
     JWT_ACCESS_TTL_MINUTES: int = 15
     JWT_REFRESH_TTL_DAYS: int = 30
 
-    CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    CORS_ORIGINS: Union[List[str], str] = ["http://localhost:5173", "http://localhost:3000", "*"]
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v: Any) -> List[str]:
+        if isinstance(v, str):
+            if v.startswith("[") and v.endswith("]"):
+                import json
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [i.strip() for i in v.split(",") if i.strip()]
+        return v
 
     BREVO_API_KEY: Optional[str] = None
     BREVO_SENDER_EMAIL: str = "no-reply@studyforge.ai"
@@ -33,6 +47,6 @@ class Settings(BaseSettings):
     AI_REQUEST_TIMEOUT_SECONDS: int = 30
     AI_MAX_DAILY_REQUESTS_PER_USER: int = 100
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(env_file=["../.env", ".env"], env_file_encoding="utf-8", extra="ignore")
 
 settings = Settings()
