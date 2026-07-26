@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../../components/layout/Layout';
 import { apiClient } from '../../lib/axios';
-import { Play, CheckCircle2, Sparkles, Send, RefreshCw, ArrowRight } from 'lucide-react';
+import { Play, CheckCircle2, Send, ArrowRight, Mic, MicOff, MessageSquare } from 'lucide-react';
+import { FeedbackModal } from '../feedback/FeedbackModal';
 
 export const PracticeLoop: React.FC = () => {
   const [topics, setTopics] = useState<any[]>([]);
@@ -11,6 +12,9 @@ export const PracticeLoop: React.FC = () => {
   const [userAnswer, setUserAnswer] = useState<string>('');
   const [attemptResult, setAttemptResult] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isListening, setIsListening] = useState<boolean>(false);
+  const [recognition, setRecognition] = useState<any>(null);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -23,7 +27,37 @@ export const PracticeLoop: React.FC = () => {
       }
     };
     fetchTopics();
+
+    // Initialize Web Speech API if supported
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+          setUserAnswer((prev) => (prev ? prev + ' ' + transcript : transcript));
+        }
+      };
+      rec.onend = () => setIsListening(false);
+      setRecognition(rec);
+    }
   }, []);
+
+  const toggleListening = () => {
+    if (!recognition) return;
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+      setIsListening(true);
+    }
+  };
 
   const handleStartSession = async () => {
     if (!selectedTopic) return;
@@ -32,7 +66,6 @@ export const PracticeLoop: React.FC = () => {
       const resSession = await apiClient.post('/practice/sessions', { topic_id: selectedTopic });
       setSession(resSession.data);
       
-      // Fetch initial question
       const resQ = await apiClient.post(`/practice/sessions/${resSession.data.session_id}/questions`);
       setQuestion(resQ.data);
     } catch (err) {
@@ -44,6 +77,10 @@ export const PracticeLoop: React.FC = () => {
 
   const handleSubmitAnswer = async () => {
     if (!userAnswer.trim() || !session || !question) return;
+    if (isListening && recognition) {
+      recognition.stop();
+      setIsListening(false);
+    }
     setLoading(true);
     try {
       const res = await apiClient.post(`/practice/sessions/${session.session_id}/attempts`, {
@@ -76,9 +113,17 @@ export const PracticeLoop: React.FC = () => {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-3xl font-extrabold text-slate-100">Adaptive Practice Loop</h1>
-          <p className="text-slate-400 mt-1">Receive dynamically calibrated questions adapted to your performance</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-extrabold text-slate-100">Adaptive Practice Loop</h1>
+            <p className="text-slate-400 mt-1">Receive dynamically calibrated questions adapted to your performance</p>
+          </div>
+          <button
+            onClick={() => setIsFeedbackOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition-colors"
+          >
+            <MessageSquare className="w-4 h-4 text-indigo-400" /> Give Feedback
+          </button>
         </div>
 
         {/* Step 1: Session Setup */}
@@ -128,12 +173,28 @@ export const PracticeLoop: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Your Answer</label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-slate-300">Your Answer (Text or Voice)</label>
+                {recognition && (
+                  <button
+                    type="button"
+                    onClick={toggleListening}
+                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all ${
+                      isListening
+                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
+                        : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
+                    }`}
+                  >
+                    {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                    {isListening ? 'Stop Listening' : 'Voice Dictate'}
+                  </button>
+                )}
+              </div>
               <textarea
                 rows={5}
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
-                placeholder="Type your structured answer here..."
+                placeholder="Type or dictate your structured answer here..."
                 className="w-full p-4 bg-slate-800/60 border border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
               />
             </div>
@@ -201,6 +262,8 @@ export const PracticeLoop: React.FC = () => {
             </button>
           </div>
         )}
+
+        <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
       </div>
     </Layout>
   );

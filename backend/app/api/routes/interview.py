@@ -32,7 +32,16 @@ async def create_interview(req: StartInterviewRequest, user: User = Depends(get_
     interview.turns.append(turn_data)
     await interview.insert()
     
-    return {"interview_id": str(interview.id), "turn": turn_data}
+    interview_dict = {
+        "id": str(interview.id),
+        "interview_id": str(interview.id),
+        "user_id": str(user.id),
+        "target_role": interview.target_role,
+        "interview_type": interview.interview_type,
+        "turns": interview.turns,
+        "status": interview.status
+    }
+    return {"interview": interview_dict, "turn": turn_data}
 
 @router.get("/{interview_id}")
 async def get_interview(interview_id: str, user: User = Depends(get_current_user)):

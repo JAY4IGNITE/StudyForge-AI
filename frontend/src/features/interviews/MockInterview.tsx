@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '../../components/layout/Layout';
 import { apiClient } from '../../lib/axios';
-import { Award, Send, CheckCircle2, User, Bot, AlertCircle } from 'lucide-react';
+import { Award, Send, CheckCircle2, User, Bot, Mic, MicOff, MessageSquare } from 'lucide-react';
+import { FeedbackModal } from '../feedback/FeedbackModal';
 
 export const MockInterview: React.FC = () => {
   const [targetRole, setTargetRole] = useState('Software Engineer');
@@ -10,6 +11,40 @@ export const MockInterview: React.FC = () => {
   const [currentTurn, setCurrentTurn] = useState<any>(null);
   const [userAnswer, setUserAnswer] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  useEffect(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+          setUserAnswer((prev) => (prev ? prev + ' ' + transcript : transcript));
+        }
+      };
+      rec.onend = () => setIsListening(false);
+      setRecognition(rec);
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognition) return;
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+      setIsListening(true);
+    }
+  };
 
   const handleStartInterview = async () => {
     setLoading(true);
@@ -18,7 +53,16 @@ export const MockInterview: React.FC = () => {
         target_role: targetRole,
         interview_type: interviewType,
       });
-      setInterview(res.data.interview);
+      // Handle both full object response and turn data
+      const interviewData = res.data.interview || {
+        id: res.data.interview_id,
+        interview_id: res.data.interview_id,
+        target_role: targetRole,
+        interview_type: interviewType,
+        turns: [res.data.turn],
+        status: 'active'
+      };
+      setInterview(interviewData);
       setCurrentTurn(res.data.turn);
     } catch (err) {
       console.error('Failed to start interview', err);
@@ -29,9 +73,14 @@ export const MockInterview: React.FC = () => {
 
   const handleSubmitTurn = async () => {
     if (!userAnswer.trim() || !interview) return;
+    if (isListening && recognition) {
+      recognition.stop();
+      setIsListening(false);
+    }
     setLoading(true);
     try {
-      const res = await apiClient.post(`/interviews/${interview.interview_id || interview._id || interview.id}/turns`, {
+      const interviewId = interview.interview_id || interview.id || interview._id;
+      const res = await apiClient.post(`/interviews/${interviewId}/turns`, {
         user_answer: userAnswer,
       });
       setInterview(res.data.interview);
@@ -47,9 +96,17 @@ export const MockInterview: React.FC = () => {
   return (
     <Layout>
       <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-3xl font-extrabold text-slate-100">AI Mock Interview</h1>
-          <p className="text-slate-400 mt-1">Multi-turn interviewer practice with turn feedback</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-extrabold text-slate-100">AI Mock Interview</h1>
+            <p className="text-slate-400 mt-1">Multi-turn interviewer practice with real-time feedback</p>
+          </div>
+          <button
+            onClick={() => setIsFeedbackOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition-colors"
+          >
+            <MessageSquare className="w-4 h-4 text-indigo-400" /> Give Feedback
+          </button>
         </div>
 
         {!interview && (
@@ -95,7 +152,7 @@ export const MockInterview: React.FC = () => {
           <div className="space-y-6">
             {/* Conversation History */}
             <div className="space-y-4">
-              {interview.turns.map((t: any, idx: number) => (
+              {interview.turns?.map((t: any, idx: number) => (
                 <div key={idx} className="space-y-3">
                   {/* Interviewer Prompt */}
                   <div className="flex gap-4 p-5 bg-slate-900/80 border border-slate-800 rounded-2xl">
@@ -136,13 +193,32 @@ export const MockInterview: React.FC = () => {
             </div>
 
             {/* Answer Input if interview is ongoing */}
-            {interview.status !== 'completed' && currentTurn && (
+            {interview.status !== 'completed' && (
               <div className="p-6 bg-slate-900 border border-slate-800 rounded-3xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider">
+                    Your Response
+                  </label>
+                  {recognition && (
+                    <button
+                      type="button"
+                      onClick={toggleListening}
+                      className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all ${
+                        isListening
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
+                          : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
+                      }`}
+                    >
+                      {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                      {isListening ? 'Stop Listening' : 'Voice Dictate'}
+                    </button>
+                  )}
+                </div>
                 <textarea
                   rows={4}
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  placeholder="Respond to the interviewer..."
+                  placeholder="Type or dictate your response to the interviewer..."
                   className="w-full p-4 bg-slate-800/60 border border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
                 />
                 <button
@@ -151,7 +227,7 @@ export const MockInterview: React.FC = () => {
                   className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   <Send className="w-5 h-5" />
-                  {loading ? 'Submitting...' : 'Submit Interview Turn'}
+                  {loading ? 'Submitting Turn...' : 'Submit Interview Turn'}
                 </button>
               </div>
             )}
@@ -164,12 +240,14 @@ export const MockInterview: React.FC = () => {
                   <h3 className="text-xl font-bold">Interview Completed!</h3>
                 </div>
                 <p className="text-slate-300 text-sm">
-                  {interview.final_evaluation?.overall_summary}
+                  {interview.final_evaluation?.overall_summary || 'Great effort completing this mock interview!'}
                 </p>
               </div>
             )}
           </div>
         )}
+
+        <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
       </div>
     </Layout>
   );

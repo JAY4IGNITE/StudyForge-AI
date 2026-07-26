@@ -4,9 +4,12 @@ import { AuthProvider, useAuth } from './AuthProvider';
 import { Login } from '../features/auth/Login';
 import { Register } from '../features/auth/Register';
 import { VerifyEmail } from '../features/auth/VerifyEmail';
+import { ForgotPassword } from '../features/auth/ForgotPassword';
+import { ResetPassword } from '../features/auth/ResetPassword';
 import { Dashboard } from '../features/analytics/Dashboard';
 import { PracticeLoop } from '../features/practice/PracticeLoop';
 import { MockInterview } from '../features/interviews/MockInterview';
+import { Roadmap } from '../features/roadmap/Roadmap';
 import { ResourceLibrary } from '../features/resources/ResourceLibrary';
 import { Profile } from '../features/profile/Profile';
 
@@ -37,6 +40,8 @@ export const AppRoutes: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Protected Application Routes */}
           <Route
@@ -60,6 +65,14 @@ export const AppRoutes: React.FC = () => {
             element={
               <ProtectedRoute>
                 <MockInterview />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/roadmap"
+            element={
+              <ProtectedRoute>
+                <Roadmap />
               </ProtectedRoute>
             }
           />
