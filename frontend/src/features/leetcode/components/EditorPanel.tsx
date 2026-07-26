@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import Editor, { OnMount } from '@monaco-editor/react';
 import { Problem, TestRunResult } from '../types';
 import { ExecutorSandbox } from '../engine/ExecutorSandbox';
@@ -44,10 +44,28 @@ export const EditorPanel: React.FC<EditorPanelProps> = ({ problem, onTestResults
   );
 
   const editorRef = useRef<any>(null);
+  const runTestsRef = useRef<() => void>(() => {});
+  const submitCodeRef = useRef<() => void>(() => {});
 
-  const handleEditorMount: OnMount = (editor) => {
+  const handleEditorMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
     editor.focus();
+
+    // Ctrl+Enter → Run sample tests
+    editor.addAction({
+      id: 'studyforge-run-tests',
+      label: 'Run Tests',
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter],
+      run: () => runTestsRef.current(),
+    });
+
+    // Ctrl+Shift+Enter → Submit all tests
+    editor.addAction({
+      id: 'studyforge-submit-code',
+      label: 'Submit Code',
+      keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Enter],
+      run: () => submitCodeRef.current(),
+    });
   };
 
   const resetCode = useCallback(() => {
