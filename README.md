@@ -1,208 +1,189 @@
-# 📚 StudyForge AI
+# StudyForge AI
 
-> **AI-Powered Adaptive Study & Interview Coach**
+> **Adaptive Learning & AI-Powered Video Interview Intelligence Platform**
 
-StudyForge AI is an intelligent learning platform that uses Generative AI to create personalized study sessions, evaluate answers, provide detailed feedback, recommend learning resources, and adapt question difficulty according to a learner's progress.
+StudyForge AI is an enterprise-grade technical preparation and learning platform. Utilizing Generative AI, Retrieval-Augmented Generation (RAG), and computer vision telemetry, StudyForge AI delivers adaptive study sessions, live video interview simulations, code execution evaluation, and posture and speech coaching.
 
-Whether you're preparing for coding interviews, technical roles, certifications, or academic examinations, StudyForge AI acts as your personal AI mentor by identifying your strengths, weaknesses, and the most effective path toward improvement.
-
----
-
-# 🚀 Features
-
-## 🧠 AI Question Generation
-
-* Generate topic-specific practice questions
-* Multiple difficulty levels (Easy, Medium, Hard)
-* Support for technical and theoretical subjects
-* Dynamic question generation using LLMs
-
-## ✍️ Answer Evaluation
-
-* Text-based answer submission
-* Voice-based answer submission
-* Semantic answer evaluation
-* Explainable scoring
-* AI-generated improvement suggestions
-
-## 📊 Adaptive Learning
-
-* Personalized learning paths
-* Automatic difficulty adjustment
-* Weak topic detection
-* Revision recommendations
-* Performance-based progression
-
-## 📈 Analytics Dashboard
-
-* Practice history
-* Accuracy trends
-* Topic-wise performance
-* Learning streaks
-* Progress tracking
-* Performance insights
-
-## 🎤 Mock Interview Mode
-
-* AI-generated interview questions
-* Technical interview simulation
-* HR interview practice
-* Instant feedback
-* Performance summary
-
-## 📚 Resource Recommendations
-
-* Learning roadmaps
-* Recommended articles
-* Video tutorials
-* Documentation
-* Practice problems
-* Personalized study suggestions
+Whether preparing for software engineering roles, system architecture design, or executive technical evaluations, StudyForge AI functions as an intelligent mentor by identifying technical knowledge gaps, analyzing communication delivery, and generating adaptive improvement roadmaps.
 
 ---
 
-# 🏗️ Tech Stack
+## Key Features
 
-## Frontend
+### 1. AI Video Interview & Telemetry System
+* **Real-Time Video Interviews**: Live interview simulations featuring conversational AI powered by NVIDIA NIM (Llama 3.1 70B).
+* **Posture & Body Language Analysis**: Non-invasive posture scoring, shoulder alignment metrics, and slouching detection using MediaPipe.
+* **Eye Contact & Attention Tracking**: Gaze direction monitoring, camera attention percentages, and looking-away telemetry.
+* **Voice Delivery & Pacing Analytics**: Real-time evaluation of speaking speed (WPM), filler word breakdown (`um`, `uh`, `like`), silence/pause estimation, and speech clarity scoring.
 
-* React
-* TypeScript
-* Vite
-* Tailwind CSS
-* React Router
-* Axios
-* Zustand
-* TanStack Query
-* Framer Motion
-* Recharts
+### 2. Live Coding Interview Environment
+* **Monaco Editor Integration**: Multi-language code editor supporting Python, TypeScript, JavaScript, Java, C++, Go, and Rust.
+* **Automated Code Execution & Review**: Test case validation, execution metrics, and automated AI code reviews analyzing time and space complexity ($O(N)$).
 
-## Backend
+### 3. Resume & Job Description Parser
+* **Resume Extraction**: Automated extraction of technical skills, projects, and work experience from resumes with tailored question generation.
+* **Job Description Alignment**: Custom interview question generation aligned to target role requirements and company cultures.
 
-* FastAPI
-* Python
-* JWT Authentication
-* Beanie ODM
-* Motor
-* Pydantic
+### 4. Socratic AI Mentor & Chatbot
+* **Interactive Floating Assistant**: Context-aware AI mentor accessible across all application views for concept clarification, progressive hints, and study guidance.
 
-## Database
-
-* MongoDB Atlas
-
-## AI & Machine Learning
-
-* Anthropic API (LLM)
-* RAG (Retrieval-Augmented Generation)
-* Semantic Answer Evaluation
-* Adaptive Learning Engine
-
-## Voice Processing
-
-* Web Speech API / Whisper API
-
-## Vector Database
-
-* ChromaDB / FAISS
-
-## Deployment
-
-* Vercel (Frontend)
-* Railway or Render (Backend)
-* MongoDB Atlas
+### 5. Comprehensive Evaluation & Analytics
+* **6-Axis Radar Reports**: Multi-dimensional evaluation covering Communication, Technical Accuracy, Confidence, Problem Solving, Coding, and STAR Behavioral structure.
+* **ATS Keyword Recommendations**: Missing resume keyword recommendations and bullet point optimization.
+* **Adaptive Learning Plans**: Personalized 7-day, 14-day, and 30-day preparation roadmaps based on historical performance metrics.
 
 ---
 
-# 📂 Project Structure
+## Architecture & Technology Stack
+
+### Frontend
+* **Core**: React 18, TypeScript, Vite
+* **Styling**: Tailwind CSS, Framer Motion
+* **State & Data Fetching**: TanStack Query, Axios
+* **UI Components**: Monaco Editor, Recharts, Lucide React
+* **Computer Vision**: MediaPipe Tasks Vision
+
+### Backend
+* **Framework**: FastAPI (Python 3.11+)
+* **Database & ODM**: MongoDB Atlas, Beanie ODM, Motor (AsyncIOMotorClient)
+* **Authentication**: JWT (JSON Web Tokens), bcrypt hashing
+* **Communication**: WebSockets, RESTful API APIs
+* **Transactional Email**: Brevo API
+
+### AI & Intelligence Engine
+* **Inference Engine**: NVIDIA NIM (`meta/llama-3.1-70b-instruct`)
+* **Vector Engine & RAG**: ChromaDB / Retrieval-Augmented Generation
+* **Third-Party Agent Integration**: Lyzr AI Studio
+
+---
+
+## Project Structure
 
 ```text
 StudyForge-AI/
-│
-├── frontend/
 ├── backend/
-├── ai-engine/
-├── datasets/
-├── docs/
-├── scripts/
-├── deployment/
-└── tests/
+│   ├── app/
+│   │   ├── api/          # REST & WebSocket route handlers
+│   │   ├── core/         # Security, configuration, and logging
+│   │   ├── db/           # MongoDB initialization and seeding
+│   │   ├── models/       # Beanie document models
+│   │   └── services/     # AI Engine, Resume Parser, and Voice/Vision analyzers
+│   └── venv/
+├── frontend/
+│   ├── src/
+│   │   ├── app/          # Router & Authentication context
+│   │   ├── components/   # Shared UI & Chatbot layout components
+│   │   ├── features/     # Dashboard, Interviews, Practice, and Reports
+│   │   └── lib/          # Axios HTTP client configuration
+│   ├── package.json
+│   └── vite.config.ts
+├── render.yaml           # Deployment configuration blueprint
+└── README.md
 ```
 
 ---
 
-# ⚡ Core Workflow
+## Core Operational Workflow
 
 ```text
-User Selects Topic
-        │
-        ▼
-AI Generates Questions
-        │
-        ▼
-User Answers (Text/Voice)
-        │
-        ▼
-AI Evaluates Answer
-        │
-        ▼
-Feedback & Score
-        │
-        ▼
-Performance Analytics
-        │
-        ▼
-Adaptive Learning Engine
-        │
-        ▼
-Next Personalized Question
+               +----------------------------------+
+               |  Candidate Selects Interview Mode |
+               | (Technical, Coding, Resume, JD)  |
+               +----------------------------------+
+                                │
+                                ▼
+               +----------------------------------+
+               |  AI Interviewer Asks Question    |
+               |   (NVIDIA NIM Llama 3.1 70B)    |
+               +----------------------------------+
+                                │
+                                ▼
+               +----------------------------------+
+               | Candidate Responds via Video/Mic |
+               |  or Monaco Code Editor           |
+               +----------------------------------+
+                                │
+                                ▼
+               +----------------------------------+
+               | Real-Time Speech & Vision Engine |
+               | (WPM, Fillers, MediaPipe Posture)|
+               +----------------------------------+
+                                │
+                                ▼
+               +----------------------------------+
+               | Executive Evaluation & Report    |
+               | (Radar Chart, ATS, 7-Day Plan)   |
+               +----------------------------------+
 ```
 
 ---
 
-# 🎯 Project Goals
+## Environment Setup & Installation
 
-* Personalize learning using AI
-* Improve interview readiness
-* Identify knowledge gaps
-* Provide actionable feedback
-* Recommend relevant learning resources
-* Track long-term progress
-* Increase learner confidence through adaptive practice
+### Prerequisites
+* **Node.js**: v18.0.0 or higher
+* **Python**: v3.11.0 or higher
+* **MongoDB**: MongoDB Atlas Cluster connection URI
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/JAY4IGNITE/StudyForge-AI.git
+cd StudyForge-AI
+```
+
+### 2. Configure Environment Variables
+Create a `.env` file in the project root:
+```env
+APP_NAME="StudyForge AI"
+API_VERSION="v1"
+MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.mongodb.net/?appName=Cluster0"
+MONGODB_DATABASE="studyforge"
+JWT_ACCESS_SECRET="your-access-secret-key"
+NVIDIA_NIM_API_KEY="nvapi-your-nvidia-nim-key"
+BREVO_API_KEY="your-brevo-api-key"
+BREVO_SENDER_EMAIL="your-verified-email@domain.com"
+```
+
+### 3. Backend Setup
+```bash
+cd backend
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+# source venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+### 4. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Navigate to `http://localhost:5173` in your browser.
 
 ---
 
-# 🔮 Future Enhancements
+## Deployment
 
-* Real-time AI interview avatar
-* Team learning and leaderboards
-* PDF resume-based interview generation
-* Multi-language support
-* AI mentor chat
-* Mobile application
-* Calendar integration
-* Gamification and achievements
+The repository includes a standardized `render.yaml` configuration for automated deployment on Render as a single unified service:
+
+* **Build Command**: `npm install --prefix frontend && npm run build --prefix frontend && pip install -r backend/requirements.txt`
+* **Start Command**: `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 
 ---
 
-# 🤝 Contributing
+## License
 
-Contributions are welcome!
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Push the branch.
-5. Open a Pull Request.
+This project is distributed under the [MIT License](LICENSE).
 
 ---
 
-# 📄 License
+## Author & Contact
 
-This project is licensed under the MIT License.
-
----
-
-# 👨‍💻 Author
-
-**Jaya Sai Krishna Vasamsetti**
-
-If you find this project useful, consider giving it a ⭐ on GitHub!
+**Jaya Sai Krishna Vasamsetti**  
+* GitHub: [@JAY4IGNITE](https://github.com/JAY4IGNITE)  
+* Email: [aistudyforge@gmail.com](mailto:aistudyforge@gmail.com)
