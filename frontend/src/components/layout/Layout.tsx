@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../app/AuthProvider';
 import { BookOpen, Award, Compass, BarChart2, User as UserIcon, LogOut, Flame, Map, MessageSquare } from 'lucide-react';
 import { FeedbackModal } from '../../features/feedback/FeedbackModal';
+import { LyzrChatbot } from '../ui/LyzrChatbot';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useAuth();
@@ -92,6 +93,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       </main>
 
       <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
+      <LyzrChatbot />
     </div>
   );
 };
