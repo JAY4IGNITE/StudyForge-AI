@@ -9,6 +9,11 @@ import { ResetPassword } from '../features/auth/ResetPassword';
 import { Dashboard } from '../features/analytics/Dashboard';
 import { PracticeLoop } from '../features/practice/PracticeLoop';
 import { MockInterview } from '../features/interviews/MockInterview';
+import { InterviewDashboard } from '../features/interviews/InterviewDashboard';
+import { InterviewSetup } from '../features/interviews/InterviewSetup';
+import { LiveInterviewRoom } from '../features/interviews/LiveInterviewRoom';
+import { CodingInterviewRoom } from '../features/interviews/CodingInterviewRoom';
+import { InterviewReportView } from '../features/interviews/InterviewReportView';
 import { Roadmap } from '../features/roadmap/Roadmap';
 import { ResourceLibrary } from '../features/resources/ResourceLibrary';
 import { Profile } from '../features/profile/Profile';
@@ -60,14 +65,57 @@ export const AppRoutes: React.FC = () => {
               </ProtectedRoute>
             }
           />
+
+          {/* AI Video Interview Module */}
           <Route
             path="/interview"
+            element={
+              <ProtectedRoute>
+                <InterviewDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview/setup"
+            element={
+              <ProtectedRoute>
+                <InterviewSetup />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview/room/:sessionId"
+            element={
+              <ProtectedRoute>
+                <LiveInterviewRoom />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview/coding/:sessionId"
+            element={
+              <ProtectedRoute>
+                <CodingInterviewRoom />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview/report/:sessionId"
+            element={
+              <ProtectedRoute>
+                <InterviewReportView />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/interview/legacy"
             element={
               <ProtectedRoute>
                 <MockInterview />
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/roadmap"
             element={
