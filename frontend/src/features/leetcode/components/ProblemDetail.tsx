@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Problem } from '../types';
+import React, { useState, useMemo } from 'react';
+import { Problem, ProblemSubmission } from '../types';
 import {
   FileText,
   Lightbulb,
@@ -9,9 +9,11 @@ import {
   ChevronUp,
   Bookmark,
   Share2,
-  ExternalLink,
   Clock,
   HardDrive,
+  CheckCircle2,
+  XCircle,
+  Code2,
 } from 'lucide-react';
 
 interface ProblemDetailProps {
@@ -20,11 +22,35 @@ interface ProblemDetailProps {
 
 type Tab = 'description' | 'solutions' | 'submissions';
 
+const SUBMISSIONS_KEY = 'studyforge_leetcode_submissions';
+
+function formatTimeAgo(iso: string): string {
+  const now = Date.now();
+  const then = new Date(iso).getTime();
+  const diffSec = Math.floor((now - then) / 1000);
+  if (diffSec < 60) return 'just now';
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr}h ago`;
+  const diffDay = Math.floor(diffHr / 24);
+  return `${diffDay}d ago`;
+}
+
 export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
   const [activeTab, setActiveTab] = useState<Tab>('description');
   const [expandedCase, setExpandedCase] = useState<string | null>(
     problem.sampleCases[0]?.id ?? null,
   );
+
+  const submissions = useMemo(() => {
+    try {
+      const all: ProblemSubmission[] = JSON.parse(localStorage.getItem(SUBMISSIONS_KEY) || '[]');
+      return all.filter((s) => s.problemId === problem.id);
+    } catch {
+      return [];
+    }
+  }, [problem.id, activeTab]);
 
   const diffBadge =
     problem.difficulty === 'Easy'
@@ -211,15 +237,45 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
         )}
 
         {activeTab === 'submissions' && (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-            <History className="w-10 h-10 text-slate-700 mb-3" />
-            <h3 className="text-sm font-bold text-slate-400 mb-1">
-              No Submissions Yet
-            </h3>
-            <p className="text-xs text-slate-500 max-w-xs">
-              Write your solution in the editor and click Submit to see your results here.
-            </p>
-          </div>
+          submissions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+              <History className="w-10 h-10 text-slate-700 mb-3" />
+              <h3 className="text-sm font-bold text-slate-400 mb-1">
+                No Submissions Yet
+              </h3>
+              <p className="text-xs text-slate-500 max-w-xs">
+                Write your solution in the editor and click Submit to see your results here.
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-800/40">
+              {submissions.map((sub, idx) => {
+                const statusColor =
+                  sub.status === 'Accepted'
+                    ? 'text-emerald-400'
+                    : sub.status === 'Runtime Error'
+                      ? 'text-rose-400'
+                      : 'text-amber-400';
+                const StatusIcon = sub.status === 'Accepted' ? CheckCircle2 : XCircle;
+                const timeAgo = formatTimeAgo(sub.submittedAt);
+                return (
+                  <div key={idx} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-800/20 transition-colors">
+                    <StatusIcon className={`w-4 h-4 shrink-0 ${statusColor}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-xs font-bold ${statusColor}`}>{sub.status}</p>
+                      <p className="text-[10px] text-slate-500 mt-0.5">
+                        {sub.passedCount}/{sub.totalCount} passed · {timeAgo}
+                      </p>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/50 font-mono flex items-center gap-1">
+                      <Code2 className="w-2.5 h-2.5" />
+                      {sub.language}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )
         )}
       </div>
     </div>
