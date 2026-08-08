@@ -1,6 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function AITutor() {
+  const [inputText, setInputText] = useState('');
+  const [messages, setMessages] = useState([
+    { role: 'tutor', content: 'Welcome back to Calculus! We were looking at Integration by Parts. To refresh, the formula is:\n\n∫ u dv = uv - ∫ v du\n\nAre you ready to try a practice problem with x * cos(x), or would you like me to explain the "LIATE" rule first?' },
+    { role: 'user', content: 'Can you break down how to solve ∫ x * cos(x) dx step-by-step? I always get confused picking \'u\' and \'dv\'. Explain it simply.' },
+    { role: 'tutor', content: 'Absolutely! Think of Integration by Parts as a tactical trade. We want to trade a hard integral for an easier one.\n\nStep 1: The LIATE Rule\nTo pick u, we use LIATE to find what comes first in this list:\n- Logarithmic\n- Inverse Trig\n- Algebraic\n- Trigonometric\n- Exponential' }
+  ]);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const handleSend = () => {
+    if (!inputText.trim()) return;
+    setMessages(prev => [...prev, { role: 'user', content: inputText }]);
+    setInputText('');
+    setIsTyping(true);
+    
+    setTimeout(() => {
+      setMessages(prev => [...prev, { role: 'tutor', content: 'That is an interesting point! This is a mock response from StudyForge Tutor to keep your studies moving forward.' }]);
+      setIsTyping(false);
+    }, 1500);
+  };
   return (
     <>
       
@@ -18,36 +38,35 @@ export function AITutor() {
 </div>
 
 <div className="flex flex-col flex-1 px-4 gap-2 overflow-y-auto scrollbar-hide">
-
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">home</span>
 <span className="font-label-md text-label-md">Home</span>
-</a>
+</Link>
 
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 active:scale-95 transition-transform relative bg-gradient-to-r from-primary-container/20 to-transparent" href="#">
+<Link to="/ai-tutor" className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 active:scale-95 transition-transform relative bg-gradient-to-r from-primary-container/20 to-transparent">
 <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: '"FILL" 1' }}>chat</span>
 <span className="font-label-md text-label-md">Chat</span>
-</a>
+</Link>
 
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<Link to="/flashcards" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">style</span>
 <span className="font-label-md text-label-md">Flashcards</span>
-</a>
+</Link>
 
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<Link to="/practice" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">quiz</span>
 <span className="font-label-md text-label-md">Quiz</span>
-</a>
+</Link>
 
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<Link to="/roadmap" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">map</span>
 <span className="font-label-md text-label-md">Roadmap</span>
-</a>
+</Link>
 
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group mt-auto" href="#">
+<Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group mt-auto">
 <span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">person</span>
 <span className="font-label-md text-label-md">Profile</span>
-</a>
+</Link>
 </div>
 
 <div className="px-4 mt-6">
@@ -157,36 +176,36 @@ export function AITutor() {
 <span className="px-3 py-1 rounded-full bg-surface-container-low text-outline font-caption text-[11px]">Today, 10:42 AM</span>
 </div>
 
-<div className="flex gap-4 items-start w-full">
+{messages.map((msg, idx) => (
+  msg.role === 'tutor' ? (
+<div key={idx} className="flex gap-4 items-start w-full">
 <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
 <span className="material-symbols-outlined text-on-primary text-[18px]" style={{ fontVariationSettings: '"FILL" 1' }}>smart_toy</span>
 </div>
 <div className="flex flex-col gap-2 max-w-[85%]">
 <span className="font-label-md text-label-md text-on-surface-variant ml-1">StudyForge Tutor</span>
-<div className="bg-surface border border-outline-variant/50 rounded-2xl rounded-tl-sm p-4 text-on-surface font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(0,0,0,0.03)] bg-gradient-to-b from-surface to-surface-container-lowest">
-<p className="">Welcome back to Calculus! We were looking at Integration by Parts. To refresh, the formula is:</p>
-<div className="my-3 py-2 px-4 bg-surface-container rounded-lg font-mono text-primary-fixed-variant text-center overflow-x-auto">
-                                    ∫ u dv = uv - ∫ v du
-                                </div>
-<p className="">Are you ready to try a practice problem with <code className="bg-surface-container-high px-1.5 py-0.5 rounded text-sm text-primary">x * cos(x)</code>, or would you like me to explain the "LIATE" rule first?</p>
+<div className="bg-surface border border-outline-variant/50 rounded-2xl rounded-tl-sm p-4 text-on-surface font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(0,0,0,0.03)] bg-gradient-to-b from-surface to-surface-container-lowest whitespace-pre-wrap">
+{msg.content}
 </div>
 </div>
 </div>
-
-<div className="flex gap-4 items-start justify-end w-full">
+  ) : (
+<div key={idx} className="flex gap-4 items-start justify-end w-full">
 <div className="flex flex-col gap-2 max-w-[85%] items-end">
 <span className="font-label-md text-label-md text-on-surface-variant mr-1">You</span>
-<div className="bg-primary text-on-primary rounded-2xl rounded-tr-sm p-4 font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(53,37,205,0.15)] bg-gradient-to-br from-primary to-on-primary-fixed-variant">
-<p className="">Can you break down how to solve ∫ x * cos(x) dx step-by-step? I always get confused picking 'u' and 'dv'. Explain it simply.</p>
+<div className="bg-primary text-on-primary rounded-2xl rounded-tr-sm p-4 font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(53,37,205,0.15)] bg-gradient-to-br from-primary to-on-primary-fixed-variant whitespace-pre-wrap">
+{msg.content}
 </div>
 </div>
-<img alt="Your avatar" className="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-cover border border-outline-variant/30" data-alt="A small circular avatar showing a highly stylized modern geometric portrait of a student wearing headphones, vibrant flat vector art style, clean lines, warm minimal background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9Hcb14P9BlEzgS6hazhi68CQzlj5H6xGXR5r1s79vPrNI6VNbbwzgRM3NMgRBmKoFHw666bSg5cuxVgIXx5gLV2RyoJMdV-bMGeqWir7kVRjmwbySei_JytYVDdLE01jYHp0GWRvJMLWFHfu7ijuvzwPWQHR3o8_WcXiQU68Am74gRCrZVHxdzRCleQt24NhzLeMhQ99VcxpPSLcjzSDdZ3DiYN9CYXnE3HHNcjxNRAZoEbGex1Q_ow"/>
+<div className="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm font-bold">U</div>
 </div>
+  )
+))}
 
+{isTyping && (
 <div className="flex gap-4 items-start w-full">
 <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm relative">
 <span className="material-symbols-outlined text-on-primary text-[18px]" style={{ fontVariationSettings: '"FILL" 1' }}>smart_toy</span>
-
 <div className="absolute inset-0 border-2 border-primary border-t-tertiary-fixed rounded-full animate-spin"></div>
 </div>
 <div className="flex flex-col gap-2 max-w-[85%] w-full">
@@ -196,42 +215,16 @@ export function AITutor() {
 <span className="w-1.5 h-1.5 bg-tertiary-fixed rounded-full inline-block"></span> Generating
                                 </span>
 </div>
-<div className="bg-surface border border-outline-variant/50 rounded-2xl rounded-tl-sm p-4 text-on-surface font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(0,0,0,0.03)] w-full bg-gradient-to-b from-surface to-surface-container-lowest">
-<p className="mb-4">Absolutely! Think of Integration by Parts as a tactical trade. We want to trade a hard integral for an easier one.</p>
-<h4 className="font-label-md text-label-md text-primary mb-2 mt-4">Step 1: The LIATE Rule</h4>
-<p className="mb-3">To pick <strong>u</strong>, we use LIATE to find what comes first in this list:</p>
-<ul className="list-disc pl-5 mb-4 space-y-1 text-on-surface-variant">
-<li className=""><strong>L</strong>ogarithmic</li>
-<li className=""><strong>I</strong>nverse Trig</li>
-<li className=""><strong>A</strong>lgebraic (like <code className="bg-surface-container px-1 py-0.5 rounded text-sm">x</code>, <code className="bg-surface-container px-1 py-0.5 rounded text-sm">x²</code>)</li>
-<li className=""><strong>T</strong>rigonometric (like <code className="bg-surface-container px-1 py-0.5 rounded text-sm">cos(x)</code>)</li>
-<li className=""><strong>E</strong>xponential</li>
-</ul>
-<p className="mb-3">In our integral <code className="bg-surface-container-high px-1.5 py-0.5 rounded text-sm text-primary">∫ x * cos(x) dx</code>:</p>
-<div className="bg-inverse-surface text-inverse-on-surface rounded-lg p-4 font-mono text-sm overflow-x-auto mb-4 border border-outline-variant/20 shadow-inner">
-<div className="text-outline mb-2"># Let's assign our parts:</div>
-<div className="flex gap-4">
-<div className="flex-1 border-r border-outline-variant/30 pr-4">
-<div className="text-tertiary-fixed">u = x</div>
-<div className="text-outline text-xs mt-1">(Algebraic comes before Trig in LIATE)</div>
-<div className="mt-2 text-secondary-fixed-dim">du = dx</div>
-</div>
-<div className="flex-1 pl-4">
-<div className="text-tertiary-fixed">dv = cos(x) dx</div>
-<div className="text-outline text-xs mt-1">(The rest of the integral)</div>
-<div className="mt-2 text-secondary-fixed-dim">v = sin(x)</div>
-</div>
-</div>
-</div>
-
-<div className="flex items-center gap-1 h-6 px-1 mt-2">
-<div className="w-1.5 h-1.5 bg-primary/60 rounded-full typing-dot"></div>
-<div className="w-1.5 h-1.5 bg-primary/60 rounded-full typing-dot"></div>
-<div className="w-1.5 h-1.5 bg-primary/60 rounded-full typing-dot"></div>
+<div className="bg-surface border border-outline-variant/50 rounded-2xl rounded-tl-sm p-4 text-on-surface font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(0,0,0,0.03)] w-max bg-gradient-to-b from-surface to-surface-container-lowest">
+<div className="flex items-center gap-1 h-6 px-1">
+<div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce"></div>
+<div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+<div className="w-1.5 h-1.5 bg-primary/60 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
 </div>
 </div>
 </div>
 </div>
+)}
 
 <div className="h-4 w-full"></div>
 </div>
@@ -245,9 +238,9 @@ export function AITutor() {
 <span className="material-symbols-outlined">attach_file</span>
 </button>
 
-<textarea className="flex-1 bg-transparent resize-none h-12 max-h-32 py-3 px-2 outline-none font-body-md text-body-md text-on-surface placeholder:text-outline-variant scrollbar-hide" placeholder="Message StudyForge Tutor (Type '/' for commands)..." style={{ minHeight: '48px' }}></textarea>
+<textarea value={inputText} onChange={(e) => setInputText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } }} className="flex-1 bg-transparent resize-none h-12 max-h-32 py-3 px-2 outline-none font-body-md text-body-md text-on-surface placeholder:text-outline-variant scrollbar-hide" placeholder="Message StudyForge Tutor (Type '/' for commands)..." style={{ minHeight: '48px' }}></textarea>
 
-<button className="p-2.5 rounded-lg bg-primary text-on-primary hover:bg-surface-tint shadow-sm transition-colors border-b-2 border-on-primary-fixed-variant active:border-b-0 active:translate-y-[2px] flex-shrink-0 flex items-center justify-center">
+<button onClick={handleSend} className="p-2.5 rounded-lg bg-primary text-on-primary hover:bg-surface-tint shadow-sm transition-colors border-b-2 border-on-primary-fixed-variant active:border-b-0 active:translate-y-[2px] flex-shrink-0 flex items-center justify-center">
 <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>send</span>
 </button>
 </div>

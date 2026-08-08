@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function PhotoSolve() {
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showSolution, setShowSolution] = useState(false);
+
+  const handleCapture = () => {
+    setIsAnalyzing(true);
+    setTimeout(() => {
+      setIsAnalyzing(false);
+      setShowSolution(true);
+    }, 2000);
+  };
   return (
     <>
       
@@ -48,40 +59,40 @@ export function PhotoSolve() {
 </div>
 <ul className="flex flex-col gap-1 px-4 flex-1">
 <li className="">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
 <span className="material-symbols-outlined" data-icon="home">home</span>
                         Home
-                    </a>
+                    </Link>
 </li>
 <li className="">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary dark:border-primary-fixed-dim bg-primary-container/10 transition-colors duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<Link to="/ai-tutor" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
 <span className="material-symbols-outlined" data-icon="chat" data-weight="fill">chat</span>
                         Chat
-                    </a>
+                    </Link>
 </li>
 <li className="">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<Link to="/flashcards" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
 <span className="material-symbols-outlined" data-icon="style">style</span>
                         Flashcards
-                    </a>
+                    </Link>
 </li>
 <li className="">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<Link to="/practice" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
 <span className="material-symbols-outlined" data-icon="quiz">quiz</span>
                         Quiz
-                    </a>
+                    </Link>
 </li>
 <li className="">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<Link to="/roadmap" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
 <span className="material-symbols-outlined" data-icon="map">map</span>
                         Roadmap
-                    </a>
+                    </Link>
 </li>
 <li className="">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
 <span className="material-symbols-outlined" data-icon="person">person</span>
                         Profile
-                    </a>
+                    </Link>
 </li>
 </ul>
 <div className="px-4 mt-auto pt-6 border-t border-outline-variant/30">
@@ -111,6 +122,7 @@ export function PhotoSolve() {
 
 <div className="absolute inset-0 bg-primary-container/20 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
 
+{(isAnalyzing || showSolution) && (
 <div className="relative w-[80%] max-w-md aspect-[4/3] border-2 border-primary-fixed-dim/50 rounded-xl overflow-hidden pulse-overlay">
 
 <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
@@ -118,18 +130,22 @@ export function PhotoSolve() {
 <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
 <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
 
-<div className="absolute left-0 right-0 h-1 scanning-line z-20"></div>
+{isAnalyzing && <div className="absolute left-0 right-0 h-1 scanning-line z-20"></div>}
 
 <div className="absolute inset-0 flex items-center justify-center p-4">
-<div className="bg-surface-container-lowest/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border border-outline-variant transform scale-110">
+<div className="bg-surface-container-lowest/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border border-outline-variant transform scale-110 transition-all">
 <span className="font-body-lg text-body-lg text-on-surface font-semibold font-serif">∫ x²(x³ + 1)⁴ dx</span>
 </div>
 </div>
 </div>
+)}
+
+{isAnalyzing && (
 <div className="mt-6 flex items-center gap-2 text-surface-container-lowest bg-inverse-surface/80 px-4 py-2 rounded-full backdrop-blur-md">
 <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
 <span className="font-label-md text-label-md tracking-wider">ANALYZING EQUATION...</span>
 </div>
+)}
 </div>
 </div>
 
@@ -138,8 +154,8 @@ export function PhotoSolve() {
 <span className="material-symbols-outlined">photo_library</span>
 </button>
 
-<button className="w-14 h-14 rounded-full border-4 border-outline-variant flex items-center justify-center opacity-50 cursor-not-allowed">
-<div className="w-10 h-10 rounded-full bg-outline-variant"></div>
+<button onClick={handleCapture} disabled={isAnalyzing} className={`w-14 h-14 rounded-full border-4 border-outline-variant flex items-center justify-center transition-all ${isAnalyzing ? 'opacity-50 cursor-not-allowed' : 'hover:border-primary hover:scale-105'}`}>
+<div className={`w-10 h-10 rounded-full ${isAnalyzing ? 'bg-outline-variant' : 'bg-primary'}`}></div>
 </button>
 <button className="p-3 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
 <span className="material-symbols-outlined">flash_on</span>
@@ -149,7 +165,8 @@ export function PhotoSolve() {
 </section>
 
 <section className="flex-[1.2] flex flex-col gap-stack-md h-full overflow-y-auto pr-2 pb-8">
-
+{showSolution ? (
+  <>
 <div className="flex items-start justify-between bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant bg-gradient-to-br from-surface-container-lowest to-surface-container-low">
 <div>
 <div className="flex items-center gap-2 mb-2">
@@ -198,12 +215,12 @@ export function PhotoSolve() {
 </div>
 </div>
 
-<div className="relative z-10 flex gap-4 bg-surface hover:-translate-y-[2px] transition-transform p-4 rounded-xl border border-outline-variant/50 shadow-sm opacity-50 blur-[1px]">
+<div className="relative z-10 flex gap-4 bg-surface hover:-translate-y-[2px] transition-transform p-4 rounded-xl border border-outline-variant/50 shadow-sm">
 <div className="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-sm shrink-0 border border-outline-variant shadow-sm">2</div>
 <div className="flex-1">
 <p className="font-label-md text-label-md text-on-surface mb-2">Rewrite the integral.</p>
 <div className="bg-surface-container-low p-3 rounded-lg border border-outline-variant/30 font-serif text-on-surface">
-                                        ... Generating step ...
+                                        ∫ (1/3) * u⁴ du
                                     </div>
 </div>
 </div>
@@ -220,6 +237,14 @@ export function PhotoSolve() {
                             Ask AI about this
                         </button>
 </div>
+  </>
+) : (
+  <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-surface-container-lowest/50 rounded-2xl border-2 border-dashed border-outline-variant/50">
+    <span className="material-symbols-outlined text-[48px] text-outline mb-4">center_focus_weak</span>
+    <h3 className="font-headline-md text-headline-md text-on-surface mb-2">Capture to Solve</h3>
+    <p className="font-body-md text-body-md text-on-surface-variant max-w-sm">Tap the capture button to scan a math problem. StudyForge AI will provide step-by-step solutions instantly.</p>
+  </div>
+)}
 </section>
 </div>
 </main>

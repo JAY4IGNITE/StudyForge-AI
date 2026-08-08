@@ -1,6 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { apiClient } from '../lib/axios';
+import { useAuth } from '../app/AuthProvider';
+import { Link } from 'react-router-dom';
 
 export function Dashboard() {
+  const { user } = useAuth();
+  const [overview, setOverview] = useState<any>(null);
+  const [topicAnalytics, setTopicAnalytics] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        const [resOverview, resTopics] = await Promise.all([
+          apiClient.get('/analytics/overview'),
+          apiClient.get('/analytics/topics'),
+        ]);
+        setOverview(resOverview.data);
+        setTopicAnalytics(resTopics.data);
+      } catch (err) {
+        console.error('Error loading dashboard analytics', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDashboardData();
+  }, []);
   return (
     <>
       
@@ -28,48 +53,48 @@ export function Dashboard() {
 <div className="flex items-center gap-3 mb-4">
 <img alt="User profile avatar" className="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A clean, professional portrait of a young student against a light neutral background, looking focused and optimistic. Soft, high-key studio lighting with a shallow depth of field. Modern, minimalist aesthetic suitable for an avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs1TWTfbAuUWCeFi7Y6Y-piT5-6OmX28xybM-7ZBFERpFy2-syN4Gw8enJ9CMR3cVCpHRB7mFXwlg5bWjNVWIhFaAwtB6xixCUyyCiDj9_Xn8x16-xLV-WUUQohtqrkdHd5Nq32tdwg7Q9zcaT7_rBlpuV8HbKgiyXkxNzBncqaCJl6tMTVrbdLuddSGEIKnV2ztUyYgCtg7kLg235BvXwZ6okG0eV3lcTf60lnupGqYDBtEIEgf5CQA"/>
 <div>
-<h2 className="font-label-md text-label-md font-bold text-on-surface">Alex Mercer</h2>
-<p className="font-caption text-caption text-on-surface-variant">Level 12 Focus Master</p>
+<h2 className="font-label-md text-label-md font-bold text-on-surface">{user?.display_name || 'User'}</h2>
+<p className="font-caption text-caption text-on-surface-variant">{user?.target_role || 'Level 12 Focus Master'}</p>
 </div>
 </div>
 <button className="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-2 rounded-lg hover:bg-surface-tint hover:text-white transition-colors duration-200 border-b-2 border-primary bg-gradient-to-r from-primary-container to-primary">Upgrade to Pro</button>
 </div>
 <ul className="flex-1 px-4 space-y-1">
 <li className="">
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 active:scale-95 transition-transform bg-gradient-to-r from-primary-container/20 to-transparent" href="#">
+<Link to="/dashboard" className="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 active:scale-95 transition-transform bg-gradient-to-r from-primary-container/20 to-transparent">
 <span className="material-symbols-outlined filled-icon" data-icon="home">home</span>
 <span className="font-label-md text-label-md">Home</span>
-</a>
+</Link>
 </li>
 <li className="">
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<Link to="/ai-tutor" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
 <span className="material-symbols-outlined" data-icon="chat">chat</span>
 <span className="font-label-md text-label-md">Chat</span>
-</a>
+</Link>
 </li>
 <li className="">
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<Link to="/flashcards" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
 <span className="material-symbols-outlined" data-icon="style">style</span>
 <span className="font-label-md text-label-md">Flashcards</span>
-</a>
+</Link>
 </li>
 <li className="">
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<Link to="/practice" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
 <span className="material-symbols-outlined" data-icon="quiz">quiz</span>
 <span className="font-label-md text-label-md">Quiz</span>
-</a>
+</Link>
 </li>
 <li className="">
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<Link to="/roadmap" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
 <span className="material-symbols-outlined" data-icon="map">map</span>
 <span className="font-label-md text-label-md">Roadmap</span>
-</a>
+</Link>
 </li>
 <li className="">
-<a className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform" href="#">
+<Link to="/profile" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
 <span className="material-symbols-outlined" data-icon="person">person</span>
 <span className="font-label-md text-label-md">Profile</span>
-</a>
+</Link>
 </li>
 </ul>
 </nav>
@@ -78,7 +103,7 @@ export function Dashboard() {
 
 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-lg gap-6">
 <div>
-<h1 className="font-headline-xl text-headline-xl text-on-surface mb-2">Welcome back, Alex!</h1>
+<h1 className="font-headline-xl text-headline-xl text-on-surface mb-2">Welcome back, {user?.display_name?.split(' ')[0] || 'Student'}!</h1>
 <p className="font-body-lg text-body-lg text-on-surface-variant">Ready to crush your goals today?</p>
 </div>
 <div className="flex items-center gap-3 bg-gradient-to-r from-secondary-container/20 to-secondary-fixed/30 border border-secondary-fixed p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)]">
@@ -96,31 +121,31 @@ export function Dashboard() {
 
 <div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-4">
 
-<button className="col-span-2 md:col-span-1 bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
+<Link to="/ai-tutor" className="col-span-2 md:col-span-1 bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
 <div className="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center mb-4 group-hover:bg-primary transition-colors">
 <span className="material-symbols-outlined text-primary group-hover:text-white transition-colors" data-icon="smart_toy">smart_toy</span>
 </div>
 <h3 className="font-label-md text-label-md text-on-surface mb-1">Ask AI</h3>
 <p className="font-caption text-caption text-on-surface-variant">Get instant help</p>
-</button>
+</Link>
 
-<button className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
+<Link to="/flashcards" className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
 <div className="w-10 h-10 rounded-lg bg-tertiary-container/10 flex items-center justify-center mb-4 group-hover:bg-tertiary transition-colors">
 <span className="material-symbols-outlined text-tertiary group-hover:text-white transition-colors" data-icon="style">style</span>
 </div>
 <h3 className="font-label-md text-label-md text-on-surface mb-1">Flashcards</h3>
 <p className="font-caption text-caption text-on-surface-variant">Review daily deck</p>
-</button>
+</Link>
 
-<button className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
+<Link to="/practice" className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
 <div className="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center mb-4 group-hover:bg-secondary-container transition-colors">
 <span className="material-symbols-outlined text-secondary-container group-hover:text-white transition-colors" data-icon="quiz">quiz</span>
 </div>
 <h3 className="font-label-md text-label-md text-on-surface mb-1">Quiz Me</h3>
 <p className="font-caption text-caption text-on-surface-variant">Test knowledge</p>
-</button>
+</Link>
 
-<button className="col-span-2 md:col-span-2 bg-gradient-to-br from-surface-container-lowest to-surface-container-low border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-row items-center justify-between text-left group to-surface-container-high">
+<Link to="/roadmap" className="col-span-2 md:col-span-2 bg-gradient-to-br from-surface-container-lowest to-surface-container-low border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-row items-center justify-between text-left group to-surface-container-high">
 <div>
 <h3 className="font-headline-md text-headline-md text-on-surface mb-2">Study Roadmap</h3>
 <p className="font-body-md text-body-md text-on-surface-variant mb-4">Calculus Midterm prep</p>
@@ -134,15 +159,15 @@ export function Dashboard() {
 <div className="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center group-hover:bg-primary transition-colors">
 <span className="material-symbols-outlined text-primary group-hover:text-white transition-colors" data-icon="map">map</span>
 </div>
-</button>
+</Link>
 
-<button className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
+<Link to="/resources" className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
 <div className="w-10 h-10 rounded-lg bg-inverse-surface/5 flex items-center justify-center mb-4 group-hover:bg-inverse-surface transition-colors">
 <span className="material-symbols-outlined text-inverse-surface group-hover:text-white transition-colors" data-icon="summarize">summarize</span>
 </div>
 <h3 className="font-label-md text-label-md text-on-surface mb-1">Notes</h3>
 <p className="font-caption text-caption text-on-surface-variant">Auto-summarize</p>
-</button>
+</Link>
 </div>
 
 <div className="md:col-span-4 bg-primary-container text-white p-stack-md rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-primary-container via-primary to-on-primary-fixed-variant">
@@ -184,7 +209,7 @@ export function Dashboard() {
 <div>
 <div className="flex justify-between items-end mb-4">
 <span className="font-label-md text-label-md text-on-surface-variant">Weekly Study Time</span>
-<span className="font-body-md text-body-md text-on-surface font-bold">14h 20m <span className="text-tertiary-container font-normal text-sm ml-1">+2h</span></span>
+<span className="font-body-md text-body-md text-on-surface font-bold">{overview?.completed_sessions || 0} Sessions <span className="text-tertiary-container font-normal text-sm ml-1">avg {overview?.average_score || 0}%</span></span>
 </div>
 
 <div className="h-32 flex items-end justify-between gap-2 border-b border-outline-variant pb-2">
@@ -205,35 +230,19 @@ export function Dashboard() {
 <span className="font-label-md text-label-md text-on-surface-variant block mb-4">Mastery Breakdown</span>
 <div className="space-y-4">
 
+{topicAnalytics?.weak_topics?.length > 0 ? topicAnalytics.weak_topics.map((topic: any) => (
 <div>
 <div className="flex justify-between text-sm mb-1">
-<span className="font-body-md text-body-md text-on-surface flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-primary"></span> Math</span>
-<span className="font-body-md text-body-md font-medium">85%</span>
+<span className="font-body-md text-body-md text-on-surface flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-primary"></span> {topic.topic_name}</span>
+<span className="font-body-md text-body-md font-medium">{topic.mastery_score}%</span>
 </div>
 <div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-<div className="h-full bg-primary rounded-full w-[85%]"></div>
+<div className="h-full bg-primary rounded-full" style={{ width: `${topic.mastery_score}%` }}></div>
 </div>
 </div>
-
-<div>
-<div className="flex justify-between text-sm mb-1">
-<span className="font-body-md text-body-md text-on-surface flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-tertiary"></span> Science</span>
-<span className="font-body-md text-body-md font-medium">62%</span>
-</div>
-<div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-<div className="h-full bg-tertiary rounded-full w-[62%]"></div>
-</div>
-</div>
-
-<div>
-<div className="flex justify-between text-sm mb-1">
-<span className="font-body-md text-body-md text-on-surface flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-secondary-container"></span> History</span>
-<span className="font-body-md text-body-md font-medium">94%</span>
-</div>
-<div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-<div className="h-full bg-secondary-container rounded-full w-[94%]"></div>
-</div>
-</div>
+)) : (
+  <p className="text-sm text-slate-400">Great job! Keep practicing to uncover insights.</p>
+)}
 </div>
 </div>
 </div>

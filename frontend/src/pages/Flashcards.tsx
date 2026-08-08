@@ -1,6 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function Flashcards() {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const mockCards = [
+    {
+      q: "What is the primary function of the mitochondria in a eukaryotic cell?",
+      a: "They generate most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy. Often referred to as the \"powerhouse of the cell.\""
+    },
+    {
+      q: "What is the process of Mitosis?",
+      a: "A type of cell division that results in two daughter cells each having the same number and kind of chromosomes as the parent nucleus."
+    },
+    {
+      q: "What is the Krebs Cycle?",
+      a: "A series of chemical reactions used by all aerobic organisms to release stored energy through the oxidation of acetyl-CoA derived from carbohydrates, fats, and proteins."
+    }
+  ];
+
+  const currentCard = mockCards[currentIndex];
+
+  const handleNext = () => {
+    setIsFlipped(false);
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % mockCards.length);
+    }, 150);
+  };
   return (
     <>
       
@@ -39,30 +66,30 @@ export function Flashcards() {
 </div>
 </div>
 <div className="flex-1 px-4 space-y-1">
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined group-hover:text-primary transition-colors">home</span>
 <span className="font-label-md text-label-md font-medium">Home</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+</Link>
+<Link to="/ai-tutor" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined group-hover:text-primary transition-colors">chat</span>
 <span className="font-label-md text-label-md font-medium">Chat</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary dark:border-primary-fixed-dim bg-primary-container/10 active:scale-95 transition-transform" href="#">
+</Link>
+<Link to="/flashcards" className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary dark:border-primary-fixed-dim bg-primary-container/10 active:scale-95 transition-transform">
 <span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>style</span>
 <span className="font-label-md text-label-md font-bold">Flashcards</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+</Link>
+<Link to="/practice" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined group-hover:text-primary transition-colors">quiz</span>
 <span className="font-label-md text-label-md font-medium">Quiz</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+</Link>
+<Link to="/roadmap" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined group-hover:text-primary transition-colors">map</span>
 <span className="font-label-md text-label-md font-medium">Roadmap</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+</Link>
+<Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
 <span className="material-symbols-outlined group-hover:text-primary transition-colors">person</span>
 <span className="font-label-md text-label-md font-medium">Profile</span>
-</a>
+</Link>
 </div>
 <div className="px-6 mt-auto">
 <button className="w-full py-3 px-4 bg-surface-container-high text-primary rounded-lg font-label-md text-label-md font-semibold hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2 btn-actionable">
@@ -81,9 +108,9 @@ export function Flashcards() {
 
 <div className="mt-6 flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/50 shadow-sm w-max">
 <div className="w-48 h-2 bg-surface-variant rounded-full overflow-hidden">
-<div className="h-full bg-primary rounded-full" style={{ width: '40%', background: 'linear-gradient(90deg, rgb(195, 192, 255) 0%, rgb(53, 37, 205) 100%)' }}></div>
+<div className="h-full bg-primary rounded-full transition-all" style={{ width: `${((currentIndex + 1) / mockCards.length) * 100}%`, background: 'linear-gradient(90deg, rgb(195, 192, 255) 0%, rgb(53, 37, 205) 100%)' }}></div>
 </div>
-<span className="font-label-md text-label-md text-on-surface-variant font-medium">12 / 20 cards remaining</span>
+<span className="font-label-md text-label-md text-on-surface-variant font-medium">{mockCards.length - currentIndex - 1} cards remaining</span>
 </div>
 </div>
 
@@ -103,37 +130,34 @@ export function Flashcards() {
 
 <section className="flex flex-col items-center justify-center flex-1 w-full max-w-3xl mx-auto py-8">
 
-<div className="w-full aspect-[4/3] md:aspect-[16/9] perspective-1000 flashcard cursor-pointer group" id="flashcard-container">
-<div className="relative w-full h-full transform-style-3d flashcard-inner shadow-sm rounded-2xl group-hover:-translate-y-1 group-hover:shadow-md transition-all duration-300">
+<div className="w-full aspect-[4/3] md:aspect-[16/9] cursor-pointer group" style={{ perspective: '1000px' }} onClick={() => setIsFlipped(!isFlipped)}>
+<div className="relative w-full h-full shadow-sm rounded-2xl group-hover:-translate-y-1 group-hover:shadow-md transition-all duration-300" style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
 
-<div className="absolute inset-0 w-full h-full backface-hidden bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center" style={{ background: 'radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(229, 238, 255) 100%)' }}>
+<div className="absolute inset-0 w-full h-full bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center" style={{ backfaceVisibility: 'hidden', background: 'radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(229, 238, 255) 100%)' }}>
 <div className="absolute top-6 left-6 text-outline font-label-md text-label-md">Question</div>
-<div className="absolute top-6 right-6">
+<div className="absolute top-6 right-6" onClick={(e) => e.stopPropagation()}>
 <span className="material-symbols-outlined text-outline cursor-help hover:text-primary transition-colors">volume_up</span>
 </div>
 <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background max-w-xl">
-                            What is the primary function of the mitochondria in a eukaryotic cell?
+                            {currentCard.q}
                         </h2>
 <div className="absolute bottom-6 flex items-center gap-2 text-outline opacity-60">
 <span className="material-symbols-outlined text-sm">touch_app</span>
-<span className="font-caption text-caption">Click or press Space to flip</span>
+<span className="font-caption text-caption">Click to flip</span>
 </div>
 </div>
 
-<div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-inverse-on-surface border border-primary-fixed-dim rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center">
+<div className="absolute inset-0 w-full h-full bg-inverse-on-surface border border-primary-fixed-dim rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
 <div className="absolute top-6 left-6 text-primary font-label-md text-label-md">Answer</div>
-<h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background max-w-xl mb-4">
-                            Cellular Respiration
-                        </h2>
 <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
-                            They generate most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy. Often referred to as the "powerhouse of the cell."
+                            {currentCard.a}
                         </p>
 </div>
 </div>
 </div>
 
 <div className="mt-8 flex items-center justify-between w-full max-w-md">
-<button className="px-6 py-3 rounded-lg font-label-md text-label-md font-semibold text-error bg-error-container/50 hover:bg-error-container transition-colors flex items-center gap-2 btn-actionable">
+<button onClick={handleNext} className="px-6 py-3 rounded-lg font-label-md text-label-md font-semibold text-error bg-error-container/50 hover:bg-error-container transition-colors flex items-center gap-2 btn-actionable">
 <span className="material-symbols-outlined text-sm">history</span>
                     Review Later
                 </button>
@@ -142,7 +166,7 @@ export function Flashcards() {
 <span className="">/</span>
 <kbd className="px-2 py-1 bg-surface-container-high rounded border border-outline-variant">→</kbd>
 </div>
-<button className="px-8 py-3 rounded-lg font-label-md text-label-md font-semibold text-on-tertiary-fixed-variant bg-tertiary-fixed hover:bg-tertiary-fixed-dim transition-colors flex items-center gap-2 btn-actionable shadow-sm" style={{ background: 'linear-gradient(rgb(111, 251, 190) 0%, rgb(78, 222, 163) 100%)' }}>
+<button onClick={handleNext} className="px-8 py-3 rounded-lg font-label-md text-label-md font-semibold text-on-tertiary-fixed-variant bg-tertiary-fixed hover:bg-tertiary-fixed-dim transition-colors flex items-center gap-2 btn-actionable shadow-sm" style={{ background: 'linear-gradient(rgb(111, 251, 190) 0%, rgb(78, 222, 163) 100%)' }}>
                     Got it
                     <span className="material-symbols-outlined text-sm">check</span>
 </button>
