@@ -1,0 +1,378 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>StudyForge AI - Chat Tutor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#6ffbbe",
+                    "inverse-on-surface": "#eaf1ff",
+                    "on-tertiary-container": "#67f4b7",
+                    "tertiary": "#005338",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed": "#0f0069",
+                    "secondary": "#855300",
+                    "secondary-fixed-dim": "#ffb95f",
+                    "on-surface-variant": "#464555",
+                    "secondary-container": "#fea619",
+                    "on-background": "#0b1c30",
+                    "on-secondary-container": "#684000",
+                    "error-container": "#ffdad6",
+                    "inverse-surface": "#213145",
+                    "primary-container": "#4f46e5",
+                    "outline-variant": "#c7c4d8",
+                    "error": "#ba1a1a",
+                    "surface": "#f8f9ff",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "tertiary-container": "#006e4b",
+                    "on-secondary-fixed-variant": "#653e00",
+                    "surface-dim": "#cbdbf5",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#2a1700",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "surface-variant": "#d3e4fe",
+                    "on-primary": "#ffffff",
+                    "primary": "#3525cd",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#e5eeff",
+                    "background": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-surface": "#0b1c30",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "outline": "#777587",
+                    "surface-container-low": "#eff4ff",
+                    "secondary-fixed": "#ffddb8",
+                    "primary-fixed": "#e2dfff",
+                    "surface-container-high": "#dce9ff",
+                    "inverse-primary": "#c3c0ff",
+                    "on-primary-container": "#dad7ff",
+                    "surface-bright": "#f8f9ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-desktop": "40px",
+                    "stack-md": "24px",
+                    "margin-mobile": "16px",
+                    "container-max": "1200px",
+                    "gutter": "24px",
+                    "stack-sm": "12px",
+                    "stack-lg": "48px"
+            },
+            "fontFamily": {
+                    "headline-xl": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "caption": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-xl": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen w-full">
+<!-- SideNavBar (Shared Component Blueprint) -->
+<nav class="fixed left-0 top-0 h-full flex flex-col py-stack-md bg-surface shadow-sm w-64 border-r border-outline-variant z-50 transition-all duration-300 bg-gradient-to-b from-surface to-surface-container-low">
+<!-- Header -->
+<div class="px-6 mb-8 flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<img alt="User profile avatar" class="w-10 h-10 rounded-xl object-cover shadow-sm bg-surface-container" data-alt="A modern, highly detailed minimalist 3D rendering of an abstract glowing forge anvil in vibrant indigo and cyan colors on a clean white background. Soft studio lighting, highly polished surfaces, premium tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9zKvaOvF0cmgQ0HJ_ljd8xb5Lib_Neq6RDwOSPtuZmWGZNuaktnNvDG0knFXybTsE2LWFoRlHoqteUL7B1JhaXW6JqwCmiQkvwVVYiQ13BR4OAOdmUKv2AVPeBcDOHWKOacIZQjdJLfYqdAYeum4acbvY_qcECQt1e5zQ0WPqZBokG60eFKa9Vqrhpb4Zni5bI4-4SSd0W4tv60d5UstuaFX7garjYkrTguDjWj_51SHHamBVwei1pA">
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">StudyForge AI</h1>
+<p class="font-caption text-caption text-on-surface-variant">Level 12 Focus Master</p>
+</div>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex flex-col flex-1 px-4 gap-2 overflow-y-auto scrollbar-hide">
+<!-- Home -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<!-- Chat (ACTIVE STATE) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 active:scale-95 transition-transform relative bg-gradient-to-r from-primary-container/20 to-transparent" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="font-label-md text-label-md">Chat</span>
+</a>
+<!-- Flashcards -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">style</span>
+<span class="font-label-md text-label-md">Flashcards</span>
+</a>
+<!-- Quiz -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">quiz</span>
+<span class="font-label-md text-label-md">Quiz</span>
+</a>
+<!-- Roadmap -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">map</span>
+<span class="font-label-md text-label-md">Roadmap</span>
+</a>
+<!-- Profile -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group mt-auto" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</div>
+<!-- CTA -->
+<div class="px-4 mt-6">
+<button class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-surface-container text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors duration-200 border-b-2 border-primary/20 hover:border-primary/40 active:border-b-0 active:translate-y-[2px]">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+                Upgrade to Pro
+            </button>
+</div>
+</nav>
+<!-- Main Application Canvas -->
+<main class="flex-1 flex flex-col ml-64 h-screen bg-background relative overflow-hidden">
+<!-- TopAppBar (Shared Component Blueprint) -->
+<header class="flex justify-between items-center w-full px-margin-desktop h-16 docked full-width top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
+<!-- Left contextual area (empty to let brand breathe in side nav) -->
+<div class="flex items-center gap-4">
+<!-- Mobile menu toggle would go here, hidden on desktop -->
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-4">
+<!-- Search (on_right as per JSON) -->
+<div class="relative hidden md:flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 w-64 rounded-full bg-surface-container-low border border-outline-variant text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" placeholder="Search resources..." type="text">
+</div>
+<!-- Trailing Icons -->
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all active:opacity-80 relative group">
+<span class="material-symbols-outlined">local_fire_department</span>
+<!-- Flame Streak Badge -->
+<span class="absolute top-0 right-0 w-4 h-4 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center font-caption text-[10px] font-bold shadow-sm">3</span>
+</button>
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all active:opacity-80">
+<span class="material-symbols-outlined">stars</span>
+</button>
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all active:opacity-80 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+</div>
+</header>
+<!-- Chat Workspace (3-pane internal layout) -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Contextual Sidebar: Chat History -->
+<aside class="w-64 border-r border-outline-variant bg-surface-bright flex flex-col hidden lg:flex flex-shrink-0 z-10">
+<div class="p-4 border-b border-outline-variant/50 flex justify-between items-center">
+<h2 class="font-label-md text-label-md text-on-surface">Conversations</h2>
+<button class="w-8 h-8 flex items-center justify-center rounded-md text-primary hover:bg-primary-container/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit_square</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-3 space-y-6">
+<!-- Topic Group 1 -->
+<div>
+<h3 class="font-caption text-caption text-outline uppercase tracking-wider mb-2 px-2">Calculus 101</h3>
+<div class="space-y-1">
+<button class="w-full text-left px-3 py-2 rounded-lg bg-surface-container text-primary font-body-md text-body-md text-sm truncate border border-primary/20 shadow-sm transition-all">
+                                Integration by Parts rules
+                            </button>
+<button class="w-full text-left px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low font-body-md text-body-md text-sm truncate transition-colors">
+                                Limits approaching infinity
+                            </button>
+</div>
+</div>
+<!-- Topic Group 2 -->
+<div>
+<h3 class="font-caption text-caption text-outline uppercase tracking-wider mb-2 px-2">Ancient Rome</h3>
+<div class="space-y-1">
+<button class="w-full text-left px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low font-body-md text-body-md text-sm truncate transition-colors">
+                                Fall of the Republic causes
+                            </button>
+<button class="w-full text-left px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low font-body-md text-body-md text-sm truncate transition-colors">
+                                Punic Wars timeline summary
+                            </button>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Chat Interface -->
+<section class="flex-1 flex flex-col relative bg-background">
+<!-- Chat Settings Strip (Top of chat area) -->
+<div class="px-6 py-3 border-b border-outline-variant/30 flex justify-between items-center bg-surface/50 backdrop-blur-sm sticky top-0 z-20">
+<!-- Persona Selector (Bento/Chip style) -->
+<div class="flex items-center gap-2 overflow-x-auto scrollbar-hide py-1">
+<span class="font-caption text-caption text-outline mr-2">Persona:</span>
+<button class="px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant text-on-surface font-caption text-caption whitespace-nowrap hover:border-primary transition-colors flex items-center gap-1 bg-gradient-to-t from-surface-container to-surface-bright">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+                            Standard Tutor
+                        </button>
+<button class="px-3 py-1.5 rounded-full bg-primary-container/20 border border-primary text-primary font-caption text-caption whitespace-nowrap font-medium flex items-center gap-1 bg-gradient-to-t from-surface-container to-surface-bright">
+<span class="material-symbols-outlined text-[14px]">child_care</span>
+                            Explain like I'm 16
+                        </button>
+<button class="px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant text-on-surface font-caption text-caption whitespace-nowrap hover:border-primary transition-colors flex items-center gap-1 bg-gradient-to-t from-surface-container to-surface-bright">
+<span class="material-symbols-outlined text-[14px]">gavel</span>
+                            Strict Assessor
+                        </button>
+</div>
+<!-- Model Indicator Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-tertiary-fixed/30 text-on-tertiary-fixed-variant font-caption text-[11px] font-semibold tracking-wide border border-tertiary-fixed/50 flex-shrink-0">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></div>
+                        GPT-4o Active
+                    </div>
+</div>
+<!-- Message Scroll Area -->
+<div class="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-8 w-full max-w-4xl mx-auto scroll-smooth">
+<!-- System Date Marker -->
+<div class="flex justify-center">
+<span class="px-3 py-1 rounded-full bg-surface-container-low text-outline font-caption text-[11px]">Today, 10:42 AM</span>
+</div>
+<!-- AI Message (Context/Intro) -->
+<div class="flex gap-4 items-start w-full">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
+<span class="material-symbols-outlined text-on-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="flex flex-col gap-2 max-w-[85%]">
+<span class="font-label-md text-label-md text-on-surface-variant ml-1">StudyForge Tutor</span>
+<div class="bg-surface border border-outline-variant/50 rounded-2xl rounded-tl-sm p-4 text-on-surface font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(0,0,0,0.03)] bg-gradient-to-b from-surface to-surface-container-lowest">
+<p class="">Welcome back to Calculus! We were looking at Integration by Parts. To refresh, the formula is:</p>
+<div class="my-3 py-2 px-4 bg-surface-container rounded-lg font-mono text-primary-fixed-variant text-center overflow-x-auto">
+                                    ∫ u dv = uv - ∫ v du
+                                </div>
+<p class="">Are you ready to try a practice problem with <code class="bg-surface-container-high px-1.5 py-0.5 rounded text-sm text-primary">x * cos(x)</code>, or would you like me to explain the "LIATE" rule first?</p>
+</div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex gap-4 items-start justify-end w-full">
+<div class="flex flex-col gap-2 max-w-[85%] items-end">
+<span class="font-label-md text-label-md text-on-surface-variant mr-1">You</span>
+<div class="bg-primary text-on-primary rounded-2xl rounded-tr-sm p-4 font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(53,37,205,0.15)] bg-gradient-to-br from-primary to-on-primary-fixed-variant">
+<p class="">Can you break down how to solve ∫ x * cos(x) dx step-by-step? I always get confused picking 'u' and 'dv'. Explain it simply.</p>
+</div>
+</div>
+<img alt="Your avatar" class="w-8 h-8 rounded-full flex-shrink-0 mt-1 object-cover border border-outline-variant/30" data-alt="A small circular avatar showing a highly stylized modern geometric portrait of a student wearing headphones, vibrant flat vector art style, clean lines, warm minimal background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9Hcb14P9BlEzgS6hazhi68CQzlj5H6xGXR5r1s79vPrNI6VNbbwzgRM3NMgRBmKoFHw666bSg5cuxVgIXx5gLV2RyoJMdV-bMGeqWir7kVRjmwbySei_JytYVDdLE01jYHp0GWRvJMLWFHfu7ijuvzwPWQHR3o8_WcXiQU68Am74gRCrZVHxdzRCleQt24NhzLeMhQ99VcxpPSLcjzSDdZ3DiYN9CYXnE3HHNcjxNRAZoEbGex1Q_ow">
+</div>
+<!-- AI Message (Complex Response with Code/Math and Streaming State) -->
+<div class="flex gap-4 items-start w-full">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 mt-1 shadow-sm relative">
+<span class="material-symbols-outlined text-on-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<!-- Generating indicator ring -->
+<div class="absolute inset-0 border-2 border-primary border-t-tertiary-fixed rounded-full animate-spin"></div>
+</div>
+<div class="flex flex-col gap-2 max-w-[85%] w-full">
+<div class="flex items-center gap-2 ml-1">
+<span class="font-label-md text-label-md text-on-surface-variant">StudyForge Tutor</span>
+<span class="font-caption text-caption text-outline flex items-center gap-1">
+<span class="w-1.5 h-1.5 bg-tertiary-fixed rounded-full inline-block"></span> Generating
+                                </span>
+</div>
+<div class="bg-surface border border-outline-variant/50 rounded-2xl rounded-tl-sm p-4 text-on-surface font-body-md text-body-md leading-relaxed shadow-[0_4px_12px_rgba(0,0,0,0.03)] w-full bg-gradient-to-b from-surface to-surface-container-lowest">
+<p class="mb-4">Absolutely! Think of Integration by Parts as a tactical trade. We want to trade a hard integral for an easier one.</p>
+<h4 class="font-label-md text-label-md text-primary mb-2 mt-4">Step 1: The LIATE Rule</h4>
+<p class="mb-3">To pick <strong>u</strong>, we use LIATE to find what comes first in this list:</p>
+<ul class="list-disc pl-5 mb-4 space-y-1 text-on-surface-variant">
+<li class=""><strong>L</strong>ogarithmic</li>
+<li class=""><strong>I</strong>nverse Trig</li>
+<li class=""><strong>A</strong>lgebraic (like <code class="bg-surface-container px-1 py-0.5 rounded text-sm">x</code>, <code class="bg-surface-container px-1 py-0.5 rounded text-sm">x²</code>)</li>
+<li class=""><strong>T</strong>rigonometric (like <code class="bg-surface-container px-1 py-0.5 rounded text-sm">cos(x)</code>)</li>
+<li class=""><strong>E</strong>xponential</li>
+</ul>
+<p class="mb-3">In our integral <code class="bg-surface-container-high px-1.5 py-0.5 rounded text-sm text-primary">∫ x * cos(x) dx</code>:</p>
+<div class="bg-inverse-surface text-inverse-on-surface rounded-lg p-4 font-mono text-sm overflow-x-auto mb-4 border border-outline-variant/20 shadow-inner">
+<div class="text-outline mb-2"># Let's assign our parts:</div>
+<div class="flex gap-4">
+<div class="flex-1 border-r border-outline-variant/30 pr-4">
+<div class="text-tertiary-fixed">u = x</div>
+<div class="text-outline text-xs mt-1">(Algebraic comes before Trig in LIATE)</div>
+<div class="mt-2 text-secondary-fixed-dim">du = dx</div>
+</div>
+<div class="flex-1 pl-4">
+<div class="text-tertiary-fixed">dv = cos(x) dx</div>
+<div class="text-outline text-xs mt-1">(The rest of the integral)</div>
+<div class="mt-2 text-secondary-fixed-dim">v = sin(x)</div>
+</div>
+</div>
+</div>
+<!-- Typing indicator mimicking streaming completion -->
+<div class="flex items-center gap-1 h-6 px-1 mt-2">
+<div class="w-1.5 h-1.5 bg-primary/60 rounded-full typing-dot"></div>
+<div class="w-1.5 h-1.5 bg-primary/60 rounded-full typing-dot"></div>
+<div class="w-1.5 h-1.5 bg-primary/60 rounded-full typing-dot"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom padding for scroll -->
+<div class="h-4 w-full"></div>
+</div>
+<!-- Input Area (Fixed Bottom) -->
+<div class="p-4 md:px-8 md:py-6 bg-surface-bright border-t border-outline-variant/30 z-20">
+<div class="max-w-4xl mx-auto relative group">
+<!-- Tactile Focus Border Effect Container -->
+<div class="flex items-end gap-2 bg-surface-container-lowest border border-outline rounded-xl p-2 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200">
+<!-- Attachment Button -->
+<button class="p-2.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container transition-colors flex-shrink-0">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<!-- Main Text Input -->
+<textarea class="flex-1 bg-transparent resize-none h-12 max-h-32 py-3 px-2 outline-none font-body-md text-body-md text-on-surface placeholder:text-outline-variant scrollbar-hide" placeholder="Message StudyForge Tutor (Type '/' for commands)..." style="min-height: 48px;"></textarea>
+<!-- Send Button -->
+<button class="p-2.5 rounded-lg bg-primary text-on-primary hover:bg-surface-tint shadow-sm transition-colors border-b-2 border-on-primary-fixed-variant active:border-b-0 active:translate-y-[2px] flex-shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+<!-- Helper Text -->
+<div class="text-center mt-2">
+<span class="font-caption text-caption text-outline">AI can make mistakes. Consider verifying important information.</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+
+
+</body></html>

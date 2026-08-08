@@ -6,7 +6,7 @@ import { Register } from '../features/auth/Register';
 import { VerifyEmail } from '../features/auth/VerifyEmail';
 import { ForgotPassword } from '../features/auth/ForgotPassword';
 import { ResetPassword } from '../features/auth/ResetPassword';
-import { Dashboard } from '../features/analytics/Dashboard';
+import { Dashboard } from '../pages/Dashboard';
 import { PracticeLoop } from '../features/practice/PracticeLoop';
 import { MockInterview } from '../features/interviews/MockInterview';
 import { InterviewDashboard } from '../features/interviews/InterviewDashboard';
@@ -15,9 +15,12 @@ import { LiveInterviewRoom } from '../features/interviews/LiveInterviewRoom';
 import { CodingInterviewRoom } from '../features/interviews/CodingInterviewRoom';
 import { InterviewReportView } from '../features/interviews/InterviewReportView';
 import { CodingPracticePage } from '../features/leetcode/components/CodingPracticePage';
-import { Roadmap } from '../features/roadmap/Roadmap';
-import { ResourceLibrary } from '../features/resources/ResourceLibrary';
+import { StudyRoadmap } from '../pages/StudyRoadmap';
+import { Resources } from '../pages/Resources';
 import { Profile } from '../features/profile/Profile';
+import { Flashcards } from '../pages/Flashcards';
+import { AITutor } from '../pages/AITutor';
+import { PhotoSolve } from '../pages/PhotoSolve';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -121,7 +124,7 @@ export const AppRoutes: React.FC = () => {
             path="/roadmap"
             element={
               <ProtectedRoute>
-                <Roadmap />
+                <StudyRoadmap />
               </ProtectedRoute>
             }
           />
@@ -129,7 +132,31 @@ export const AppRoutes: React.FC = () => {
             path="/resources"
             element={
               <ProtectedRoute>
-                <ResourceLibrary />
+                <Resources />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/flashcards"
+            element={
+              <ProtectedRoute>
+                <Flashcards />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ai-tutor"
+            element={
+              <ProtectedRoute>
+                <AITutor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/photo-solve"
+            element={
+              <ProtectedRoute>
+                <PhotoSolve />
               </ProtectedRoute>
             }
           />
