@@ -9,6 +9,7 @@ import {
   Award, TrendingUp, AlertTriangle, CheckCircle, BookOpen, ArrowLeft,
   Sparkles, Target, FileText, Lightbulb
 } from 'lucide-react';
+import { Layout } from '../../components/layout/Layout';
 
 export const InterviewReportView: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -25,9 +26,11 @@ export const InterviewReportView: React.FC = () => {
 
   if (!report) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-slate-400">
-        <Sparkles className="w-5 h-5 animate-pulse mr-2 text-indigo-400" /> Generating AI evaluation report...
-      </div>
+      <Layout>
+        <div className="flex items-center justify-center min-h-[60vh] text-slate-400">
+          <Sparkles className="w-5 h-5 animate-pulse mr-2 text-indigo-400" /> Generating AI evaluation report...
+        </div>
+      </Layout>
     );
   }
 
@@ -44,6 +47,7 @@ export const InterviewReportView: React.FC = () => {
   const scoreColor = overallScore >= 85 ? 'text-emerald-400' : overallScore >= 70 ? 'text-amber-400' : 'text-rose-400';
 
   return (
+    <Layout>
     <div className="space-y-8 max-w-5xl mx-auto">
       {/* Back */}
       <button onClick={() => navigate('/interview')} className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors">
@@ -232,5 +236,6 @@ export const InterviewReportView: React.FC = () => {
         </div>
       )}
     </div>
+    </Layout>
   );
 };

@@ -4,6 +4,7 @@ import { apiClient } from '../../lib/axios';
 import {
   Code, Users, FileText, Briefcase, Mic, Upload, ArrowRight, Sparkles, AlertCircle
 } from 'lucide-react';
+import { Layout } from '../../components/layout/Layout';
 
 const MODES = [
   { id: 'technical', label: 'Technical', icon: Code },
@@ -69,6 +70,7 @@ export const InterviewSetup: React.FC = () => {
   };
 
   return (
+    <Layout>
     <div className="max-w-2xl mx-auto space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-white mb-2">Setup Interview</h1>
@@ -183,5 +185,6 @@ export const InterviewSetup: React.FC = () => {
         <ArrowRight className="w-5 h-5" />
       </button>
     </div>
+    </Layout>
   );
 };

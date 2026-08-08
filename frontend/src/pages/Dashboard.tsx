@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../lib/axios';
 import { useAuth } from '../app/AuthProvider';
 import { Link } from 'react-router-dom';
+import { Layout } from '../components/layout/Layout';
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -27,79 +28,8 @@ export function Dashboard() {
     loadDashboardData();
   }, []);
   return (
-    <>
-      
- TopAppBar (Hidden on Mobile, Visible on Desktop) 
-<header className="hidden md:flex justify-between items-center w-full px-margin-desktop h-16 ml-64 bg-surface/80 backdrop-blur-md border-b border-outline-variant docked full-width top-0 z-40 fixed">
-<div className="flex items-center gap-4">
-<span className="font-headline-md text-headline-md font-black text-primary">StudyForge AI</span>
-</div>
-<div className="flex items-center gap-6">
-<div className="relative w-64">
-<span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
-<input className="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border border-outline-variant rounded-full text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors placeholder-outline" placeholder="Search topics, notes..." type="text"/>
-</div>
-<div className="flex items-center gap-4 text-on-surface-variant">
-<button className="hover:text-primary transition-all active:scale-95"><span className="material-symbols-outlined filled-icon" data-icon="local_fire_department">local_fire_department</span></button>
-<button className="hover:text-primary transition-all active:scale-95"><span className="material-symbols-outlined" data-icon="stars">stars</span></button>
-<button className="hover:text-primary transition-all active:scale-95"><span className="material-symbols-outlined" data-icon="notifications">notifications</span></button>
-<img alt="User avatar" className="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A clean, professional portrait of a young student against a light neutral background, looking focused and optimistic. Soft, high-key studio lighting with a shallow depth of field. Modern, minimalist aesthetic suitable for an avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT_RsUE5otVGNRkVoOCcB6QVli2-WDR6DatAvWZW4dCiNeLyW-o6B3lIMZvahL7Yz4b4wnWLP9yizHxYp2RuPuL6MLpflEI3jg5x4yeBVtXq3jkMhbexKW4Mi7bXNgMC6Ui-ntxpxnDj5N0kL9hvs4pCnuBxRLIkFRblWtAYx9Z2eS7rv0aMLy30DZizk4ZpLj4IdgWVz7R94Ggq-cljBbxVxydrotu9PyDGEPBwEIOFw68pbAkYlmMg"/>
-</div>
-</div>
-</header>
- SideNavBar (Hidden on Mobile, Visible on Desktop) 
-<nav className="hidden md:flex fixed left-0 top-0 h-full flex-col py-stack-md h-screen w-64 border-r border-outline-variant bg-surface shadow-sm z-50 bg-gradient-to-b from-surface to-surface-container-low">
-<div className="px-6 mb-8 flex flex-col items-start">
-<div className="flex items-center gap-3 mb-4">
-<img alt="User profile avatar" className="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A clean, professional portrait of a young student against a light neutral background, looking focused and optimistic. Soft, high-key studio lighting with a shallow depth of field. Modern, minimalist aesthetic suitable for an avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs1TWTfbAuUWCeFi7Y6Y-piT5-6OmX28xybM-7ZBFERpFy2-syN4Gw8enJ9CMR3cVCpHRB7mFXwlg5bWjNVWIhFaAwtB6xixCUyyCiDj9_Xn8x16-xLV-WUUQohtqrkdHd5Nq32tdwg7Q9zcaT7_rBlpuV8HbKgiyXkxNzBncqaCJl6tMTVrbdLuddSGEIKnV2ztUyYgCtg7kLg235BvXwZ6okG0eV3lcTf60lnupGqYDBtEIEgf5CQA"/>
-<div>
-<h2 className="font-label-md text-label-md font-bold text-on-surface">{user?.display_name || 'User'}</h2>
-<p className="font-caption text-caption text-on-surface-variant">{user?.target_role || 'Level 12 Focus Master'}</p>
-</div>
-</div>
-<button className="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-2 rounded-lg hover:bg-surface-tint hover:text-white transition-colors duration-200 border-b-2 border-primary bg-gradient-to-r from-primary-container to-primary">Upgrade to Pro</button>
-</div>
-<ul className="flex-1 px-4 space-y-1">
-<li className="">
-<Link to="/dashboard" className="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 active:scale-95 transition-transform bg-gradient-to-r from-primary-container/20 to-transparent">
-<span className="material-symbols-outlined filled-icon" data-icon="home">home</span>
-<span className="font-label-md text-label-md">Home</span>
-</Link>
-</li>
-<li className="">
-<Link to="/ai-tutor" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
-<span className="material-symbols-outlined" data-icon="chat">chat</span>
-<span className="font-label-md text-label-md">Chat</span>
-</Link>
-</li>
-<li className="">
-<Link to="/flashcards" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
-<span className="material-symbols-outlined" data-icon="style">style</span>
-<span className="font-label-md text-label-md">Flashcards</span>
-</Link>
-</li>
-<li className="">
-<Link to="/practice" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
-<span className="material-symbols-outlined" data-icon="quiz">quiz</span>
-<span className="font-label-md text-label-md">Quiz</span>
-</Link>
-</li>
-<li className="">
-<Link to="/roadmap" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
-<span className="material-symbols-outlined" data-icon="map">map</span>
-<span className="font-label-md text-label-md">Roadmap</span>
-</Link>
-</li>
-<li className="">
-<Link to="/profile" className="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform">
-<span className="material-symbols-outlined" data-icon="person">person</span>
-<span className="font-label-md text-label-md">Profile</span>
-</Link>
-</li>
-</ul>
-</nav>
- Main Content Area 
-<main className="md:ml-64 pt-6 md:pt-24 px-margin-mobile md:px-margin-desktop pb-24 md:pb-12 max-w-container-max mx-auto">
+    <Layout>
+      <div className="max-w-container-max mx-auto">
 
 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-lg gap-6">
 <div>
@@ -247,31 +177,7 @@ export function Dashboard() {
 </div>
 </div>
 </div>
-</main>
- Bottom Nav Bar (Mobile Only) 
-<nav className="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant px-4 py-2 flex justify-around items-center z-50 pb-safe shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
-<a className="flex flex-col items-center gap-1 text-primary p-2" href="#">
-<span className="material-symbols-outlined filled-icon text-2xl" data-icon="home">home</span>
-<span className="text-[10px] font-medium">Home</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-on-surface-variant p-2" href="#">
-<span className="material-symbols-outlined text-2xl" data-icon="style">style</span>
-<span className="text-[10px] font-medium">Cards</span>
-</a>
-
-<button className="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center -mt-6 shadow-lg border-4 border-surface active:scale-95 transition-transform">
-<span className="material-symbols-outlined text-3xl" data-icon="smart_toy">smart_toy</span>
-</button>
-<a className="flex flex-col items-center gap-1 text-on-surface-variant p-2" href="#">
-<span className="material-symbols-outlined text-2xl" data-icon="map">map</span>
-<span className="text-[10px] font-medium">Roadmap</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-on-surface-variant p-2" href="#">
-<span className="material-symbols-outlined text-2xl" data-icon="person">person</span>
-<span className="text-[10px] font-medium">Profile</span>
-</a>
-</nav>
-
-    </>
+      </div>
+    </Layout>
   );
 }
