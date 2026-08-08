@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Layout } from '../components/layout/Layout';
 
 export function AITutor() {
   const [inputText, setInputText] = useState('');
@@ -22,92 +23,8 @@ export function AITutor() {
     }, 1500);
   };
   return (
-    <>
-      
- SideNavBar (Shared Component Blueprint) 
-<nav className="fixed left-0 top-0 h-full flex flex-col py-stack-md bg-surface shadow-sm w-64 border-r border-outline-variant z-50 transition-all duration-300 bg-gradient-to-b from-surface to-surface-container-low">
-
-<div className="px-6 mb-8 flex flex-col gap-4">
-<div className="flex items-center gap-3">
-<img alt="User profile avatar" className="w-10 h-10 rounded-xl object-cover shadow-sm bg-surface-container" data-alt="A modern, highly detailed minimalist 3D rendering of an abstract glowing forge anvil in vibrant indigo and cyan colors on a clean white background. Soft studio lighting, highly polished surfaces, premium tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9zKvaOvF0cmgQ0HJ_ljd8xb5Lib_Neq6RDwOSPtuZmWGZNuaktnNvDG0knFXybTsE2LWFoRlHoqteUL7B1JhaXW6JqwCmiQkvwVVYiQ13BR4OAOdmUKv2AVPeBcDOHWKOacIZQjdJLfYqdAYeum4acbvY_qcECQt1e5zQ0WPqZBokG60eFKa9Vqrhpb4Zni5bI4-4SSd0W4tv60d5UstuaFX7garjYkrTguDjWj_51SHHamBVwei1pA"/>
-<div>
-<h1 className="font-headline-md text-headline-md font-bold text-primary">StudyForge AI</h1>
-<p className="font-caption text-caption text-on-surface-variant">Level 12 Focus Master</p>
-</div>
-</div>
-</div>
-
-<div className="flex flex-col flex-1 px-4 gap-2 overflow-y-auto scrollbar-hide">
-<Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">home</span>
-<span className="font-label-md text-label-md">Home</span>
-</Link>
-
-<Link to="/ai-tutor" className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 active:scale-95 transition-transform relative bg-gradient-to-r from-primary-container/20 to-transparent">
-<span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: '"FILL" 1' }}>chat</span>
-<span className="font-label-md text-label-md">Chat</span>
-</Link>
-
-<Link to="/flashcards" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">style</span>
-<span className="font-label-md text-label-md">Flashcards</span>
-</Link>
-
-<Link to="/practice" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">quiz</span>
-<span className="font-label-md text-label-md">Quiz</span>
-</Link>
-
-<Link to="/roadmap" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">map</span>
-<span className="font-label-md text-label-md">Roadmap</span>
-</Link>
-
-<Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group mt-auto">
-<span className="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">person</span>
-<span className="font-label-md text-label-md">Profile</span>
-</Link>
-</div>
-
-<div className="px-4 mt-6">
-<button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-surface-container text-primary font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors duration-200 border-b-2 border-primary/20 hover:border-primary/40 active:border-b-0 active:translate-y-[2px]">
-<span className="material-symbols-outlined text-[18px]">workspace_premium</span>
-                Upgrade to Pro
-            </button>
-</div>
-</nav>
- Main Application Canvas 
-<main className="flex-1 flex flex-col ml-64 h-screen bg-background relative overflow-hidden">
-
-<header className="flex justify-between items-center w-full px-margin-desktop h-16 docked full-width top-0 z-40 bg-surface/80 backdrop-blur-md border-b border-outline-variant">
-
-<div className="flex items-center gap-4">
-
-</div>
-
-<div className="flex items-center gap-4">
-
-<div className="relative hidden md:flex items-center">
-<span className="material-symbols-outlined absolute left-3 text-outline text-[20px]">search</span>
-<input className="pl-10 pr-4 py-2 w-64 rounded-full bg-surface-container-low border border-outline-variant text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body-md text-body-md" placeholder="Search resources..." type="text"/>
-</div>
-
-<button className="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all active:opacity-80 relative group">
-<span className="material-symbols-outlined">local_fire_department</span>
-
-<span className="absolute top-0 right-0 w-4 h-4 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center font-caption text-[10px] font-bold shadow-sm">3</span>
-</button>
-<button className="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all active:opacity-80">
-<span className="material-symbols-outlined">stars</span>
-</button>
-<button className="p-2 rounded-full text-on-surface-variant hover:text-primary hover:bg-surface-container transition-all active:opacity-80 relative">
-<span className="material-symbols-outlined">notifications</span>
-<span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
-</button>
-</div>
-</header>
-
-<div className="flex flex-1 overflow-hidden">
+    <Layout>
+      <div className="-m-6 md:-m-10 h-[calc(100vh-3rem)] md:h-[calc(100vh-5rem)] flex overflow-hidden">
 
 <aside className="w-64 border-r border-outline-variant bg-surface-bright flex flex-col hidden lg:flex flex-shrink-0 z-10">
 <div className="p-4 border-b border-outline-variant/50 flex justify-between items-center">
@@ -251,9 +168,7 @@ export function AITutor() {
 </div>
 </div>
 </section>
-</div>
-</main>
-
-    </>
+      </div>
+    </Layout>
   );
 }

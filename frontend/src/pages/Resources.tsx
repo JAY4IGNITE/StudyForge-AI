@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../lib/axios';
 import { useAuth } from '../app/AuthProvider';
 import { Link } from 'react-router-dom';
+import { Layout } from '../components/layout/Layout';
 
 export function Resources() {
   const { user } = useAuth();
@@ -22,86 +23,8 @@ export function Resources() {
     fetchResources();
   }, []);
   return (
-    <>
-      
- SideNavBar 
-<nav className="hidden md:flex flex-col py-stack-md bg-surface shadow-sm h-screen w-64 border-r border-outline-variant fixed left-0 top-0 z-50 bg-gradient-to-b from-surface to-surface-container-low">
-
-<div className="px-stack-md mb-stack-lg flex items-center gap-3">
-<div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold shadow-sm">
-                S
-            </div>
-<div className="flex flex-col">
-<span className="font-headline-md text-headline-md font-bold text-primary">StudyForge AI</span>
-<span className="font-caption text-caption text-on-surface-variant">{user?.target_role || 'Level 12 Focus Master'}</span>
-</div>
-</div>
-
-<div className="flex flex-col flex-grow gap-1 px-base">
-<Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors" data-icon="home">home</span>
-<span className="font-label-md text-label-md">Home</span>
-</Link>
-<Link to="/resources" className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-primary bg-primary-container/10 transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] text-primary" data-icon="description" data-weight="fill">description</span>
-<span className="font-label-md text-label-md">Notes &amp; Documents</span>
-</Link>
-<Link to="/ai-tutor" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors" data-icon="chat">chat</span>
-<span className="font-label-md text-label-md">Chat</span>
-</Link>
-<Link to="/flashcards" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors" data-icon="style">style</span>
-<span className="font-label-md text-label-md">Flashcards</span>
-</Link>
-<Link to="/practice" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors" data-icon="quiz">quiz</span>
-<span className="font-label-md text-label-md">Quiz</span>
-</Link>
-<Link to="/roadmap" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors" data-icon="map">map</span>
-<span className="font-label-md text-label-md">Roadmap</span>
-</Link>
-<Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors" data-icon="person">person</span>
-<span className="font-label-md text-label-md">Profile</span>
-</Link>
-</div>
-
-<div className="px-stack-md mt-auto">
-<button className="w-full bg-surface-container-high text-primary font-label-md text-label-md py-3 rounded-lg hover:bg-primary hover:text-on-primary transition-colors action-btn">
-                Upgrade to Pro
-            </button>
-</div>
-</nav>
- Main Content Area 
-<div className="flex-1 flex flex-col md:ml-64 h-full relative overflow-y-auto">
-
-<header className="flex justify-between items-center w-full px-margin-desktop h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant sticky top-0 z-40">
-<div className="flex-1">
-
-<button className="md:hidden p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span className="material-symbols-outlined" data-icon="menu">menu</span>
-</button>
-</div>
-<div className="flex items-center gap-4">
-<button className="p-2 text-on-surface-variant hover:text-primary transition-all active:opacity-80">
-<span className="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span>
-</button>
-<button className="p-2 text-on-surface-variant hover:text-primary transition-all active:opacity-80">
-<span className="material-symbols-outlined" data-icon="stars">stars</span>
-</button>
-<button className="p-2 text-on-surface-variant hover:text-primary transition-all active:opacity-80 relative">
-<span className="material-symbols-outlined" data-icon="notifications">notifications</span>
-<span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
-</button>
-<div className="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant cursor-pointer">
-<img alt="User avatar" className="w-full h-full object-cover" data-alt="A small, professional portrait photo of a user for an avatar. Bright lighting, clean minimal background, signaling a modern tech-savvy learner. High quality, crisp resolution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAKm3kK6vmMOl1eMqOvzpqJ8e3b_dUNVplNGcl8pQ3qqOAvsSqHsgQ1qT33VUs8O3UlWgjVRt0Q_Cxry53Do6L-fQckhxVhixbDgxRzvGyAIxD1T32O8wKhsSpOs9AGnVErfMnTXXNNZ7yZwhtodkaDTlCDHVfTfJxuy2a6HcB1SY1AlW3J4yV8xW4VZONrwtnhbTTBoJKgtg96GR3CHppKc2Ou8Xr7aX6-IyARYg1fp07hXh3shJAvw"/>
-</div>
-</div>
-</header>
-
-<main className="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full flex flex-col gap-stack-lg">
+    <Layout>
+      <div className="max-w-container-max mx-auto w-full flex flex-col gap-stack-lg">
 
 <div>
 <h1 className="font-headline-lg md:font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface mb-2">Notes &amp; Documents</h1>
@@ -172,35 +95,7 @@ export function Resources() {
 )}
 </div>
 </section>
-</main>
 </div>
- Bottom Nav for Mobile 
-<nav className="md:hidden fixed bottom-0 w-full bg-surface border-t border-outline-variant flex justify-around items-center py-3 px-2 z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] pb-safe">
-<a className="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary w-16 group" href="#">
-<span className="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform" data-icon="home">home</span>
-<span className="font-caption text-[10px]">Home</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-primary font-bold w-16 group" href="#">
-<div className="px-4 py-1 rounded-full bg-primary-container/10 mb-0.5">
-<span className="material-symbols-outlined text-[24px]" data-icon="description" data-weight="fill">description</span>
-</div>
-<span className="font-caption text-[10px]">Notes</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary w-16 group" href="#">
-<span className="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform" data-icon="chat">chat</span>
-<span className="font-caption text-[10px]">Chat</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary w-16 group" href="#">
-<span className="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform" data-icon="style">style</span>
-<span className="font-caption text-[10px]">Cards</span>
-</a>
-<a className="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary w-16 group" href="#">
-<span className="material-symbols-outlined text-[24px] group-hover:scale-110 transition-transform" data-icon="person">person</span>
-<span className="font-caption text-[10px]">Profile</span>
-</a>
-</nav>
-
-
-    </>
+    </Layout>
   );
 }

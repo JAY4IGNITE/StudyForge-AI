@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Layout } from '../components/layout/Layout';
 
 export function PhotoSolve() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -13,98 +14,8 @@ export function PhotoSolve() {
     }, 2000);
   };
   return (
-    <>
-      
- TopAppBar 
-<header className="docked full-width top-0 z-40 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-margin-desktop h-16 md:ml-64 transition-all">
-<div className="flex items-center gap-4">
-<button className="md:hidden p-2 text-on-surface-variant hover:text-primary transition-colors">
-<span className="material-symbols-outlined">menu</span>
-</button>
-<h1 className="font-headline-md text-headline-md font-black text-primary dark:text-primary-fixed-dim">StudyForge AI</h1>
-</div>
-<div className="flex items-center gap-4">
-
-<div className="hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-2 border border-outline-variant focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-<span className="material-symbols-outlined text-on-surface-variant mr-2">search</span>
-<input className="bg-transparent border-none outline-none text-body-md font-body-md placeholder-outline w-48 text-on-surface" placeholder="Search..." type="text"/>
-</div>
-
-<button className="text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
-<span className="material-symbols-outlined" data-icon="local_fire_department">local_fire_department</span>
-</button>
-<button className="text-on-surface-variant hover:text-primary transition-colors active:opacity-80">
-<span className="material-symbols-outlined" data-icon="stars">stars</span>
-</button>
-<button className="text-on-surface-variant hover:text-primary transition-colors active:opacity-80 relative">
-<span className="material-symbols-outlined" data-icon="notifications">notifications</span>
-<span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
-</button>
-
-<img alt="User avatar" className="w-8 h-8 rounded-full border-2 border-surface object-cover cursor-pointer hover:opacity-80 transition-opacity" data-alt="A modern UI design user avatar portrait, professional yet approachable, set against a clean, light mode studio background, high quality, soft studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1E5fmmr5GqhtL9Q9CVEvDCMsHNdmiyFy-2oxJvlKEIgRrwGcNbdstfowDPFAE0DzprzR28zqNpyvI21q-Rbzrj8WXwG3K-x-zYeH-BAdkqlbEPBFelWMLaT0Is5WdGsuDqCvOpAPFjV48ZP6hrFBIfQeABc0AodsjMYHi3Ky2-4q928QuYgEIH0sowmXcedkNy9uytRr3K28wOQdpY0ugfKMbLUVZL6XsaGdTxGH5IZFUn4utaSiRfw"/>
-</div>
-</header>
-<div className="flex flex-1 overflow-hidden">
-
-<nav className="hidden md:flex fixed left-0 top-0 h-full flex-col py-stack-md bg-surface dark:bg-surface-dim shadow-sm w-64 border-r border-outline-variant dark:border-outline z-50 bg-gradient-to-b from-surface to-surface-container-low">
-<div className="px-6 mb-8">
-<h1 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim mb-2">StudyForge AI</h1>
-<div className="flex items-center gap-3 bg-surface-container-low p-3 rounded-xl border border-outline-variant/30">
-<img alt="User profile avatar" className="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A small circular avatar of a student looking focused, clean modern light mode aesthetic, well-lit, professional headshot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCh4vjltOm7q_e1GBK4aMzcKosSelLr1qQ9Wx_xb1lqcIar4qNKzGmvIsgmGqFx9wlr9G-BGrxhRyy98TEOUMYvkfYHxFMbBt_GKSP9xMKDY_6qKZpyhOe08LUJTBbvPcs7yOiT5rhhi_cbjS-31KQZqfpX3wwP8Uyqkz3cSkxlFmJlZi8OppZiflmVdP5DBQBzauyInzTik8NHdLVBiwjw-PoAN-hFmLa7Bztdic6bgq8tB75-xnwhuQ"/>
-<div>
-<p className="font-label-md text-label-md text-on-surface">Alex Chen</p>
-<p className="font-caption text-caption text-secondary">Level 12 Focus Master</p>
-</div>
-</div>
-</div>
-<ul className="flex flex-col gap-1 px-4 flex-1">
-<li className="">
-<Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
-<span className="material-symbols-outlined" data-icon="home">home</span>
-                        Home
-                    </Link>
-</li>
-<li className="">
-<Link to="/ai-tutor" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
-<span className="material-symbols-outlined" data-icon="chat" data-weight="fill">chat</span>
-                        Chat
-                    </Link>
-</li>
-<li className="">
-<Link to="/flashcards" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
-<span className="material-symbols-outlined" data-icon="style">style</span>
-                        Flashcards
-                    </Link>
-</li>
-<li className="">
-<Link to="/practice" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
-<span className="material-symbols-outlined" data-icon="quiz">quiz</span>
-                        Quiz
-                    </Link>
-</li>
-<li className="">
-<Link to="/roadmap" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
-<span className="material-symbols-outlined" data-icon="map">map</span>
-                        Roadmap
-                    </Link>
-</li>
-<li className="">
-<Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 font-body-md text-body-md">
-<span className="material-symbols-outlined" data-icon="person">person</span>
-                        Profile
-                    </Link>
-</li>
-</ul>
-<div className="px-4 mt-auto pt-6 border-t border-outline-variant/30">
-<button className="w-full bg-secondary-container text-on-secondary-container font-label-md text-label-md py-3 rounded-xl border-push hover:bg-secondary-fixed transition-colors flex items-center justify-center gap-2">
-<span className="material-symbols-outlined text-sm">workspace_premium</span>
-                    Upgrade to Pro
-                </button>
-</div>
-</nav>
-
-<main className="flex-1 md:ml-64 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-surface-bright">
-<div className="max-w-container-max mx-auto h-full flex flex-col lg:flex-row gap-gutter">
+    <Layout>
+      <div className="max-w-container-max mx-auto h-full flex flex-col lg:flex-row gap-gutter">
 
 <section className="flex-1 flex flex-col gap-stack-md min-h-[500px]">
 <div className="flex items-center justify-between">
@@ -247,9 +158,6 @@ export function PhotoSolve() {
 )}
 </section>
 </div>
-</main>
-</div>
-
-    </>
+    </Layout>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Layout } from '../components/layout/Layout';
 
 export function Flashcards() {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -29,77 +30,8 @@ export function Flashcards() {
     }, 150);
   };
   return (
-    <>
-      
- TopAppBar 
-<header className="flex justify-between items-center w-full px-margin-desktop h-16 ml-64 docked full-width top-0 z-40 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flat no shadows hidden md:flex">
-<div className="flex items-center gap-2">
-<span className="font-headline-md text-headline-md font-black text-primary dark:text-primary-fixed-dim">StudyForge AI</span>
-</div>
-<div className="flex items-center gap-6">
-<div className="relative hidden lg:block w-64">
-<span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
-<input className="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-full text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors" placeholder="Search..." type="text"/>
-</div>
-<div className="flex items-center gap-4 text-on-surface-variant dark:text-outline">
-<button className="hover:text-primary dark:hover:text-primary-fixed-dim transition-all Active: opacity-80 transition-opacity">
-<span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>local_fire_department</span>
-</button>
-<button className="hover:text-primary dark:hover:text-primary-fixed-dim transition-all Active: opacity-80 transition-opacity">
-<span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>stars</span>
-</button>
-<button className="hover:text-primary dark:hover:text-primary-fixed-dim transition-all Active: opacity-80 transition-opacity relative">
-<span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>notifications</span>
-<span className="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
-</button>
-<img alt="User avatar" className="w-8 h-8 rounded-full border border-outline-variant object-cover ml-2 cursor-pointer" data-alt="A small, circular avatar portrait of a modern student in soft, warm lighting. Minimalist light-mode styling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQrcGtql6Bg9NqdrTltTH_dwLaEPWKAVVlNQAfgcjTClYY1V1LIUD--UhLM3UVUsa2MbKBd2hucqtvilpwDvCvcsU3l_HclTLapgx8cNVehghsWqXGEJJqc2_vkv00x1VdKy-v3uv4wFhHg5xb2sPNCfUJVXUYUaYILy8-GQ5gf_QzIkbhcRhrpEN8O-FBCfC8dnMBuILJ-z3xyO8NvFjh6VYhKxVGue53ljzCXgSFgyADrJVwWeMPwA"/>
-</div>
-</div>
-</header>
- SideNavBar 
-<nav className="fixed left-0 top-0 h-full flex flex-col py-stack-md h-screen w-64 border-r border-outline-variant dark:border-outline bg-surface dark:bg-surface-dim shadow-sm hidden md:flex z-50" style={{ background: 'linear-gradient(rgb(248, 249, 255) 0%, rgb(239, 244, 255) 100%)' }}>
-<div className="px-6 mb-8 flex items-center gap-3">
-<div className="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xl">S</div>
-<div>
-<h2 className="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim leading-none">StudyForge AI</h2>
-<p className="font-caption text-caption text-outline mt-1">Level 12 Focus Master</p>
-</div>
-</div>
-<div className="flex-1 px-4 space-y-1">
-<Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">home</span>
-<span className="font-label-md text-label-md font-medium">Home</span>
-</Link>
-<Link to="/ai-tutor" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">chat</span>
-<span className="font-label-md text-label-md font-medium">Chat</span>
-</Link>
-<Link to="/flashcards" className="flex items-center gap-3 px-4 py-3 rounded-lg text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary dark:border-primary-fixed-dim bg-primary-container/10 active:scale-95 transition-transform">
-<span className="material-symbols-outlined" style={{ fontVariationSettings: '"FILL" 1' }}>style</span>
-<span className="font-label-md text-label-md font-bold">Flashcards</span>
-</Link>
-<Link to="/practice" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">quiz</span>
-<span className="font-label-md text-label-md font-medium">Quiz</span>
-</Link>
-<Link to="/roadmap" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">map</span>
-<span className="font-label-md text-label-md font-medium">Roadmap</span>
-</Link>
-<Link to="/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-outline hover:text-primary dark:hover:text-primary-fixed-dim hover:bg-surface-container-high dark:hover:bg-surface-container transition-colors duration-200 active:scale-95 transition-transform group">
-<span className="material-symbols-outlined group-hover:text-primary transition-colors">person</span>
-<span className="font-label-md text-label-md font-medium">Profile</span>
-</Link>
-</div>
-<div className="px-6 mt-auto">
-<button className="w-full py-3 px-4 bg-surface-container-high text-primary rounded-lg font-label-md text-label-md font-semibold hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2 btn-actionable">
-<span className="material-symbols-outlined text-sm">workspace_premium</span>
-                Upgrade to Pro
-            </button>
-</div>
-</nav>
- Main Content Canvas 
-<main className="md:ml-64 pt-16 min-h-screen flex flex-col p-margin-mobile md:p-margin-desktop gap-stack-lg max-w-container-max mx-auto">
+    <Layout>
+      <div className="min-h-screen flex flex-col gap-stack-lg max-w-container-max mx-auto">
 
 <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 <div className="lg:col-span-2 flex flex-col justify-center">
@@ -172,9 +104,7 @@ export function Flashcards() {
 </button>
 </div>
 </section>
-</main>
-
-
-    </>
+</div>
+    </Layout>
   );
 }

@@ -5,6 +5,7 @@ import {
   Bot, Mic, Code, FileText, Briefcase, Users, Clock, TrendingUp,
   ChevronRight, Star, BarChart3, Video, Sparkles
 } from 'lucide-react';
+import { Layout } from '../../components/layout/Layout';
 
 const INTERVIEW_MODES = [
   { id: 'technical', label: 'Technical Interview', icon: Code, color: 'from-indigo-600 to-blue-600', desc: 'System design, algorithms & data structures' },
@@ -26,6 +27,7 @@ export const InterviewDashboard: React.FC = () => {
   }, []);
 
   return (
+    <Layout>
     <div className="space-y-8">
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-900/50 via-slate-900 to-purple-900/50 border border-indigo-500/20 p-8 md:p-10">
@@ -132,5 +134,6 @@ export const InterviewDashboard: React.FC = () => {
         </div>
       )}
     </div>
+    </Layout>
   );
 };
