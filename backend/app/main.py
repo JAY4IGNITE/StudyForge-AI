@@ -13,6 +13,7 @@ from app.db.mongodb import init_db, close_db
 from app.db.seed import seed_initial_data
 from app.api.router import api_router
 from app.api.routes.interview_ws import router as interview_ws_router
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,6 +31,8 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+FastAPIInstrumentor.instrument_app(app)
 
 # CORS middleware configuration
 app.add_middleware(

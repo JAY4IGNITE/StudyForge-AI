@@ -11,20 +11,23 @@ POSSIBLE_PATHS = [
     os.path.abspath("datasets/interview_problems_1000.json"),
 ]
 
+import aiofiles
+
 _problems_cache: List[dict] = []
 
-def _load_problems() -> List[dict]:
+async def _load_problems() -> List[dict]:
     global _problems_cache
     if not _problems_cache:
         for path in POSSIBLE_PATHS:
             if os.path.exists(path):
-                with open(path, "r", encoding="utf-8") as f:
-                    _problems_cache = json.load(f)
+                async with aiofiles.open(path, "r", encoding="utf-8") as f:
+                    content = await f.read()
+                    _problems_cache = json.loads(content)
                 break
     return _problems_cache
 
 @router.get("/problems")
-def get_problems(
+async def get_problems(
     page: int = Query(1, ge=1),
     limit: int = Query(20, ge=1, le=100),
     search: Optional[str] = None,
@@ -36,7 +39,7 @@ def get_problems(
     Paginated API endpoint serving 1,000+ technical coding interview questions
     with search, difficulty, category tag, and company filters.
     """
-    all_probs = _load_problems()
+    all_probs = await _load_problems()
     filtered = all_probs
 
     if search:
@@ -78,9 +81,9 @@ def get_problems(
     }
 
 @router.get("/problems/{problem_id}")
-def get_problem_by_id(problem_id: str):
+async def get_problem_by_id(problem_id: str):
     """Fetches a specific coding problem by ID or slug."""
-    all_probs = _load_problems()
+    all_probs = await _load_problems()
     for p in all_probs:
         if p["id"] == problem_id or p["slug"] == problem_id:
             return p
