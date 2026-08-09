@@ -17,7 +17,6 @@ import {
   Settings,
 } from 'lucide-react';
 import { FeedbackModal } from '../../features/feedback/FeedbackModal';
-import { LyzrChatbot } from '../ui/LyzrChatbot';
 import { Button } from '../ui/button';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { Separator } from '../ui/separator';
@@ -206,7 +205,6 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       </main>
 
       <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
-      <LyzrChatbot />
     </div>
   );
 };
