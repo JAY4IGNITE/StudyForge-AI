@@ -23,7 +23,7 @@ def test_create_session_endpoint(monkeypatch):
 
     monkeypatch.setattr(practice_service, "create_session", mock_create_session)
 
-    response = client.post("/practice/sessions", json={"topic_id": "topic123"})
+    response = client.post("/api/v1/practice/sessions", json={"topic_id": "topic123"})
     assert response.status_code == 201
     assert response.json() == {"session_id": "session123", "target_difficulty": "medium"}
 
@@ -52,6 +52,6 @@ def test_complete_session_endpoint(monkeypatch):
 
     monkeypatch.setattr(practice_service, "complete_session", mock_complete_session)
 
-    response = client.post("/practice/sessions/session123/complete")
+    response = client.post("/api/v1/practice/sessions/session123/complete")
     assert response.status_code == 200
     assert response.json() == {"message": "Session completed successfully."}
