@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../../components/layout/Layout';
 import { apiClient } from '../../lib/axios';
-import { Play, CheckCircle2, Send, ArrowRight, Mic, MicOff, MessageSquare } from 'lucide-react';
+import { Play, CheckCircle2, Send, ArrowRight, Mic, MicOff, MessageSquare, TrendingUp } from 'lucide-react';
 import { FeedbackModal } from '../feedback/FeedbackModal';
+import { Card, CardContent } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Textarea } from '../../components/ui/textarea';
+import { Label } from '../../components/ui/label';
+import { cn } from '../../lib/utils';
 
 export const PracticeLoop: React.FC = () => {
   const [topics, setTopics] = useState<any[]>([]);
@@ -28,7 +34,6 @@ export const PracticeLoop: React.FC = () => {
     };
     fetchTopics();
 
-    // Initialize Web Speech API if supported
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       const rec = new SpeechRecognition();
@@ -65,7 +70,7 @@ export const PracticeLoop: React.FC = () => {
     try {
       const resSession = await apiClient.post('/practice/sessions', { topic_id: selectedTopic });
       setSession(resSession.data);
-      
+
       const resQ = await apiClient.post(`/practice/sessions/${resSession.data.session_id}/questions`);
       setQuestion(resQ.data);
     } catch (err) {
@@ -112,155 +117,150 @@ export const PracticeLoop: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className="mx-auto max-w-4xl space-y-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-extrabold text-slate-100">Adaptive Practice Loop</h1>
-            <p className="text-slate-400 mt-1">Receive dynamically calibrated questions adapted to your performance</p>
+            <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
+              Adaptive Practice Loop
+            </h1>
+            <p className="mt-1 text-muted-foreground">
+              Receive dynamically calibrated questions adapted to your performance
+            </p>
           </div>
-          <button
-            onClick={() => setIsFeedbackOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition-colors"
-          >
-            <MessageSquare className="w-4 h-4 text-indigo-400" /> Give Feedback
-          </button>
+          <Button variant="secondary" size="sm" onClick={() => setIsFeedbackOpen(true)} className="gap-2">
+            <MessageSquare className="h-4 w-4 text-ember" /> Give feedback
+          </Button>
         </div>
 
         {/* Step 1: Session Setup */}
         {!session && (
-          <div className="p-8 bg-slate-900/90 border border-slate-800 rounded-3xl space-y-6">
-            <h2 className="text-xl font-bold text-slate-200">Select Practice Topic</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="space-y-6 p-8">
+            <h2 className="font-display text-xl font-medium text-foreground">Select practice topic</h2>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {topics.map((t) => (
-                <div
+                <button
                   key={t.id}
                   onClick={() => setSelectedTopic(t.id)}
-                  className={`p-5 rounded-2xl border cursor-pointer transition-all ${
+                  className={cn(
+                    'rounded-2xl border p-5 text-left transition-all',
                     selectedTopic === t.id
-                      ? 'bg-indigo-600/20 border-indigo-500/50 shadow-lg shadow-indigo-500/10'
-                      : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-800/80'
-                  }`}
+                      ? 'border-ember/40 bg-ember/10 shadow-[0_10px_28px_-16px_hsl(var(--ember)/0.5)]'
+                      : 'border-border bg-secondary/20 hover:bg-secondary/40'
+                  )}
                 >
-                  <p className="font-bold text-slate-100">{t.name}</p>
-                  <p className="text-xs text-slate-400 mt-1">{t.description}</p>
-                </div>
+                  <p className="font-medium text-foreground">{t.name}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{t.description}</p>
+                </button>
               ))}
             </div>
 
-            <button
-              onClick={handleStartSession}
-              disabled={loading || !selectedTopic}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
-            >
-              <Play className="w-5 h-5 fill-current" />
-              {loading ? 'Starting Session...' : 'Start Practice Session'}
-            </button>
-          </div>
+            <Button onClick={handleStartSession} disabled={loading || !selectedTopic} className="h-14 w-full gap-2">
+              <Play className="h-5 w-5 fill-current" />
+              {loading ? 'Starting session...' : 'Start practice session'}
+            </Button>
+          </Card>
         )}
 
         {/* Step 2: Practice Question & Submission */}
         {session && question && !attemptResult && (
-          <div className="p-8 bg-slate-900/90 border border-slate-800 rounded-3xl space-y-6">
+          <Card className="space-y-6 p-8">
             <div className="flex items-center justify-between">
-              <span className="px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full text-xs font-semibold uppercase tracking-wider">
+              <Badge variant="ember" className="rounded-full font-sans uppercase tracking-wider">
                 Difficulty: {question.difficulty}
+              </Badge>
+              <span className="font-mono text-xs text-muted-foreground">
+                Session ID: {session.session_id.slice(-6)}
               </span>
-              <span className="text-xs text-slate-500">Session ID: {session.session_id.slice(-6)}</span>
             </div>
 
-            <div className="p-6 bg-slate-800/40 border border-slate-700/50 rounded-2xl">
-              <h3 className="text-lg font-bold text-slate-100">{question.prompt}</h3>
+            <div className="rounded-2xl border border-border bg-secondary/20 p-6">
+              <h3 className="text-lg font-medium text-foreground">{question.prompt}</h3>
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="block text-sm font-medium text-slate-300">Your Answer (Text or Voice)</label>
+              <div className="mb-2 flex items-center justify-between">
+                <Label className="text-sm font-medium text-foreground">Your answer (text or voice)</Label>
                 {recognition && (
                   <button
                     type="button"
                     onClick={toggleListening}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all ${
+                    className={cn(
+                      'flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-semibold transition-all',
                       isListening
-                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
-                        : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
-                    }`}
+                        ? 'animate-pulse border-destructive/40 bg-destructive/15 text-destructive'
+                        : 'border-ember/25 bg-ember/10 text-ember hover:bg-ember/15'
+                    )}
                   >
-                    {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-                    {isListening ? 'Stop Listening' : 'Voice Dictate'}
+                    {isListening ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />}
+                    {isListening ? 'Stop listening' : 'Voice dictate'}
                   </button>
                 )}
               </div>
-              <textarea
+              <Textarea
                 rows={5}
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
                 placeholder="Type or dictate your structured answer here..."
-                className="w-full p-4 bg-slate-800/60 border border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
+                className="rounded-2xl p-4"
               />
             </div>
 
-            <button
-              onClick={handleSubmitAnswer}
-              disabled={loading || !userAnswer.trim()}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-            >
-              <Send className="w-5 h-5" />
-              {loading ? 'Evaluating Response...' : 'Submit Answer for Evaluation'}
-            </button>
-          </div>
+            <Button onClick={handleSubmitAnswer} disabled={loading || !userAnswer.trim()} className="h-14 w-full gap-2">
+              <Send className="h-5 w-5" />
+              {loading ? 'Evaluating response...' : 'Submit answer for evaluation'}
+            </Button>
+          </Card>
         )}
 
         {/* Step 3: Structured AI Evaluation Results */}
         {attemptResult && (
-          <div className="p-8 bg-slate-900/90 border border-slate-800 rounded-3xl space-y-6 animate-fadeIn">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-6">
+          <Card className="space-y-6 p-8">
+            <div className="flex items-center justify-between border-b border-border pb-6">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-emerald-500/20 text-emerald-400 rounded-xl">
-                  <CheckCircle2 className="w-6 h-6" />
+                <div className="rounded-xl bg-gold/15 p-3 text-gold">
+                  <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-100">Evaluation Complete</h3>
-                  <p className="text-xs text-slate-400">Adaptive score & semantic breakdown</p>
+                  <h3 className="font-display text-xl font-medium text-foreground">Evaluation complete</h3>
+                  <p className="text-xs text-muted-foreground">Adaptive score &amp; semantic breakdown</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-3xl font-extrabold text-indigo-400">{attemptResult.score}/100</p>
-                <p className="text-xs text-slate-400">Semantic score: {attemptResult.semantic_score}%</p>
+                <p className="font-mono text-3xl font-semibold text-ember">{attemptResult.score}/100</p>
+                <p className="text-xs text-muted-foreground">Semantic score: {attemptResult.semantic_score}%</p>
               </div>
             </div>
 
             <div className="space-y-4">
-              <div className="p-4 bg-slate-800/40 rounded-xl border border-slate-700/50">
-                <h4 className="text-sm font-bold text-slate-200 mb-1">Explanation</h4>
-                <p className="text-sm text-slate-300">{attemptResult.evaluation.explanation}</p>
+              <div className="rounded-xl border border-border bg-secondary/20 p-4">
+                <h4 className="mb-1 text-sm font-semibold text-foreground">Explanation</h4>
+                <p className="text-sm text-muted-foreground">{attemptResult.evaluation.explanation}</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                  <h4 className="text-sm font-bold text-emerald-400 mb-2">Strengths</h4>
-                  <ul className="list-disc list-inside text-xs text-emerald-300 space-y-1">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-xl border border-gold/25 bg-gold/10 p-4">
+                  <h4 className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-gold">
+                    <TrendingUp className="h-3.5 w-3.5" /> Strengths
+                  </h4>
+                  <ul className="list-inside list-disc space-y-1 text-xs text-foreground/80">
                     {attemptResult.evaluation.strengths.map((s: string, idx: number) => (
                       <li key={idx}>{s}</li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-                  <h4 className="text-sm font-bold text-indigo-400 mb-2">Improvement Advice</h4>
-                  <p className="text-xs text-indigo-300">{attemptResult.evaluation.improvement_advice}</p>
+                <div className="rounded-xl border border-steel/25 bg-steel/10 p-4">
+                  <h4 className="mb-2 text-sm font-semibold text-steel">Improvement advice</h4>
+                  <p className="text-xs text-foreground/80">{attemptResult.evaluation.improvement_advice}</p>
                 </div>
               </div>
             </div>
 
-            <button
-              onClick={handleNextQuestion}
-              disabled={loading}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
-            >
-              <ArrowRight className="w-5 h-5" />
-              {loading ? 'Generating Next Question...' : 'Continue to Next Adapted Question'}
-            </button>
-          </div>
+            <Button onClick={handleNextQuestion} disabled={loading} className="h-14 w-full gap-2">
+              <ArrowRight className="h-5 w-5" />
+              {loading ? 'Generating next question...' : 'Continue to next adapted question'}
+            </Button>
+          </Card>
         )}
 
         <FeedbackModal isOpen={isFeedbackOpen} onClose={() => setIsFeedbackOpen(false)} />
