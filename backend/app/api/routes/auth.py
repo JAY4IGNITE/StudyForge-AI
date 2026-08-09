@@ -35,7 +35,7 @@ async def verify_email_confirm(req: OTPVerifyRequest):
     if not success:
         raise StudyForgeException(code="INVALID_OTP", message="Invalid or expired OTP code.")
     
-    user = await User.find_one(User.email == req.email.lower())
+    user = await User.find_one({"email": req.email.lower()})
     if user:
         user.email_verified_at = datetime.now(timezone.utc)
         await user.save()
@@ -55,7 +55,7 @@ async def reset_password(req: ResetPasswordRequest):
     if not success:
         raise StudyForgeException(code="INVALID_OTP", message="Invalid or expired OTP code.")
         
-    user = await User.find_one(User.email == req.email.lower())
+    user = await User.find_one({"email": req.email.lower()})
     if not user:
         raise StudyForgeException(code="USER_NOT_FOUND", message="User not found.")
         

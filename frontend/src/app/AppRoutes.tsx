@@ -23,6 +23,7 @@ const Profile = React.lazy(() => import('../features/profile/Profile').then(m =>
 const Flashcards = React.lazy(() => import('../pages/Flashcards').then(m => ({ default: m.Flashcards })));
 const AITutor = React.lazy(() => import('../pages/AITutor').then(m => ({ default: m.AITutor })));
 const PhotoSolve = React.lazy(() => import('../pages/PhotoSolve').then(m => ({ default: m.PhotoSolve })));
+const AtsDashboard = React.lazy(() => import('../pages/AtsDashboard'));
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -82,6 +83,9 @@ export const AppRoutes: React.FC = () => {
 
             {/* LeetCode-Style Coding Practice */}
             <Route path="/coding-practice" element={<ProtectedRoute><CodingPracticePage /></ProtectedRoute>} />
+
+            {/* ATS Scanner */}
+            <Route path="/ats" element={<ProtectedRoute><AtsDashboard /></ProtectedRoute>} />
 
             {/* Catch-all redirect */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

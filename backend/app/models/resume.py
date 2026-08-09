@@ -20,6 +20,7 @@ class Resume(Document):
     uploaded_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     parsed_at: Optional[datetime] = None
     deleted_at: Optional[datetime] = None
+    parsed_data: Optional[dict] = None
 
     class Settings:
         name = "resumes"
