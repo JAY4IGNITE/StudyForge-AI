@@ -2,6 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bot, X, Send, Sparkles, User, RefreshCw } from 'lucide-react';
 import { useAuth } from '../../app/AuthProvider';
 import { apiClient } from '../../lib/axios';
+import { Button } from './button';
+import { Input } from './input';
+import { Badge } from './badge';
+import { Avatar, AvatarFallback } from './avatar';
+import { ScrollArea } from './scroll-area';
+import { cn } from '../../lib/utils';
 
 interface Message {
   id: string;
@@ -9,8 +15,6 @@ interface Message {
   text: string;
   timestamp: string;
 }
-
-const LYZR_AGENT_ID = '6a65a46f14f796988ca804f8';
 
 export const LyzrChatbot: React.FC = () => {
   const { user } = useAuth();
@@ -21,7 +25,7 @@ export const LyzrChatbot: React.FC = () => {
     {
       id: 'welcome',
       sender: 'ai',
-      text: `Hello ${user?.display_name || 'there'}! 👋 I am your **StudyForge AI Mentor** powered by NVIDIA NIM (Llama 3.1 70B).\n\nAsk me any question, request step-by-step problem solutions, or start a mock interview!`,
+      text: `Hello ${user?.display_name || 'there'}! I am your StudyForge AI Mentor, powered by NVIDIA NIM (Llama 3.1 70B).\n\nAsk me any question, request step-by-step problem solutions, or start a mock interview!`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -60,13 +64,12 @@ export const LyzrChatbot: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Call backend FastAPI endpoint powered by NVIDIA NIM
       const res = await apiClient.post('/ai/chat', {
         message: userText,
         history: currentHistory,
       });
 
-      const replyText = res.data.reply || "I am analyzing your request using NVIDIA NIM Llama 3.1.";
+      const replyText = res.data.reply || 'I am analyzing your request using NVIDIA NIM Llama 3.1.';
 
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -82,7 +85,7 @@ export const LyzrChatbot: React.FC = () => {
         {
           id: (Date.now() + 1).toString(),
           sender: 'ai',
-          text: "I encountered a network issue communicating with the NVIDIA NIM AI service. Please verify your backend server status.",
+          text: 'I encountered a network issue communicating with the NVIDIA NIM AI service. Please verify your backend server status.',
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         },
       ]);
@@ -93,111 +96,99 @@ export const LyzrChatbot: React.FC = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Floating Toggle Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="group relative flex items-center gap-3 px-5 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-full shadow-2xl shadow-indigo-500/40 border border-indigo-400/30 transition-all duration-300 transform hover:scale-105"
+          className="group relative flex items-center gap-3 rounded-full bg-ember-gradient px-5 py-3.5 text-ember-foreground shadow-[0_10px_30px_-8px_hsl(var(--ember)/0.6)] transition-transform hover:scale-105"
         >
           <div className="relative">
-            <Bot className="w-6 h-6 text-white animate-pulse" />
-            <Sparkles className="w-3.5 h-3.5 text-amber-300 absolute -top-1 -right-1" />
+            <Bot className="h-6 w-6 animate-pulse" />
+            <Sparkles className="absolute -right-1 -top-1 h-3.5 w-3.5 text-[hsl(var(--ember-foreground))]" />
           </div>
-          <span className="font-semibold text-sm tracking-wide">AI Mentor</span>
-          <span className="absolute -top-1 -right-1 flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+          <span className="text-sm font-semibold tracking-wide">AI Mentor</span>
+          <span className="absolute -right-1 -top-1 flex h-3 w-3">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-gold" />
           </span>
         </button>
       )}
 
-      {/* Floating Chat Modal */}
       {isOpen && (
-        <div className="w-[380px] sm:w-[420px] h-[580px] bg-slate-900/95 border border-indigo-500/30 rounded-3xl shadow-2xl backdrop-blur-xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
-          {/* Header */}
-          <div className="p-4 bg-gradient-to-r from-indigo-900/80 via-slate-900 to-purple-900/80 border-b border-slate-800 flex items-center justify-between">
+        <div className="flex h-[580px] w-[380px] flex-col overflow-hidden rounded-3xl border border-ember/25 bg-card/95 shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-bottom-4 duration-300 sm:w-[420px]">
+          <div className="bg-forge-glow flex items-center justify-between border-b border-border p-4">
             <div className="flex items-center gap-3">
-              <div className="relative p-2.5 bg-indigo-600/30 border border-indigo-500/40 rounded-2xl">
-                <Bot className="w-6 h-6 text-indigo-400" />
-                <Sparkles className="w-3 h-3 text-amber-300 absolute top-1 right-1" />
+              <div className="relative rounded-2xl border border-ember/30 bg-ember/15 p-2.5">
+                <Bot className="h-6 w-6 text-ember" />
+                <Sparkles className="absolute right-1 top-1 h-3 w-3 text-gold" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-100 text-sm flex items-center gap-2">
+                <h3 className="flex items-center gap-2 text-sm font-medium text-foreground">
                   StudyForge AI Mentor
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-medium">
+                  <Badge variant="gold" className="rounded-full font-sans text-[10px]">
                     GPT-4.1
-                  </span>
+                  </Badge>
                 </h3>
-                <p className="text-xs text-slate-400">RAG Knowledge Enabled • Socratic Tutor</p>
+                <p className="text-xs text-muted-foreground">RAG knowledge enabled • Socratic tutor</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-2 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 rounded-xl transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-9 w-9 shrink-0">
+              <X className="h-4 w-4" />
+            </Button>
           </div>
 
-          {/* Messages Feed */}
-          <div className="flex-1 p-4 overflow-y-auto space-y-4 text-sm scrollbar-thin scrollbar-thumb-slate-800">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-              >
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    msg.sender === 'user'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-indigo-600/30 border border-indigo-500/30 text-indigo-400'
-                  }`}
-                >
-                  {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+          <ScrollArea className="flex-1">
+            <div className="space-y-4 p-4 text-sm">
+              {messages.map((msg) => (
+                <div key={msg.id} className={cn('flex gap-3', msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row')}>
+                  <Avatar className="h-8 w-8 shrink-0">
+                    <AvatarFallback
+                      className={msg.sender === 'user' ? 'bg-secondary text-foreground' : 'bg-ember-gradient'}
+                    >
+                      {msg.sender === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div
+                    className={cn(
+                      'max-w-[80%] whitespace-pre-wrap rounded-2xl p-3.5 leading-relaxed',
+                      msg.sender === 'user'
+                        ? 'rounded-tr-none bg-ember-gradient text-ember-foreground shadow-[0_8px_20px_-10px_hsl(var(--ember)/0.5)]'
+                        : 'rounded-tl-none border border-border bg-secondary/30 text-foreground'
+                    )}
+                  >
+                    <p>{msg.text}</p>
+                    <span className="mt-1 block text-right text-[10px] opacity-60">{msg.timestamp}</span>
+                  </div>
                 </div>
-                <div
-                  className={`max-w-[80%] rounded-2xl p-3.5 ${
-                    msg.sender === 'user'
-                      ? 'bg-indigo-600 text-white rounded-tr-none shadow-md shadow-indigo-600/20'
-                      : 'bg-slate-800/80 text-slate-200 border border-slate-700/60 rounded-tl-none whitespace-pre-wrap'
-                  }`}
-                >
-                  <p className="leading-relaxed">{msg.text}</p>
-                  <span className="text-[10px] opacity-60 mt-1 block text-right">{msg.timestamp}</span>
-                </div>
-              </div>
-            ))}
+              ))}
 
-            {isLoading && (
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-full bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+              {isLoading && (
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8 shrink-0">
+                    <AvatarFallback className="bg-ember/15 text-ember">
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex items-center gap-2 rounded-2xl rounded-tl-none border border-border bg-secondary/30 px-4 py-3 text-xs italic text-muted-foreground">
+                    <Sparkles className="h-3.5 w-3.5 animate-pulse text-ember" />
+                    Searching knowledge base &amp; formulating tutor response...
+                  </div>
                 </div>
-                <div className="bg-slate-800/80 text-slate-400 border border-slate-700/60 rounded-2xl rounded-tl-none px-4 py-3 text-xs italic flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
-                  Searching Knowledge Base & Formulating Tutor Response...
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
 
-          {/* Input Footer */}
-          <form onSubmit={handleSendMessage} className="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
-            <input
+          <form onSubmit={handleSendMessage} className="flex items-center gap-2 border-t border-border bg-card p-3">
+            <Input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask a question or request a mock interview..."
-              className="flex-1 bg-slate-800/80 text-slate-100 placeholder-slate-500 text-xs rounded-xl px-4 py-3 border border-slate-700/60 focus:outline-none focus:border-indigo-500/60 transition-colors"
+              className="h-11 flex-1 text-xs"
             />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className="p-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:hover:bg-indigo-600 text-white rounded-xl transition-all shadow-md shadow-indigo-600/30"
-            >
-              <Send className="w-4 h-4" />
-            </button>
+            <Button type="submit" size="icon" disabled={!input.trim() || isLoading} className="h-11 w-11 shrink-0">
+              <Send className="h-4 w-4" />
+            </Button>
           </form>
         </div>
       )}
