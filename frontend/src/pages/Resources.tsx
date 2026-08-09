@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../lib/axios';
-import { useAuth } from '../app/AuthProvider';
-import { Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
+import { Card } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import { Skeleton } from '../components/ui/skeleton';
+import { UploadCloud, FileText, ScrollText, Brain, MessageSquare, FolderX } from 'lucide-react';
 
 export function Resources() {
-  const { user } = useAuth();
   const [resources, setResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,80 +24,100 @@ export function Resources() {
     };
     fetchResources();
   }, []);
+
   return (
     <Layout>
-      <div className="max-w-container-max mx-auto w-full flex flex-col gap-stack-lg">
+      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8">
+        <div>
+          <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
+            Notes &amp; Documents
+          </h1>
+          <p className="mt-1 text-muted-foreground">
+            Upload your study materials to instantly generate quizzes, summaries, and chat with your content.
+          </p>
+        </div>
 
-<div>
-<h1 className="font-headline-lg md:font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-surface mb-2">Notes &amp; Documents</h1>
-<p className="font-body-lg text-body-lg text-on-surface-variant">Upload your study materials to instantly generate quizzes, summaries, and chat with your content.</p>
-</div>
+        {/* Upload zone */}
+        <label
+          htmlFor="file-input"
+          className="bg-forge-glow group flex h-48 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-border transition-colors hover:border-ember/40"
+        >
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-ember transition-transform group-hover:scale-110">
+            <UploadCloud className="h-6 w-6" />
+          </div>
+          <div className="text-center">
+            <p className="mb-1 font-medium text-foreground">Drag and drop your files here</p>
+            <p className="text-sm text-muted-foreground">or click to browse PDFs, Docs, or Images (Max 50MB)</p>
+          </div>
+          <input accept=".pdf,.doc,.docx,.txt" className="hidden" id="file-input" multiple type="file" />
+        </label>
 
-<section className="upload-zone w-full h-48 flex flex-col items-center justify-center gap-3 cursor-pointer group bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-primary-container/5" id="drop-zone">
-<div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-<span className="material-symbols-outlined text-[28px]" data-icon="cloud_upload">cloud_upload</span>
-</div>
-<div className="text-center">
-<p className="font-label-md text-label-md text-on-surface mb-1">Drag and drop your files here</p>
-<p className="font-body-md text-body-md text-on-surface-variant text-sm">or click to browse PDFs, Docs, or Images (Max 50MB)</p>
-</div>
-<input accept=".pdf,.doc,.docx,.txt" className="hidden" id="file-input" multiple type="file"/>
-</section>
+        {/* Document list */}
+        <section className="flex flex-1 flex-col gap-4">
+          <div className="mb-2 flex items-end justify-between border-b border-border pb-2">
+            <h2 className="font-display text-xl font-medium text-foreground">Recent Documents</h2>
+            <span className="font-mono text-xs text-muted-foreground">{resources?.length || 0} files</span>
+          </div>
 
-<section className="flex-1 flex flex-col gap-4">
-<div className="flex justify-between items-end mb-2 border-b border-outline-variant pb-2">
-<h2 className="font-headline-md text-headline-md text-on-surface">Recent Documents</h2>
-<span className="font-caption text-caption text-on-surface-variant">{resources?.length || 0} files</span>
-</div>
-
-<div className="flex flex-col gap-4" id="document-list">
-
-{loading ? (
-  <div className="p-8 text-center text-on-surface-variant">Loading documents...</div>
-) : resources?.length > 0 ? (
-  resources.map((r, idx) => (
-<div key={idx} className="bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-md flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-[2px] transition-all duration-300 bg-gradient-to-r from-surface-container-lowest to-surface-container-low/30">
-<div className="flex items-start gap-4">
-<div className="w-10 h-10 rounded bg-error-container text-on-error-container flex items-center justify-center shrink-0">
-<span className="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
-</div>
-<div>
-<h3 className="font-label-md text-label-md text-on-surface font-semibold mb-1">{r.title}</h3>
-<div className="flex items-center gap-2 font-caption text-caption text-on-surface-variant">
-<span className="">{r.description || 'Uploaded'}</span>
-<span className="">•</span>
-<span className="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant text-[10px] uppercase">{r.difficulty || 'Processed'}</span>
-</div>
-</div>
-</div>
-<div className="flex flex-wrap gap-2 md:gap-3">
-<button className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low text-primary hover:bg-primary-container/10 font-label-md text-[13px] action-btn border border-primary-container/10">
-<span className="material-symbols-outlined text-[16px]" data-icon="summarize">summarize</span>
-                                Summarize
-                            </button>
-<button className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low text-primary hover:bg-primary-container/10 font-label-md text-[13px] action-btn border border-primary-container/10">
-<span className="material-symbols-outlined text-[16px]" data-icon="psychology">psychology</span>
-                                Quiz Me
-                            </button>
-<a href={r.url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-on-primary hover:bg-surface-tint font-label-md text-[13px] action-btn border-b-2 border-[#1e11a6]">
-<span className="material-symbols-outlined text-[16px]" data-icon="forum">forum</span>
-                                View Resource
-                            </a>
-</div>
-</div>
-  ))
-) : (
-<div className="flex-col items-center justify-center py-12 px-4 text-center border-2 border-dashed border-outline-variant rounded-xl bg-surface-container-lowest/50" id="empty-state">
-<div className="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant mb-4 mx-auto">
-<span className="material-symbols-outlined text-[32px]" data-icon="folder_off">folder_off</span>
-</div>
-<h3 className="font-headline-md text-headline-md text-on-surface mb-2">No documents yet</h3>
-<p className="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">No documents uploaded yet. Upload a PDF to start generating study materials and learning faster.</p>
-</div>
-)}
-</div>
-</section>
-</div>
+          <div className="flex flex-col gap-4">
+            {loading ? (
+              <>
+                <Skeleton className="h-24 w-full rounded-xl" />
+                <Skeleton className="h-24 w-full rounded-xl" />
+              </>
+            ) : resources?.length > 0 ? (
+              resources.map((r, idx) => (
+                <Card
+                  key={idx}
+                  className="flex flex-col justify-between gap-4 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-16px_hsl(var(--ember)/0.3)] md:flex-row md:items-center"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-destructive/10 text-destructive">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="mb-1 font-medium text-foreground">{r.title}</h3>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <span>{r.description || 'Uploaded'}</span>
+                        <span>•</span>
+                        <Badge variant="secondary" className="rounded-full font-sans text-[10px] uppercase">
+                          {r.difficulty || 'Processed'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" className="gap-1.5 border-ember/20 text-ember hover:bg-ember/10 hover:text-ember">
+                      <ScrollText className="h-3.5 w-3.5" />
+                      Summarize
+                    </Button>
+                    <Button variant="outline" size="sm" className="gap-1.5 border-ember/20 text-ember hover:bg-ember/10 hover:text-ember">
+                      <Brain className="h-3.5 w-3.5" />
+                      Quiz me
+                    </Button>
+                    <Button asChild size="sm" className="gap-1.5">
+                      <a href={r.url} target="_blank" rel="noreferrer">
+                        <MessageSquare className="h-3.5 w-3.5" />
+                        View resource
+                      </a>
+                    </Button>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <Card className="flex flex-col items-center justify-center border-2 border-dashed border-border bg-secondary/10 px-4 py-12 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-muted-foreground">
+                  <FolderX className="h-8 w-8" />
+                </div>
+                <h3 className="mb-2 font-display text-xl font-medium text-foreground">No documents yet</h3>
+                <p className="mx-auto max-w-md text-muted-foreground">
+                  No documents uploaded yet. Upload a PDF to start generating study materials and learning faster.
+                </p>
+              </Card>
+            )}
+          </div>
+        </section>
+      </div>
     </Layout>
   );
 }

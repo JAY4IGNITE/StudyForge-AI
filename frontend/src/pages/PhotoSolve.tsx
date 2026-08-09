@@ -1,6 +1,41 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
+import { Card } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
+import {
+  Images,
+  Zap,
+  Loader2,
+  CheckCircle2,
+  Award,
+  Sparkles,
+  Layers,
+  MessageSquareText,
+  Aperture,
+} from 'lucide-react';
+
+const steps = [
+  {
+    n: 1,
+    title: 'Identify the substitution.',
+    body: (
+      <>
+        Let <em className="not-italic font-serif italic text-foreground">u</em> be the inner function. The
+        derivative of <em className="not-italic font-serif italic text-foreground">x³ + 1</em> is{' '}
+        <em className="not-italic font-serif italic text-foreground">3x²</em>, which is closely related to the
+        remaining part of the integrand.
+      </>
+    ),
+    math: 'u = x³ + 1\ndu = 3x² dx',
+  },
+  {
+    n: 2,
+    title: 'Rewrite the integral.',
+    body: null,
+    math: '∫ (1/3) · u⁴ du',
+  },
+];
 
 export function PhotoSolve() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -13,151 +48,170 @@ export function PhotoSolve() {
       setShowSolution(true);
     }, 2000);
   };
+
   return (
     <Layout>
-      <div className="max-w-container-max mx-auto h-full flex flex-col lg:flex-row gap-gutter">
+      <div className="mx-auto flex h-full max-w-7xl flex-col gap-6 lg:flex-row">
+        {/* Camera / viewfinder */}
+        <section className="flex min-h-[500px] flex-1 flex-col gap-4">
+          <div>
+            <h2 className="font-display text-2xl font-medium tracking-tight text-foreground">Photo Solve</h2>
+            <p className="mt-1 text-muted-foreground">
+              Capture or upload a math problem to get step-by-step solutions.
+            </p>
+          </div>
 
-<section className="flex-1 flex flex-col gap-stack-md min-h-[500px]">
-<div className="flex items-center justify-between">
-<div>
-<h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Photo Solve</h2>
-<p className="font-body-md text-body-md text-on-surface-variant mt-1">Capture or upload a math problem to get step-by-step solutions.</p>
-</div>
-</div>
+          <Card className="relative flex flex-1 flex-col overflow-hidden p-0">
+            <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-[#0a0b0e]">
+              <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.55)_100%)]" />
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-70 mix-blend-luminosity"
+                style={{
+                  backgroundImage:
+                    'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBx06L8wdI3krJn2OcyahOgtKrMOeafNcZbxyeS60S5IGhwgWjFN256KElhsydVDl9UEDrHfzM1pA4M_XxgtesCB3azWJ69AUip3iAWIzAvUnwdC1XgH33zcxTDL-_RX0nhBasRS4aHj8d9gmjfytTQyuerHKda1ucBvfV89tCdeDvp1MlbzRHQE5VK7arByGi5OBsxCVh5Nb_L00DrDfse0bcPZ6_XDBQifVCJXTBw2AQrBAQbglYZbA")',
+                }}
+              />
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-ember/5 backdrop-blur-[2px]">
+                {(isAnalyzing || showSolution) && (
+                  <div className="relative aspect-[4/3] w-[80%] max-w-md overflow-hidden rounded-xl border-2 border-ember/50">
+                    <div className="absolute left-0 top-0 h-8 w-8 rounded-tl-lg border-l-4 border-t-4 border-ember" />
+                    <div className="absolute right-0 top-0 h-8 w-8 rounded-tr-lg border-r-4 border-t-4 border-ember" />
+                    <div className="absolute bottom-0 left-0 h-8 w-8 rounded-bl-lg border-b-4 border-l-4 border-ember" />
+                    <div className="absolute bottom-0 right-0 h-8 w-8 rounded-br-lg border-b-4 border-r-4 border-ember" />
 
-<div className="relative flex-1 bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden flex flex-col">
+                    {isAnalyzing && (
+                      <div className="absolute inset-x-0 top-1/2 z-20 h-0.5 animate-pulse bg-ember shadow-[0_0_12px_2px_hsl(var(--ember)/0.8)]" />
+                    )}
 
-<div className="relative flex-1 bg-inverse-surface flex items-center justify-center overflow-hidden"><div className="absolute inset-0 z-10 pointer-events-none bg-[radial-gradient(circle,transparent_40%,rgba(0,0,0,0.4)_100%)]"></div>
+                    <div className="absolute inset-0 flex items-center justify-center p-4">
+                      <div className="scale-110 rounded-lg border border-border bg-card/90 p-3 shadow-lg backdrop-blur-sm">
+                        <span className="font-serif text-lg font-semibold text-foreground">
+                          ∫ x²(x³ + 1)⁴ dx
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-<div className="absolute inset-0 bg-cover bg-center opacity-80 mix-blend-luminosity" data-alt="A slightly blurred, top-down view of a textbook page showing complex calculus integration problems. The paper is well-lit but slightly off-white, typical of a textbook. A modern UI overlay is framing the central equation." style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBx06L8wdI3krJn2OcyahOgtKrMOeafNcZbxyeS60S5IGhwgWjFN256KElhsydVDl9UEDrHfzM1pA4M_XxgtesCB3azWJ69AUip3iAWIzAvUnwdC1XgH33zcxTDL-_RX0nhBasRS4aHj8d9gmjfytTQyuerHKda1ucBvfV89tCdeDvp1MlbzRHQE5VK7arByGi5OBsxCVh5Nb_L00DrDfse0bcPZ6_XDBQifVCJXTBw2AQrBAQbglYZbA")' }}></div>
+                {isAnalyzing && (
+                  <div className="mt-6 flex items-center gap-2 rounded-full bg-background/80 px-4 py-2 backdrop-blur-md">
+                    <Loader2 className="h-4 w-4 animate-spin text-ember" />
+                    <span className="font-mono text-xs tracking-wider text-foreground">ANALYZING EQUATION...</span>
+                  </div>
+                )}
+              </div>
+            </div>
 
-<div className="absolute inset-0 bg-primary-container/20 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center">
+            <div className="z-20 flex h-20 items-center justify-between border-t border-border bg-card px-6">
+              <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full text-muted-foreground">
+                <Images className="h-5 w-5" />
+              </Button>
 
-{(isAnalyzing || showSolution) && (
-<div className="relative w-[80%] max-w-md aspect-[4/3] border-2 border-primary-fixed-dim/50 rounded-xl overflow-hidden pulse-overlay">
+              <button
+                onClick={handleCapture}
+                disabled={isAnalyzing}
+                className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-border transition-all ${
+                  isAnalyzing ? 'cursor-not-allowed opacity-50' : 'hover:scale-105 hover:border-ember'
+                }`}
+              >
+                <div className={`h-10 w-10 rounded-full ${isAnalyzing ? 'bg-muted' : 'bg-ember-gradient'}`} />
+              </button>
 
-<div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
-<div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
-<div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
-<div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
+              <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full text-muted-foreground">
+                <Zap className="h-5 w-5" />
+              </Button>
+            </div>
+          </Card>
+        </section>
 
-{isAnalyzing && <div className="absolute left-0 right-0 h-1 scanning-line z-20"></div>}
+        {/* Solution panel */}
+        <section className="flex flex-[1.2] flex-col gap-4 overflow-y-auto pb-8 pr-1">
+          {showSolution ? (
+            <>
+              <Card className="flex items-start justify-between p-6">
+                <div>
+                  <div className="mb-2 flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-gold" />
+                    <span className="text-sm font-medium text-gold">Problem detected</span>
+                  </div>
+                  <h3 className="font-display text-xl font-medium text-foreground">
+                    Integration by Substitution
+                  </h3>
+                  <p className="text-sm text-muted-foreground">Calculus II • Techniques of Integration</p>
+                </div>
+                <Badge variant="gold" className="gap-1 rounded-full">
+                  <Award className="h-3.5 w-3.5" /> +15 XP
+                </Badge>
+              </Card>
 
-<div className="absolute inset-0 flex items-center justify-center p-4">
-<div className="bg-surface-container-lowest/90 backdrop-blur-sm p-3 rounded-lg shadow-lg border border-outline-variant transform scale-110 transition-all">
-<span className="font-body-lg text-body-lg text-on-surface font-semibold font-serif">∫ x²(x³ + 1)⁴ dx</span>
-</div>
-</div>
-</div>
-)}
+              <Card className="p-6">
+                <h4 className="mb-4 border-b border-border pb-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                  Extracted problem
+                </h4>
+                <div className="flex justify-center overflow-x-auto rounded-xl border border-border bg-secondary/30 py-4">
+                  <div className="whitespace-nowrap px-4 py-2 font-serif text-2xl text-foreground">
+                    ∫ x²(x³ + 1)⁴ dx
+                  </div>
+                </div>
+              </Card>
 
-{isAnalyzing && (
-<div className="mt-6 flex items-center gap-2 text-surface-container-lowest bg-inverse-surface/80 px-4 py-2 rounded-full backdrop-blur-md">
-<span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
-<span className="font-label-md text-label-md tracking-wider">ANALYZING EQUATION...</span>
-</div>
-)}
-</div>
-</div>
+              <Card className="flex flex-1 flex-col p-6">
+                <div className="mb-6 flex items-center justify-between border-b border-border pb-2">
+                  <h4 className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ember">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Solution steps
+                  </h4>
+                  <Badge variant="secondary" className="rounded-md font-sans">
+                    4 steps
+                  </Badge>
+                </div>
 
-<div className="h-20 bg-surface-container-lowest border-t border-outline-variant flex items-center justify-between px-6 z-20">
-<button className="p-3 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
-<span className="material-symbols-outlined">photo_library</span>
-</button>
+                <div className="relative flex flex-col gap-4">
+                  <div className="absolute bottom-4 left-[15px] top-4 z-0 w-px bg-border" />
 
-<button onClick={handleCapture} disabled={isAnalyzing} className={`w-14 h-14 rounded-full border-4 border-outline-variant flex items-center justify-center transition-all ${isAnalyzing ? 'opacity-50 cursor-not-allowed' : 'hover:border-primary hover:scale-105'}`}>
-<div className={`w-10 h-10 rounded-full ${isAnalyzing ? 'bg-outline-variant' : 'bg-primary'}`}></div>
-</button>
-<button className="p-3 rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
-<span className="material-symbols-outlined">flash_on</span>
-</button>
-</div>
-</div>
-</section>
+                  {steps.map((step) => (
+                    <div
+                      key={step.n}
+                      className="relative z-10 flex gap-4 rounded-xl border border-border bg-secondary/20 p-4 shadow-sm transition-transform hover:-translate-y-0.5"
+                    >
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-ember-gradient text-sm font-bold text-ember-foreground shadow-sm">
+                        {step.n}
+                      </div>
+                      <div className="flex-1">
+                        <p className="mb-2 font-medium text-foreground">{step.title}</p>
+                        {step.body && <p className="mb-3 text-sm leading-relaxed text-muted-foreground">{step.body}</p>}
+                        <div className="whitespace-pre-line rounded-lg border border-border/60 bg-card p-3 font-serif text-foreground">
+                          {step.math}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
 
-<section className="flex-[1.2] flex flex-col gap-stack-md h-full overflow-y-auto pr-2 pb-8">
-{showSolution ? (
-  <>
-<div className="flex items-start justify-between bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant bg-gradient-to-br from-surface-container-lowest to-surface-container-low">
-<div>
-<div className="flex items-center gap-2 mb-2">
-<span className="material-symbols-outlined text-tertiary">check_circle</span>
-<span className="font-label-md text-label-md text-tertiary">Problem Detected</span>
-</div>
-<h3 className="font-headline-md text-headline-md text-on-surface mb-1">Integration by Substitution</h3>
-<p className="font-body-md text-body-md text-on-surface-variant">Calculus II • Techniques of Integration</p>
-</div>
-<div className="bg-secondary-container/20 text-on-secondary-container px-3 py-1 rounded-full flex items-center gap-1 border border-secondary-container/30">
-<span className="material-symbols-outlined text-sm text-secondary">workspace_premium</span>
-<span className="font-caption text-caption font-bold">+15 XP</span>
-</div>
-</div>
-
-<div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant bg-gradient-to-br from-surface-container-lowest to-surface-container-low">
-<h4 className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-4 border-b border-outline-variant pb-2">Extracted Problem</h4>
-<div className="flex justify-center py-4 bg-surface rounded-xl border border-outline-variant/50 overflow-x-auto">
-<div className="text-2xl font-serif text-on-surface whitespace-nowrap px-4 py-2">
-                                ∫ x²(x³ + 1)⁴ dx
-                            </div>
-</div>
-</div>
-
-<div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant flex-1 flex flex-col bg-gradient-to-br from-surface-container-lowest to-surface-container-low">
-<div className="flex items-center justify-between mb-6 border-b border-outline-variant pb-2">
-<h4 className="font-label-md text-label-md text-primary uppercase tracking-wider flex items-center gap-2">
-<span className="material-symbols-outlined text-sm">auto_awesome</span>
-                                Solution Steps
-                            </h4>
-<span className="font-caption text-caption text-on-surface-variant bg-surface px-2 py-1 rounded-md border border-outline-variant">4 Steps</span>
-</div>
-<div className="flex flex-col gap-4 relative">
-
-<div className="absolute left-[15px] top-4 bottom-4 w-[2px] bg-outline-variant/30 z-0"></div>
-
-<div className="relative z-10 flex gap-4 bg-surface hover:-translate-y-[2px] transition-transform p-4 rounded-xl border border-outline-variant/50 shadow-sm">
-<div className="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shrink-0 border border-surface shadow-sm">1</div>
-<div className="flex-1">
-<p className="font-label-md text-label-md text-on-surface mb-2">Identify the substitution.</p>
-<p className="font-body-md text-body-md text-on-surface-variant mb-3">Let <span className="font-serif italic text-on-surface">u</span> be the inner function. The derivative of <span className="font-serif italic text-on-surface">x³ + 1</span> is <span className="font-serif italic text-on-surface">3x²</span>, which is closely related to the remaining part of the integrand.</p>
-<div className="bg-surface-container-low p-3 rounded-lg border border-outline-variant/30 font-serif text-on-surface">
-                                        u = x³ + 1<br/>
-                                        du = 3x² dx
-                                    </div>
-</div>
-</div>
-
-<div className="relative z-10 flex gap-4 bg-surface hover:-translate-y-[2px] transition-transform p-4 rounded-xl border border-outline-variant/50 shadow-sm">
-<div className="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center font-bold text-sm shrink-0 border border-outline-variant shadow-sm">2</div>
-<div className="flex-1">
-<p className="font-label-md text-label-md text-on-surface mb-2">Rewrite the integral.</p>
-<div className="bg-surface-container-low p-3 rounded-lg border border-outline-variant/30 font-serif text-on-surface">
-                                        ∫ (1/3) * u⁴ du
-                                    </div>
-</div>
-</div>
-</div>
-</div>
-
-<div className="grid grid-cols-2 gap-4 mt-2">
-<button className="bg-primary-container text-on-primary-container font-label-md text-label-md py-4 rounded-xl border-push hover:bg-primary transition-colors flex items-center justify-center gap-2 shadow-sm bg-gradient-to-r from-primary-container to-primary">
-<span className="material-symbols-outlined">style</span>
-                            Add to Flashcards
-                        </button>
-<button className="bg-surface-container-highest text-on-surface font-label-md text-label-md py-4 rounded-xl border-push border border-outline-variant hover:bg-surface-variant transition-colors flex items-center justify-center gap-2 shadow-sm">
-<span className="material-symbols-outlined text-primary">chat_spark</span>
-                            Ask AI about this
-                        </button>
-</div>
-  </>
-) : (
-  <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-surface-container-lowest/50 rounded-2xl border-2 border-dashed border-outline-variant/50">
-    <span className="material-symbols-outlined text-[48px] text-outline mb-4">center_focus_weak</span>
-    <h3 className="font-headline-md text-headline-md text-on-surface mb-2">Capture to Solve</h3>
-    <p className="font-body-md text-body-md text-on-surface-variant max-w-sm">Tap the capture button to scan a math problem. StudyForge AI will provide step-by-step solutions instantly.</p>
-  </div>
-)}
-</section>
-</div>
+              <div className="mt-2 grid grid-cols-2 gap-4">
+                <Button className="h-14 gap-2">
+                  <Layers className="h-4 w-4" />
+                  Add to flashcards
+                </Button>
+                <Button variant="secondary" className="h-14 gap-2">
+                  <MessageSquareText className="h-4 w-4 text-ember" />
+                  Ask AI about this
+                </Button>
+              </div>
+            </>
+          ) : (
+            <Card className="flex flex-1 flex-col items-center justify-center border-2 border-dashed border-border bg-secondary/10 p-8 text-center">
+              <Aperture className="mb-4 h-12 w-12 text-muted-foreground" />
+              <h3 className="mb-2 font-display text-xl font-medium text-foreground">Capture to solve</h3>
+              <p className="max-w-sm text-muted-foreground">
+                Tap the capture button to scan a math problem. StudyForge AI will provide step-by-step solutions
+                instantly.
+              </p>
+            </Card>
+          )}
+        </section>
+      </div>
     </Layout>
   );
 }
