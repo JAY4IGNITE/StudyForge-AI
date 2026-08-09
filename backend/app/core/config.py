@@ -45,6 +45,13 @@ class Settings(BaseSettings):
 
     NVIDIA_NIM_API_KEY: Optional[str] = None
 
+    R2_ACCOUNT_ID: Optional[str] = None
+    R2_ACCESS_KEY_ID: Optional[str] = None
+    R2_SECRET_ACCESS_KEY: Optional[str] = None
+    R2_BUCKET_NAME: Optional[str] = None
+    R2_ENDPOINT: Optional[str] = None
+    R2_PRESIGNED_URL_EXPIRY_SECONDS: int = 3600
+
     AI_MAX_RETRIES: int = 2
     AI_REQUEST_TIMEOUT_SECONDS: int = 30
     AI_MAX_DAILY_REQUESTS_PER_USER: int = 100
