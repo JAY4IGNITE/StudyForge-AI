@@ -1,15 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import { Problem, ProblemSubmission } from '../types';
 import { Search, Code2, Tag, CheckCircle2, ChevronRight, Circle, MinusCircle } from 'lucide-react';
+import { Input } from '../../../components/ui/input';
+import { Badge } from '../../../components/ui/badge';
+import { cn } from '../../../lib/utils';
 
 const SUBMISSIONS_KEY = 'studyforge_leetcode_submissions';
 
 type SolvedStatus = 'solved' | 'attempted' | 'unsolved';
 
 function getSolvedStatus(problemId: string, submissions: ProblemSubmission[]): SolvedStatus {
-  const problemSubs = submissions.filter(s => s.problemId === problemId);
+  const problemSubs = submissions.filter((s) => s.problemId === problemId);
   if (problemSubs.length === 0) return 'unsolved';
-  if (problemSubs.some(s => s.status === 'Accepted')) return 'solved';
+  if (problemSubs.some((s) => s.status === 'Accepted')) return 'solved';
   return 'attempted';
 }
 
@@ -19,11 +22,13 @@ interface ProblemListProps {
   selectedProblemId?: string;
 }
 
-export const ProblemList: React.FC<ProblemListProps> = ({
-  problems,
-  onSelectProblem,
-  selectedProblemId
-}) => {
+const DIFFICULTY_CLASSES: Record<string, string> = {
+  Easy: 'text-gold bg-gold/10 border-gold/25',
+  Medium: 'text-ember bg-ember/10 border-ember/25',
+  Hard: 'text-destructive bg-destructive/10 border-destructive/25',
+};
+
+export const ProblemList: React.FC<ProblemListProps> = ({ problems, onSelectProblem, selectedProblemId }) => {
   const [search, setSearch] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState<'All' | 'Solved' | 'Attempted' | 'Unsolved'>('All');
@@ -34,11 +39,12 @@ export const ProblemList: React.FC<ProblemListProps> = ({
     } catch {
       return [];
     }
-  }, [selectedProblemId]); // Re-read when selection changes (after potential submission)
+  }, [selectedProblemId]);
 
-  const filtered = problems.filter(p => {
-    const matchesSearch = p.title.toLowerCase().includes(search.toLowerCase()) ||
-                          p.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
+  const filtered = problems.filter((p) => {
+    const matchesSearch =
+      p.title.toLowerCase().includes(search.toLowerCase()) ||
+      p.tags.some((t) => t.toLowerCase().includes(search.toLowerCase()));
     const matchesDiff = difficultyFilter === 'All' || p.difficulty === difficultyFilter;
 
     if (!matchesSearch || !matchesDiff) return false;
@@ -51,56 +57,57 @@ export const ProblemList: React.FC<ProblemListProps> = ({
     return true;
   });
 
-  const solvedCount = problems.filter(p => getSolvedStatus(p.id, submissions) === 'solved').length;
+  const solvedCount = problems.filter((p) => getSolvedStatus(p.id, submissions) === 'solved').length;
 
   return (
-    <div className="flex flex-col h-full bg-slate-900/90 border-r border-slate-800">
-      {/* Search & Filter Header */}
-      <div className="p-4 border-b border-slate-800 space-y-3">
+    <div className="flex h-full flex-col border-r border-border bg-card/90">
+      <div className="space-y-3 border-b border-border p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Code2 className="w-5 h-5 text-indigo-400" />
-            <h2 className="font-bold text-white text-base">Problem Bank</h2>
+            <Code2 className="h-5 w-5 text-ember" />
+            <h2 className="text-base font-bold text-foreground">Problem Bank</h2>
           </div>
-          <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+          <Badge variant="gold" className="rounded-md font-mono">
             {solvedCount}/{problems.length}
-          </span>
+          </Badge>
         </div>
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-3" />
-          <input
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search problems or tags..."
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500/50"
+            className="h-10 pl-9 text-xs"
           />
         </div>
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
-          {['All', 'Easy', 'Medium', 'Hard'].map(diff => (
+          {['All', 'Easy', 'Medium', 'Hard'].map((diff) => (
             <button
               key={diff}
               onClick={() => setDifficultyFilter(diff)}
-              className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${
+              className={cn(
+                'rounded-lg px-3 py-1 text-xs font-semibold transition-colors',
                 difficultyFilter === diff
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-slate-800 text-slate-400 hover:text-slate-200'
-              }`}
+                  ? 'bg-ember-gradient text-ember-foreground'
+                  : 'bg-secondary text-muted-foreground hover:text-foreground'
+              )}
             >
               {diff}
             </button>
           ))}
         </div>
         <div className="flex items-center gap-1.5 overflow-x-auto">
-          {(['All', 'Solved', 'Attempted', 'Unsolved'] as const).map(st => (
+          {(['All', 'Solved', 'Attempted', 'Unsolved'] as const).map((st) => (
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-2.5 py-0.5 rounded-md text-[10px] font-semibold transition-colors ${
+              className={cn(
+                'rounded-md px-2.5 py-0.5 text-[10px] font-semibold transition-colors',
                 statusFilter === st
-                  ? 'bg-slate-700 text-white'
-                  : 'text-slate-500 hover:text-slate-300'
-              }`}
+                  ? 'bg-secondary text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
             >
               {st}
             </button>
@@ -108,55 +115,59 @@ export const ProblemList: React.FC<ProblemListProps> = ({
         </div>
       </div>
 
-      {/* List Feed */}
-      <div className="flex-1 overflow-y-auto divide-y divide-slate-800/60">
-        {filtered.map(p => {
+      <div className="flex-1 divide-y divide-border/60 overflow-y-auto">
+        {filtered.map((p) => {
           const isSelected = p.id === selectedProblemId;
-          const diffColor = p.difficulty === 'Easy' ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' :
-                            p.difficulty === 'Medium' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
-                            'text-rose-400 bg-rose-500/10 border-rose-500/20';
           const status = getSolvedStatus(p.id, submissions);
           return (
             <button
               key={p.id}
               onClick={() => onSelectProblem(p)}
-              className={`w-full p-4 text-left transition-colors flex items-center gap-3 group ${
-                isSelected ? 'bg-indigo-600/10 border-l-2 border-indigo-500' : 'hover:bg-slate-800/40'
-              }`}
+              className={cn(
+                'group flex w-full items-center gap-3 p-4 text-left transition-colors',
+                isSelected ? 'border-l-2 border-ember bg-ember/10' : 'hover:bg-secondary/40'
+              )}
             >
-              {/* Solved indicator */}
               <div className="shrink-0">
                 {status === 'solved' ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle2 className="h-4 w-4 text-gold" />
                 ) : status === 'attempted' ? (
-                  <MinusCircle className="w-4 h-4 text-amber-400" />
+                  <MinusCircle className="h-4 w-4 text-ember" />
                 ) : (
-                  <Circle className="w-4 h-4 text-slate-700" />
+                  <Circle className="h-4 w-4 text-muted-foreground/40" />
                 )}
               </div>
-              <div className="flex-1 space-y-1.5 min-w-0">
-                <h3 className={`text-xs font-bold transition-colors truncate ${isSelected ? 'text-indigo-400' : 'text-slate-200 group-hover:text-white'}`}>
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <h3
+                  className={cn(
+                    'truncate text-xs font-bold transition-colors',
+                    isSelected ? 'text-ember' : 'text-foreground/85 group-hover:text-foreground'
+                  )}
+                >
                   {p.title}
                 </h3>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold ${diffColor}`}>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className={cn('rounded border px-2 py-0.5 text-[10px] font-semibold', DIFFICULTY_CLASSES[p.difficulty])}>
                     {p.difficulty}
                   </span>
-                  {p.tags.slice(0, 2).map(t => (
-                    <span key={t} className="text-[10px] text-slate-500 flex items-center gap-0.5">
-                      <Tag className="w-2.5 h-2.5" /> {t}
+                  {p.tags.slice(0, 2).map((t) => (
+                    <span key={t} className="flex items-center gap-0.5 text-[10px] text-muted-foreground">
+                      <Tag className="h-2.5 w-2.5" /> {t}
                     </span>
                   ))}
                 </div>
               </div>
-              <ChevronRight className={`w-4 h-4 shrink-0 transition-colors ${isSelected ? 'text-indigo-400' : 'text-slate-600 group-hover:text-slate-400'}`} />
+              <ChevronRight
+                className={cn(
+                  'h-4 w-4 shrink-0 transition-colors',
+                  isSelected ? 'text-ember' : 'text-muted-foreground/50 group-hover:text-muted-foreground'
+                )}
+              />
             </button>
           );
         })}
         {filtered.length === 0 && (
-          <div className="p-6 text-center text-xs text-slate-500">
-            No problems match your filters.
-          </div>
+          <div className="p-6 text-center text-xs text-muted-foreground">No problems match your filters.</div>
         )}
       </div>
     </div>
