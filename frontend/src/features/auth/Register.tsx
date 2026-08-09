@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
-import { UserPlus, Sparkles } from 'lucide-react';
+import { UserPlus, Flame } from 'lucide-react';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
 
 export const Register: React.FC = () => {
   const [displayName, setDisplayName] = useState('');
@@ -30,76 +34,81 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-950">
-      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 p-8 rounded-2xl shadow-2xl backdrop-blur-xl">
-        <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-indigo-600/20 text-indigo-400 rounded-xl mb-3">
-            <Sparkles className="w-8 h-8" />
+    <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
+      <Card className="w-full max-w-md p-8 shadow-2xl">
+        <div className="mb-8 text-center">
+          <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
+            <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
           </div>
-          <h1 className="text-2xl font-bold text-slate-100">Create your StudyForge Account</h1>
-          <p className="text-sm text-slate-400 mt-1">Start your adaptive practice journey today</p>
+          <h1 className="font-display text-2xl font-medium text-foreground">Create your StudyForge account</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Start your adaptive practice journey today</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-sm">
+          <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Full Name</label>
-            <input
+            <Label htmlFor="name" className="mb-1.5 block text-sm font-medium text-foreground">
+              Full name
+            </Label>
+            <Input
+              id="name"
               type="text"
               required
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
               placeholder="Jane Doe"
+              className="h-12"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email address</label>
-            <input
+            <Label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground">
+              Email address
+            </Label>
+            <Input
+              id="email"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
               placeholder="jane@example.com"
+              className="h-12"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Password</label>
-            <input
+            <Label htmlFor="password" className="mb-1.5 block text-sm font-medium text-foreground">
+              Password
+            </Label>
+            <Input
+              id="password"
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
               placeholder="••••••••"
+              className="h-12"
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            <UserPlus className="w-5 h-5" />
+          <Button type="submit" disabled={loading} className="h-12 w-full gap-2">
+            <UserPlus className="h-4 w-4" />
             {loading ? 'Registering...' : 'Register'}
-          </button>
+          </Button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-400">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link to="/login" className="text-indigo-400 hover:underline font-medium">
+          <Link to="/login" className="font-medium text-ember hover:underline">
             Log in
           </Link>
         </p>
-      </div>
+      </Card>
     </div>
   );
 };

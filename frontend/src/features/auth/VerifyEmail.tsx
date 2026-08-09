@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
 import { KeyRound, CheckCircle } from 'lucide-react';
+import { AuthShell } from '../../components/auth/AuthShell';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
 
 export const VerifyEmail: React.FC = () => {
   const location = useLocation();
@@ -32,63 +36,47 @@ export const VerifyEmail: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-slate-950">
-      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 p-8 rounded-2xl shadow-2xl backdrop-blur-xl">
-        <div className="text-center mb-8">
-          <div className="inline-flex p-3 bg-indigo-600/20 text-indigo-400 rounded-xl mb-3">
-            <KeyRound className="w-8 h-8" />
-          </div>
-          <h1 className="text-2xl font-bold text-slate-100">Verify your Email</h1>
-          <p className="text-sm text-slate-400 mt-1">Enter the 6-digit OTP code sent to your email</p>
+    <AuthShell icon={KeyRound} title="Verify your email" subtitle="Enter the 6-digit OTP code sent to your email">
+      {error && (
+        <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
+          {error}
+        </div>
+      )}
+      {message && (
+        <div className="mb-6 flex items-center gap-2 rounded-xl border border-gold/30 bg-gold/10 p-4 text-sm text-gold">
+          <CheckCircle className="h-4 w-4" />
+          {message}
+        </div>
+      )}
+
+      <form onSubmit={handleVerify} className="space-y-4">
+        <div>
+          <Label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground">
+            Email address
+          </Label>
+          <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
         </div>
 
-        {error && (
-          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-sm">
-            {error}
-          </div>
-        )}
+        <div>
+          <Label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-foreground">
+            6-digit OTP code
+          </Label>
+          <Input
+            id="otp"
+            type="text"
+            required
+            maxLength={6}
+            value={otpCode}
+            onChange={(e) => setOtpCode(e.target.value)}
+            placeholder="123456"
+            className="h-14 text-center font-mono text-2xl tracking-widest"
+          />
+        </div>
 
-        {message && (
-          <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-sm flex items-center gap-2">
-            <CheckCircle className="w-5 h-5" />
-            {message}
-          </div>
-        )}
-
-        <form onSubmit={handleVerify} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email address</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100 placeholder-slate-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">6-Digit OTP Code</label>
-            <input
-              type="text"
-              required
-              maxLength={6}
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              className="w-full text-center tracking-widest text-2xl font-mono px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-100"
-              placeholder="123456"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {loading ? 'Verifying...' : 'Verify Email'}
-          </button>
-        </form>
-      </div>
-    </div>
+        <Button type="submit" disabled={loading} className="h-12 w-full">
+          {loading ? 'Verifying...' : 'Verify email'}
+        </Button>
+      </form>
+    </AuthShell>
   );
 };

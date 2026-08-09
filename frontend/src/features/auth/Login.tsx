@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
 import { useAuth } from '../../app/AuthProvider';
-import { Sprout, Mail, Lock, ArrowRight, Github } from 'lucide-react';
+import { Flame, Mail, Lock, ArrowRight, Github } from 'lucide-react';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Separator } from '../../components/ui/separator';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -28,126 +33,104 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#0B0F19] font-sans">
-      <div className="w-full max-w-md bg-[#151923] border border-[#1E2532] p-10 rounded-2xl shadow-2xl">
-        
-        {/* Header / Logo */}
-        <div className="text-center mb-10 flex flex-col items-center">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <Sprout className="w-8 h-8 text-[#06b6d4]" />
-            <h1 className="text-3xl font-extrabold text-white tracking-tight">StudyForge-AI</h1>
+    <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
+      <Card className="w-full max-w-md p-10 shadow-2xl">
+        <div className="mb-10 flex flex-col items-center text-center">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
+            <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
           </div>
-          <p className="text-sm text-slate-400 max-w-[250px]">
+          <h1 className="font-display text-2xl font-medium tracking-tight text-foreground">
+            StudyForge<span className="text-ember">.</span>
+          </h1>
+          <p className="mt-2 max-w-[250px] text-sm text-muted-foreground">
             Access your AI-powered learning workspace.
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-sm text-center">
+          <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-center text-sm text-destructive">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email Field */}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-[11px] font-bold text-slate-400 mb-2 uppercase tracking-wider">
-              Email Address
-            </label>
+            <Label htmlFor="email" className="mb-2 block text-[11px] uppercase tracking-wider text-muted-foreground">
+              Email address
+            </Label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-slate-500" />
-              </div>
-              <input
+              <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 bg-[#0F1219] border border-[#1E2532] rounded-xl focus:ring-1 focus:ring-[#706BFF] focus:border-[#706BFF] focus:outline-none text-slate-100 placeholder-slate-600 transition-colors"
                 placeholder="scholar@institute.edu"
+                className="h-12 pl-10"
               />
             </div>
           </div>
 
-          {/* Password Field */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="mb-2 flex items-center justify-between">
+              <Label htmlFor="password" className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 Password
-              </label>
-              <Link to="/forgot-password" className="text-[11px] font-bold text-[#06b6d4] hover:text-[#06b6d4]/80 transition-colors">
+              </Label>
+              <Link to="/forgot-password" className="text-[11px] font-medium text-ember hover:text-ember/80">
                 Forgot?
               </Link>
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-slate-500" />
-              </div>
-              <input
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="password"
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 bg-[#0F1219] border border-[#1E2532] rounded-xl focus:ring-1 focus:ring-[#706BFF] focus:border-[#706BFF] focus:outline-none text-slate-100 placeholder-slate-600 transition-colors tracking-[0.2em]"
                 placeholder="••••••••"
+                className="h-12 pl-10 tracking-[0.2em]"
               />
             </div>
           </div>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 px-4 bg-[#706BFF] hover:bg-[#5E59F2] text-white text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2 tracking-wide"
-          >
-            {loading ? 'AUTHENTICATING...' : 'CONTINUE TO WORKSPACE'}
-            {!loading && <ArrowRight className="w-4 h-4" />}
-          </button>
+          <Button type="submit" disabled={loading} className="mt-2 h-12 w-full gap-2 text-xs font-bold uppercase tracking-wide">
+            {loading ? 'Authenticating...' : 'Continue to workspace'}
+            {!loading && <ArrowRight className="h-4 w-4" />}
+          </Button>
         </form>
 
-        {/* Divider */}
-        <div className="mt-8 mb-6 relative flex items-center justify-center">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-[#1E2532]"></div>
-          </div>
-          <div className="relative bg-[#151923] px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-            Or Authenticate Via
-          </div>
+        <div className="relative my-8 flex items-center justify-center">
+          <Separator className="absolute inset-x-0" />
+          <span className="relative bg-card px-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            Or authenticate via
+          </span>
         </div>
 
-        {/* OAuth Buttons */}
         <div className="space-y-3">
-          <button
-            type="button"
-            className="w-full py-3 px-4 bg-[#1A1F2B] hover:bg-[#202634] border border-[#232A3B] text-slate-300 text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-3"
-          >
-            {/* Minimal Google G SVG */}
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <Button variant="secondary" className="h-12 w-full gap-3">
+            <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
                 d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"
               />
             </svg>
             Continue with Google
-          </button>
-
-          <button
-            type="button"
-            className="w-full py-3 px-4 bg-[#1A1F2B] hover:bg-[#202634] border border-[#232A3B] text-slate-300 text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-3"
-          >
-            <Github className="w-5 h-5" />
+          </Button>
+          <Button variant="secondary" className="h-12 w-full gap-3">
+            <Github className="h-5 w-5" />
             Continue with GitHub
-          </button>
+          </Button>
         </div>
 
-        {/* Footer Link */}
-        <p className="mt-8 text-center text-xs text-slate-400">
+        <p className="mt-8 text-center text-xs text-muted-foreground">
           New researcher?{' '}
-          <Link to="/register" className="text-[#706BFF] hover:text-[#5E59F2] hover:underline transition-colors">
-            Request Access
+          <Link to="/register" className="font-medium text-ember hover:text-ember/80 hover:underline">
+            Request access
           </Link>
         </p>
-      </div>
+      </Card>
     </div>
   );
 };
