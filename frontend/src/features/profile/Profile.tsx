@@ -2,7 +2,26 @@ import React, { useState } from 'react';
 import { Layout } from '../../components/layout/Layout';
 import { useAuth } from '../../app/AuthProvider';
 import { apiClient } from '../../lib/axios';
-import { User, Target, Save, CheckCircle2 } from 'lucide-react';
+import { Save, CheckCircle2, Flame } from 'lucide-react';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Avatar, AvatarFallback } from '../../components/ui/avatar';
+import { Separator } from '../../components/ui/separator';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/ui/select';
+
+function initials(name?: string) {
+  if (!name) return 'SF';
+  const parts = name.trim().split(/\s+/);
+  return (parts[0]?.[0] ?? '').concat(parts[1]?.[0] ?? '').toUpperCase() || 'SF';
+}
 
 export const Profile: React.FC = () => {
   const { user, refreshUser } = useAuth();
@@ -33,75 +52,91 @@ export const Profile: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto space-y-8">
+      <div className="mx-auto max-w-2xl space-y-8">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-100">User Profile & Goals</h1>
-          <p className="text-slate-400 mt-1">Manage target roles, goals, and practice preferences</p>
+          <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
+            Profile &amp; goals
+          </h1>
+          <p className="mt-1 text-muted-foreground">Manage target roles, goals, and practice preferences</p>
         </div>
 
+        <Card className="flex items-center gap-4 p-6">
+          <Avatar className="h-16 w-16 text-lg">
+            <AvatarFallback>{initials(user?.display_name)}</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="font-display text-lg font-medium text-foreground">{user?.display_name}</p>
+            <p className="text-sm text-muted-foreground">{user?.email}</p>
+          </div>
+        </Card>
+
         {message && (
-          <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-400 text-sm flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="flex items-center gap-2 rounded-xl border border-gold/30 bg-gold/10 p-4 text-sm text-gold">
+            <CheckCircle2 className="h-5 w-5" />
             {message}
           </div>
         )}
 
-        <form onSubmit={handleSave} className="p-8 bg-slate-900/90 border border-slate-800 rounded-3xl space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email Address</label>
-            <input
-              type="text"
-              disabled
-              value={user?.email || ''}
-              className="w-full px-4 py-3 bg-slate-800/30 border border-slate-800 rounded-xl text-slate-500 cursor-not-allowed"
-            />
-          </div>
+        <Card className="p-0">
+          <form onSubmit={handleSave} className="space-y-6 p-8">
+            <div>
+              <Label className="mb-1.5 block text-sm font-medium text-foreground">Email address</Label>
+              <Input type="text" disabled value={user?.email || ''} className="h-12 cursor-not-allowed opacity-60" />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Display Name</label>
-            <input
-              type="text"
-              required
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-100"
-            />
-          </div>
+            <div>
+              <Label htmlFor="displayName" className="mb-1.5 block text-sm font-medium text-foreground">
+                Display name
+              </Label>
+              <Input
+                id="displayName"
+                type="text"
+                required
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className="h-12"
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Target Role</label>
-            <input
-              type="text"
-              required
-              value={targetRole}
-              onChange={(e) => setTargetRole(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-100"
-              placeholder="e.g., Senior Full-Stack Engineer"
-            />
-          </div>
+            <div>
+              <Label htmlFor="targetRole" className="mb-1.5 block text-sm font-medium text-foreground">
+                Target role
+              </Label>
+              <Input
+                id="targetRole"
+                type="text"
+                required
+                value={targetRole}
+                onChange={(e) => setTargetRole(e.target.value)}
+                placeholder="e.g., Senior Full-Stack Engineer"
+                className="h-12"
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Preferred Starting Difficulty</label>
-            <select
-              value={difficultyPref}
-              onChange={(e) => setDifficultyPref(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/60 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-slate-100"
-            >
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </div>
+            <div>
+              <Label className="mb-1.5 block text-sm font-medium text-foreground">
+                Preferred starting difficulty
+              </Label>
+              <Select value={difficultyPref} onValueChange={setDifficultyPref}>
+                <SelectTrigger className="h-12">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="easy">Easy</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="hard">Hard</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-xl shadow-indigo-600/30 transition-all flex items-center justify-center gap-2"
-          >
-            <Save className="w-5 h-5" />
-            {loading ? 'Saving...' : 'Save Changes'}
-          </button>
-        </form>
+            <Separator />
+
+            <Button type="submit" disabled={loading} className="h-14 w-full gap-2">
+              <Save className="h-5 w-5" />
+              {loading ? 'Saving...' : 'Save changes'}
+            </Button>
+          </form>
+        </Card>
       </div>
     </Layout>
   );
