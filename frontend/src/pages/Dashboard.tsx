@@ -1,8 +1,56 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  Bot,
+  Layers,
+  HelpCircle,
+  Map,
+  FileText,
+  Flame,
+  Timer,
+  Pause,
+  SkipForward,
+  ArrowUpRight,
+} from 'lucide-react';
 import { apiClient } from '../lib/axios';
 import { useAuth } from '../app/AuthProvider';
-import { Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import { Skeleton } from '../components/ui/skeleton';
+import { TemperBar, TemperGauge } from '../components/ui/temper-gauge';
+
+interface QuickAction {
+  to: string;
+  icon: React.ElementType;
+  title: string;
+  blurb: string;
+  accent: 'ember' | 'steel' | 'gold';
+}
+
+const quickActions: QuickAction[] = [
+  { to: '/ai-tutor', icon: Bot, title: 'Ask AI', blurb: 'Get instant help', accent: 'ember' },
+  { to: '/flashcards', icon: Layers, title: 'Flashcards', blurb: 'Review daily deck', accent: 'gold' },
+  { to: '/practice', icon: HelpCircle, title: 'Quiz Me', blurb: 'Test knowledge', accent: 'steel' },
+  { to: '/resources', icon: FileText, title: 'Notes', blurb: 'Auto-summarize', accent: 'steel' },
+];
+
+const accentClasses: Record<QuickAction['accent'], string> = {
+  ember: 'bg-ember/10 text-ember group-hover:bg-ember group-hover:text-ember-foreground',
+  steel: 'bg-steel/10 text-steel group-hover:bg-steel group-hover:text-[hsl(228_40%_9%)]',
+  gold: 'bg-gold/10 text-gold group-hover:bg-gold group-hover:text-[hsl(42_45%_9%)]',
+};
+
+const weekBars = [
+  { day: 'M', hours: 2, pct: 40 },
+  { day: 'T', hours: 3, pct: 60 },
+  { day: 'W', hours: 4.5, pct: 90, peak: true },
+  { day: 'T', hours: 1.5, pct: 30 },
+  { day: 'F', hours: 3.5, pct: 70 },
+  { day: 'S', hours: 0, pct: 4 },
+  { day: 'S', hours: 0, pct: 4 },
+];
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -27,156 +75,179 @@ export function Dashboard() {
     };
     loadDashboardData();
   }, []);
+
   return (
     <Layout>
-      <div className="max-w-container-max mx-auto">
+      <div className="mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="mb-8 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div>
+            <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
+              Welcome back, {user?.display_name?.split(' ')[0] || 'Student'}
+            </h1>
+            <p className="mt-1 text-muted-foreground">Ready to crush your goals today?</p>
+          </div>
+          <Card className="flex items-center gap-4 border-ember/20 bg-ember/5 px-5 py-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4)]">
+              <Flame className="h-5 w-5 text-ember-foreground" />
+            </div>
+            <div>
+              <div className="font-mono text-xl font-semibold leading-none text-ember">7 Days</div>
+              <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                Current streak
+              </div>
+            </div>
+          </Card>
+        </div>
 
-<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-lg gap-6">
-<div>
-<h1 className="font-headline-xl text-headline-xl text-on-surface mb-2">Welcome back, {user?.display_name?.split(' ')[0] || 'Student'}!</h1>
-<p className="font-body-lg text-body-lg text-on-surface-variant">Ready to crush your goals today?</p>
-</div>
-<div className="flex items-center gap-3 bg-gradient-to-r from-secondary-container/20 to-secondary-fixed/30 border border-secondary-fixed p-4 rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)]">
-<div className="bg-gradient-to-br from-secondary-container to-secondary w-12 h-12 rounded-full flex items-center justify-center shadow-sm">
-<span className="material-symbols-outlined filled-icon text-white text-2xl" data-icon="local_fire_department">local_fire_department</span>
-</div>
-<div>
-<div className="font-headline-md text-headline-md text-secondary font-bold">7 Days</div>
-<div className="font-caption text-caption text-secondary/80 font-medium uppercase tracking-wider">Current Streak</div>
-</div>
-</div>
-</div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+          {/* Quick actions */}
+          <div className="grid grid-cols-2 gap-4 md:col-span-8 md:grid-cols-3">
+            {quickActions.slice(0, 3).map((action) => {
+              const Icon = action.icon;
+              return (
+                <Link key={action.to} to={action.to} className="group">
+                  <Card className="h-full p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-14px_hsl(var(--ember)/0.35)]">
+                    <div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${accentClasses[action.accent]}`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-medium text-foreground">{action.title}</h3>
+                    <p className="mt-0.5 text-sm text-muted-foreground">{action.blurb}</p>
+                  </Card>
+                </Link>
+              );
+            })}
 
-<div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <Link to="/roadmap" className="group col-span-2">
+              <Card className="h-full p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-14px_hsl(var(--ember)/0.35)]">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex-1">
+                    <h3 className="font-display text-lg font-medium text-foreground">Study Roadmap</h3>
+                    <p className="mt-0.5 text-sm text-muted-foreground">Calculus midterm prep</p>
+                    <TemperBar value={75} className="mt-4 max-w-[220px]" />
+                  </div>
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ember/10 text-ember transition-colors group-hover:bg-ember group-hover:text-ember-foreground">
+                    <Map className="h-5 w-5" />
+                  </div>
+                </div>
+              </Card>
+            </Link>
 
-<div className="md:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+            <Link to="/resources" className="group">
+              <Card className="h-full p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-14px_hsl(var(--ember)/0.35)]">
+                <div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${accentClasses.steel}`}>
+                  <FileText className="h-5 w-5" />
+                </div>
+                <h3 className="font-medium text-foreground">Notes</h3>
+                <p className="mt-0.5 text-sm text-muted-foreground">Auto-summarize</p>
+              </Card>
+            </Link>
+          </div>
 
-<Link to="/ai-tutor" className="col-span-2 md:col-span-1 bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
-<div className="w-10 h-10 rounded-lg bg-primary-container/10 flex items-center justify-center mb-4 group-hover:bg-primary transition-colors">
-<span className="material-symbols-outlined text-primary group-hover:text-white transition-colors" data-icon="smart_toy">smart_toy</span>
-</div>
-<h3 className="font-label-md text-label-md text-on-surface mb-1">Ask AI</h3>
-<p className="font-caption text-caption text-on-surface-variant">Get instant help</p>
-</Link>
+          {/* Focus session */}
+          <Card className="relative overflow-hidden md:col-span-4">
+            <div className="bg-forge-glow pointer-events-none absolute inset-0" />
+            <CardContent className="relative flex flex-col items-center p-6">
+              <div className="mb-6 flex w-full items-center justify-between">
+                <Badge variant="ember" className="gap-1.5 rounded-md px-2.5 py-1">
+                  <Timer className="h-3 w-3" /> Focus session
+                </Badge>
+              </div>
+              <TemperGauge value={75} size={176} strokeWidth={8} className="mb-8">
+                <span className="font-mono text-4xl font-semibold tracking-tight text-foreground">18:42</span>
+                <span className="mt-1 text-xs text-muted-foreground">25/5 sprint</span>
+              </TemperGauge>
+              <div className="flex items-center gap-4">
+                <Button size="icon" className="h-12 w-12 rounded-full">
+                  <Pause className="h-5 w-5" />
+                </Button>
+                <Button variant="secondary" size="icon" className="h-12 w-12 rounded-full">
+                  <SkipForward className="h-5 w-5" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-<Link to="/flashcards" className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
-<div className="w-10 h-10 rounded-lg bg-tertiary-container/10 flex items-center justify-center mb-4 group-hover:bg-tertiary transition-colors">
-<span className="material-symbols-outlined text-tertiary group-hover:text-white transition-colors" data-icon="style">style</span>
-</div>
-<h3 className="font-label-md text-label-md text-on-surface mb-1">Flashcards</h3>
-<p className="font-caption text-caption text-on-surface-variant">Review daily deck</p>
-</Link>
+        {/* Progress snapshot */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Progress snapshot</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            {/* Weekly study time */}
+            <div>
+              <div className="mb-4 flex items-end justify-between">
+                <span className="text-sm font-medium text-muted-foreground">Weekly study time</span>
+                {loading ? (
+                  <Skeleton className="h-4 w-28" />
+                ) : (
+                  <span className="font-mono text-sm font-semibold text-foreground">
+                    {overview?.completed_sessions ?? 0} sessions
+                    <span className="ml-1.5 font-sans font-normal text-muted-foreground">
+                      avg {overview?.average_score ?? 0}%
+                    </span>
+                  </span>
+                )}
+              </div>
+              <div className="flex h-32 items-end justify-between gap-2 border-b border-border pb-2">
+                {weekBars.map((bar, i) => (
+                  <div key={i} className="group relative w-full">
+                    <span
+                      className={`absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-xs transition-opacity ${
+                        bar.peak ? 'font-semibold text-ember opacity-100' : 'text-muted-foreground opacity-0 group-hover:opacity-100'
+                      }`}
+                    >
+                      {bar.hours}h
+                    </span>
+                    <div
+                      className={`w-full rounded-t-sm transition-colors ${
+                        bar.peak ? 'bg-ember-gradient' : 'bg-secondary hover:bg-ember/30'
+                      }`}
+                      style={{ height: `${bar.pct}%` }}
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="mt-2 flex justify-between px-1 font-mono text-xs text-muted-foreground">
+                {weekBars.map((bar, i) => (
+                  <span key={i}>{bar.day}</span>
+                ))}
+              </div>
+            </div>
 
-<Link to="/practice" className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
-<div className="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center mb-4 group-hover:bg-secondary-container transition-colors">
-<span className="material-symbols-outlined text-secondary-container group-hover:text-white transition-colors" data-icon="quiz">quiz</span>
-</div>
-<h3 className="font-label-md text-label-md text-on-surface mb-1">Quiz Me</h3>
-<p className="font-caption text-caption text-on-surface-variant">Test knowledge</p>
-</Link>
-
-<Link to="/roadmap" className="col-span-2 md:col-span-2 bg-gradient-to-br from-surface-container-lowest to-surface-container-low border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-row items-center justify-between text-left group to-surface-container-high">
-<div>
-<h3 className="font-headline-md text-headline-md text-on-surface mb-2">Study Roadmap</h3>
-<p className="font-body-md text-body-md text-on-surface-variant mb-4">Calculus Midterm prep</p>
-<div className="flex items-center gap-2">
-<div className="w-32 h-2 bg-outline-variant/30 rounded-full overflow-hidden">
-<div className="w-3/4 h-full bg-primary rounded-full"></div>
-</div>
-<span className="font-caption text-caption text-primary font-semibold">75%</span>
-</div>
-</div>
-<div className="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center group-hover:bg-primary transition-colors">
-<span className="material-symbols-outlined text-primary group-hover:text-white transition-colors" data-icon="map">map</span>
-</div>
-</Link>
-
-<Link to="/resources" className="bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all flex flex-col items-start text-left group">
-<div className="w-10 h-10 rounded-lg bg-inverse-surface/5 flex items-center justify-center mb-4 group-hover:bg-inverse-surface transition-colors">
-<span className="material-symbols-outlined text-inverse-surface group-hover:text-white transition-colors" data-icon="summarize">summarize</span>
-</div>
-<h3 className="font-label-md text-label-md text-on-surface mb-1">Notes</h3>
-<p className="font-caption text-caption text-on-surface-variant">Auto-summarize</p>
-</Link>
-</div>
-
-<div className="md:col-span-4 bg-primary-container text-white p-stack-md rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.08)] flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-primary-container via-primary to-on-primary-fixed-variant">
-
-<div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-<div className="absolute bottom-0 left-0 w-24 h-24 bg-surface-tint/50 rounded-full blur-xl -ml-6 -mb-6"></div>
-<div className="z-10 text-center w-full">
-<div className="flex justify-between items-center w-full mb-6">
-<span className="font-label-md text-label-md text-primary-fixed-dim tracking-wider uppercase">Focus Session</span>
-<span className="material-symbols-outlined text-primary-fixed-dim" data-icon="timer">timer</span>
-</div>
-<div className="relative w-48 h-48 mx-auto mb-8 flex items-center justify-center">
-
-<svg className="absolute inset-0 w-full h-full" viewBox="0 0 120 120">
-<circle cx="60" cy="60" fill="none" r="54" stroke="rgba(255,255,255,0.2)" strokeWidth="6"></circle>
-<circle className="progress-ring__circle" cx="60" cy="60" fill="none" r="54" stroke="white" stroke-dasharray="339.292" stroke-dashoffset="84.823" strokeLinecap="round" strokeWidth="6"></circle>
-</svg>
-<div className="flex flex-col items-center">
-<span className="text-5xl font-headline-xl font-bold font-mono tracking-tighter">18:42</span>
-<span className="font-caption text-caption text-primary-fixed-dim mt-1">25/5 Sprint</span>
-</div>
-</div>
-<div className="flex justify-center gap-4">
-<button className="w-12 h-12 rounded-full bg-white text-primary-container flex items-center justify-center hover:scale-105 active:scale-95 transition-transform shadow-lg">
-<span className="material-symbols-outlined filled-icon text-2xl" data-icon="pause">pause</span>
-</button>
-<button className="w-12 h-12 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 active:scale-95 transition-all backdrop-blur-sm border border-white/30">
-<span className="material-symbols-outlined text-xl" data-icon="skip_next">skip_next</span>
-</button>
-</div>
-</div>
-</div>
-</div> 
-
-<div className="mt-8 bg-surface-container-lowest border border-outline-variant p-stack-md rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.03)]">
-<h2 className="font-headline-md text-headline-md text-on-surface mb-6">Progress Snapshot</h2>
-<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-<div>
-<div className="flex justify-between items-end mb-4">
-<span className="font-label-md text-label-md text-on-surface-variant">Weekly Study Time</span>
-<span className="font-body-md text-body-md text-on-surface font-bold">{overview?.completed_sessions || 0} Sessions <span className="text-tertiary-container font-normal text-sm ml-1">avg {overview?.average_score || 0}%</span></span>
-</div>
-
-<div className="h-32 flex items-end justify-between gap-2 border-b border-outline-variant pb-2">
-<div className="w-full bg-primary/20 rounded-t-sm h-[40%] hover:bg-primary/40 transition-colors relative group"><span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">2h</span></div>
-<div className="w-full bg-primary/20 rounded-t-sm h-[60%] hover:bg-primary/40 transition-colors relative group"><span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">3h</span></div>
-<div className="w-full bg-primary rounded-t-sm h-[90%] relative group"><span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-primary">4.5h</span></div>
-<div className="w-full bg-primary/20 rounded-t-sm h-[30%] hover:bg-primary/40 transition-colors relative group"><span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">1.5h</span></div>
-<div className="w-full bg-primary/20 rounded-t-sm h-[70%] hover:bg-primary/40 transition-colors relative group"><span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">3.5h</span></div>
-<div className="w-full bg-surface-container-high rounded-t-sm h-1 border border-dashed border-outline-variant"></div>
-<div className="w-full bg-surface-container-high rounded-t-sm h-1 border border-dashed border-outline-variant"></div>
-</div>
-<div className="flex justify-between text-xs text-outline mt-2 px-1">
-<span className="">M</span><span className="">T</span><span className="">W</span><span className="">T</span><span className="">F</span><span className="">S</span><span className="">S</span>
-</div>
-</div>
-
-<div>
-<span className="font-label-md text-label-md text-on-surface-variant block mb-4">Mastery Breakdown</span>
-<div className="space-y-4">
-
-{topicAnalytics?.weak_topics?.length > 0 ? topicAnalytics.weak_topics.map((topic: any) => (
-<div>
-<div className="flex justify-between text-sm mb-1">
-<span className="font-body-md text-body-md text-on-surface flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-primary"></span> {topic.topic_name}</span>
-<span className="font-body-md text-body-md font-medium">{topic.mastery_score}%</span>
-</div>
-<div className="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
-<div className="h-full bg-primary rounded-full" style={{ width: `${topic.mastery_score}%` }}></div>
-</div>
-</div>
-)) : (
-  <p className="text-sm text-slate-400">Great job! Keep practicing to uncover insights.</p>
-)}
-</div>
-</div>
-</div>
-</div>
+            {/* Mastery breakdown */}
+            <div>
+              <span className="mb-4 block text-sm font-medium text-muted-foreground">Mastery breakdown</span>
+              <div className="space-y-4">
+                {loading ? (
+                  <>
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                  </>
+                ) : topicAnalytics?.weak_topics?.length > 0 ? (
+                  topicAnalytics.weak_topics.map((topic: any) => (
+                    <div key={topic.topic_name}>
+                      <div className="mb-1.5 flex items-center justify-between text-sm">
+                        <span className="flex items-center gap-2 text-foreground">
+                          <span className="h-1.5 w-1.5 rounded-full bg-ember" /> {topic.topic_name}
+                        </span>
+                        <span className="font-mono font-medium text-foreground">{topic.mastery_score}%</span>
+                      </div>
+                      <TemperBar value={topic.mastery_score} showValue={false} />
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <ArrowUpRight className="h-4 w-4 text-gold" />
+                    Great job! Keep practicing to uncover insights.
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </Layout>
   );

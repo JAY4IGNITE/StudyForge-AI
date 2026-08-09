@@ -17,6 +17,9 @@ export interface TemperGaugeProps {
   label?: string;
   sublabel?: string;
   className?: string;
+  trackClassName?: string;
+  /** Override the default "NN%" center readout with custom content (e.g. a timer). */
+  children?: React.ReactNode;
 }
 
 export function TemperGauge({
@@ -26,6 +29,8 @@ export function TemperGauge({
   label,
   sublabel,
   className,
+  trackClassName,
+  children,
 }: TemperGaugeProps) {
   const clamped = Math.max(0, Math.min(100, value));
   const radius = (size - strokeWidth) / 2;
@@ -52,6 +57,7 @@ export function TemperGauge({
           fill="none"
           stroke="hsl(var(--border))"
           strokeWidth={strokeWidth}
+          className={trackClassName}
         />
         <circle
           cx={size / 2}
@@ -73,11 +79,15 @@ export function TemperGauge({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-mono text-2xl font-semibold tabular-nums leading-none">
-          {Math.round(clamped)}
-          <span className="text-sm text-muted-foreground">%</span>
-        </span>
-        {label && <span className="mt-1 text-[11px] font-medium text-muted-foreground">{label}</span>}
+        {children ?? (
+          <>
+            <span className="font-mono text-2xl font-semibold tabular-nums leading-none">
+              {Math.round(clamped)}
+              <span className="text-sm text-muted-foreground">%</span>
+            </span>
+            {label && <span className="mt-1 text-[11px] font-medium text-muted-foreground">{label}</span>}
+          </>
+        )}
       </div>
       {sublabel && (
         <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-muted-foreground">
