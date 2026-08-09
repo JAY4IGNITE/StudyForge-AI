@@ -3,12 +3,21 @@ import httpx
 from typing import List, Dict, Any, Optional
 from app.core.config import settings
 from app.core.logging import logger
+from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+
+class RateLimitError(Exception):
+    pass
 
 NVIDIA_NIM_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 DEFAULT_MODEL = "meta/llama-3.1-70b-instruct"
 
 class AIService:
     @staticmethod
+    @retry(
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+        stop=stop_after_attempt(3),
+        retry=retry_if_exception_type((httpx.RequestError, RateLimitError))
+    )
     async def chat_with_mentor(message: str, user_name: Optional[str] = None, history: Optional[List[Dict[str, str]]] = None) -> str:
         """
         Interacts with NVIDIA NIM (Llama 3.1 70B) to act as Socratic Study Mentor & Interview Coach.
@@ -49,9 +58,15 @@ class AIService:
                 if res.status_code == 200:
                     data = res.json()
                     return data["choices"][0]["message"]["content"]
+                elif res.status_code == 429:
+                    logger.warning("NVIDIA NIM Rate Limit Exceeded (429). Retrying...")
+                    raise RateLimitError("Rate limit exceeded")
                 else:
                     logger.error(f"NVIDIA NIM Chat API error {res.status_code}: {res.text}")
                     return f"NVIDIA NIM service error ({res.status_code}). Please try again."
+        except httpx.RequestError as e:
+            logger.error(f"Request error calling NVIDIA NIM API: {e}")
+            raise
         except Exception as e:
             logger.error(f"Exception calling NVIDIA NIM API: {e}")
             return "Failed to reach NVIDIA NIM AI service. Please check network connectivity."

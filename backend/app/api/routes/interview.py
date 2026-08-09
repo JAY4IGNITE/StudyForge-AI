@@ -71,7 +71,7 @@ async def setup_interview(req: SetupInterviewRequest, user: User = Depends(get_c
 
 @router.get("/history")
 async def get_interview_history(user: User = Depends(get_current_user)):
-    sessions = await InterviewSession.find(InterviewSession.user_id == str(user.id)).sort("-started_at").to_list()
+    sessions = await InterviewSession.find(InterviewSession.user_id == str(user.id)).sort("-started_at").limit(50).to_list()
     return {"history": sessions}
 
 @router.get("/analytics/dashboard")
