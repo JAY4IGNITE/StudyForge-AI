@@ -24,7 +24,7 @@ services:
     environment:
       - APP_ENV=production
       - REDIS_URL=redis://redis:6379
-      - MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/?appName=Cluster0
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/?authSource=admin
       - MONGODB_DATABASE=studyforge
     depends_on:
       - redis

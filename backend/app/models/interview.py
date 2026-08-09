@@ -77,6 +77,7 @@ class InterviewReport(Document):
     weaknesses: List[str] = Field(default_factory=list)
     ats_keywords_missing: List[str] = Field(default_factory=list)
     resume_improvements: List[str] = Field(default_factory=list)
+    ats_score: float = Field(default=0.0)
     learning_plan_7_days: List[LearningPlanDay] = Field(default_factory=list)
     learning_plan_14_days: List[LearningPlanDay] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -91,6 +92,7 @@ class ResumeAnalysis(Document):
     extracted_projects: List[str] = Field(default_factory=list)
     extracted_experience: List[str] = Field(default_factory=list)
     generated_questions: List[str] = Field(default_factory=list)
+    ats_score: float = Field(default=0.0)
     uploaded_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     class Settings:

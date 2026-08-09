@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
+import { useWebSocket } from '../../hooks/useWebSocket';
 import {
   Bot, User, Mic, MicOff, Video, VideoOff, PhoneOff, Maximize,
   Eye, Brain, Activity, Send, Sparkles, Clock, Wifi, Circle,
@@ -32,6 +33,10 @@ export const LiveInterviewRoom: React.FC = () => {
   const [timer, setTimer] = useState(0);
   const [recognition, setRecognition] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'transcript' | 'telemetry' | 'star' | 'audit'>('transcript');
+  const [streamingText, setStreamingText] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
+
+  const { connectionState, send, subscribe, unsubscribe } = useWebSocket(sessionId);
 
   const [hasGrantedPermissions, setHasGrantedPermissions] = useState(false);
   const [telemetryConsent, setTelemetryConsent] = useState(true);
@@ -87,6 +92,46 @@ export const LiveInterviewRoom: React.FC = () => {
       });
     }
   }, [sessionId]);
+
+  useEffect(() => {
+    const handleStreamStart = () => {
+      setStreamingText('');
+      setIsStreaming(true);
+      setLoading(true);
+    };
+
+    const handleStreamChunk = (payload: any) => {
+      setStreamingText((prev) => prev + payload.text);
+    };
+
+    const handleStreamEnd = (payload: any) => {
+      setIsStreaming(false);
+      setLoading(false);
+      setStreamingText('');
+      
+      if (payload.is_completed) {
+        setTimeout(() => navigate(`/interview/report/${sessionId}`), 1500);
+      }
+      
+      if (sessionId) {
+        apiClient.get(`/interviews/${sessionId}`).then((r) => {
+          setSession(r.data);
+          const turns = r.data.turns || [];
+          if (turns.length > 0) setCurrentTurn(turns[turns.length - 1]);
+        });
+      }
+    };
+
+    subscribe('ai.stream.start', handleStreamStart);
+    subscribe('ai.stream.chunk', handleStreamChunk);
+    subscribe('ai.stream.end', handleStreamEnd);
+
+    return () => {
+      unsubscribe('ai.stream.start', handleStreamStart);
+      unsubscribe('ai.stream.chunk', handleStreamChunk);
+      unsubscribe('ai.stream.end', handleStreamEnd);
+    };
+  }, [subscribe, unsubscribe, sessionId, navigate]);
 
   useEffect(() => {
     if (hasGrantedPermissions && isCameraOn && videoRef.current) {
@@ -270,8 +315,10 @@ export const LiveInterviewRoom: React.FC = () => {
   }, [isCameraOn, hasGrantedPermissions]);
 
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  }, [session?.turns, userAnswer, activeTab]);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [session?.turns, userAnswer, activeTab, streamingText]);
 
   const toggleMic = () => {
     if (!recognition) return;
@@ -302,20 +349,14 @@ export const LiveInterviewRoom: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await apiClient.post(`/interviews/${sessionId}/turns`, {
-        user_answer: userAnswer,
+      send('interview.user_message', {
+        text: userAnswer,
         audio_duration_seconds: timer > 0 ? Math.min(timer, 120) : 15,
         vision_metrics: visionMetrics,
       });
-      setSession(res.data.session);
-      setCurrentTurn(res.data.current_turn);
       setUserAnswer('');
-      if (res.data.is_completed) {
-        setTimeout(() => navigate(`/interview/report/${sessionId}`), 1500);
-      }
     } catch (err) {
       console.error('Turn submission failed', err);
-    } finally {
       setLoading(false);
     }
   };
@@ -366,7 +407,25 @@ export const LiveInterviewRoom: React.FC = () => {
               Auditable mock test
             </span>
           </div>
-          <span className="rounded bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground">
+          <div className={cn(
+            "flex items-center gap-1.5 rounded border px-2 py-0.5 ml-2",
+            connectionState === 'connected' ? "border-gold/30 bg-gold/10 text-gold" :
+            connectionState === 'connecting' || connectionState === 'reconnecting' ? "border-steel/30 bg-steel/10 text-steel" :
+            "border-destructive/30 bg-destructive/10 text-destructive"
+          )}>
+            <div className={cn(
+              "h-2 w-2 rounded-full",
+              connectionState === 'connected' ? "bg-gold shadow-[0_0_8px_rgba(243,192,73,0.8)]" :
+              connectionState === 'connecting' || connectionState === 'reconnecting' ? "bg-steel animate-pulse" :
+              "bg-destructive"
+            )} />
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              {connectionState === 'connected' ? 'Live Stream' :
+               connectionState === 'reconnecting' ? 'Reconnecting...' :
+               connectionState === 'connecting' ? 'Connecting...' : 'Disconnected'}
+            </span>
+          </div>
+          <span className="rounded bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground ml-2">
             {formatTime(timer)}
           </span>
         </div>
@@ -605,7 +664,24 @@ export const LiveInterviewRoom: React.FC = () => {
                   </div>
                 ))}
 
-                {session.status !== 'completed' && (
+                {isStreaming && (
+                  <div className="flex gap-3">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ember/30 bg-ember/15">
+                      <Bot className="h-4 w-4 animate-pulse text-ember" />
+                    </div>
+                    <div className="flex-1 rounded-2xl rounded-tl-sm border border-ember bg-secondary/30 p-4 shadow-[0_0_15px_rgba(255,117,66,0.1)]">
+                      <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-ember">
+                        AI Examiner
+                      </span>
+                      <p className="text-sm leading-relaxed text-foreground">
+                        {streamingText}
+                        <span className="ml-1 inline-block h-3 w-1.5 animate-pulse bg-ember"></span>
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {session.status !== 'completed' && !isStreaming && (
                   <div className="flex flex-row-reverse gap-3 pt-2">
                     <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-steel/30 bg-steel/15">
                       <User className="h-4 w-4 text-steel" />

@@ -11,7 +11,7 @@ from app.services.email_service import email_service
 class AuthService:
     @staticmethod
     async def register_user(req: UserRegisterRequest) -> User:
-        existing = await User.find_one(User.email == req.email.lower())
+        existing = await User.find_one({"email": req.email.lower()})
         if existing:
             raise StudyForgeException(code="EMAIL_EXISTS", message="An account with this email already exists.", status_code=status.HTTP_400_BAD_REQUEST)
         
@@ -26,7 +26,7 @@ class AuthService:
 
     @staticmethod
     async def authenticate_user(req: UserLoginRequest) -> TokenResponse:
-        user = await User.find_one(User.email == req.email.lower())
+        user = await User.find_one({"email": req.email.lower()})
         if not user or not verify_password(req.password, user.password_hash):
             raise StudyForgeException(code="INVALID_CREDENTIALS", message="Invalid email or password.", status_code=status.HTTP_401_UNAUTHORIZED)
         

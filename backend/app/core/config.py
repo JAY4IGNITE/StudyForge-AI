@@ -19,6 +19,13 @@ class Settings(BaseSettings):
     JWT_ACCESS_TTL_MINUTES: int = 15
     JWT_REFRESH_TTL_DAYS: int = 30
 
+    FRONTEND_URL: str = "http://localhost:5173"
+
+    GOOGLE_CLIENT_ID: Optional[str] = None
+    GOOGLE_CLIENT_SECRET: Optional[str] = None
+    GITHUB_CLIENT_ID: Optional[str] = None
+    GITHUB_CLIENT_SECRET: Optional[str] = None
+
     CORS_ORIGINS: Union[List[str], str] = ["http://localhost:5173", "http://localhost:3000", "*"]
 
     @field_validator("CORS_ORIGINS", mode="before")

@@ -43,3 +43,41 @@ class ResumeUploadUrlResponse(BaseModel):
     upload_method: str = "PUT"
     expires_in: int
     content_type: str
+
+class ResumeExperience(BaseModel):
+    title: Optional[str] = None
+    company: Optional[str] = None
+    location: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    description: Optional[str] = None
+    bullets: list[str] = Field(default_factory=list)
+
+class ResumeProject(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    technologies: list[str] = Field(default_factory=list)
+    bullets: list[str] = Field(default_factory=list)
+
+class ResumeEducation(BaseModel):
+    institution: Optional[str] = None
+    degree: Optional[str] = None
+    field_of_study: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+
+class ParsedResume(BaseModel):
+    contact: dict[str, str] = Field(default_factory=dict)
+    summary: str = ""
+    skills: list[str] = Field(default_factory=list)
+    experience: list[ResumeExperience] = Field(default_factory=list)
+    projects: list[ResumeProject] = Field(default_factory=list)
+    education: list[ResumeEducation] = Field(default_factory=list)
+    certifications: list[str] = Field(default_factory=list)
+    achievements: list[str] = Field(default_factory=list)
+    languages: list[str] = Field(default_factory=list)
+    raw_text: str = ""
+    parser: str = ""
+    ocr_used: bool = False
+    parse_quality: float = 1.0
+    warnings: list[str] = Field(default_factory=list)
