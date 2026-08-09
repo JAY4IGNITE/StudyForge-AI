@@ -50,7 +50,6 @@ async def init_db():
         raise e
 
 async def close_db():
-    global db_client
     if db_client:
         db_client.close()
         logger.info("MongoDB connection closed.")
