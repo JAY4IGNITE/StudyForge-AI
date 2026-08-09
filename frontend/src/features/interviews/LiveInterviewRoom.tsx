@@ -4,10 +4,20 @@ import { apiClient } from '../../lib/axios';
 import {
   Bot, User, Mic, MicOff, Video, VideoOff, PhoneOff, Maximize,
   Eye, Brain, Activity, Send, Sparkles, Clock, Wifi, Circle,
-  Volume2, ShieldCheck, HelpCircle, Layers, CheckCircle2, MessageSquare,
-  Lock, AlertTriangle, Terminal, Info
+  Volume2, ShieldCheck, HelpCircle, Layers, MessageSquare,
+  AlertTriangle, Terminal
 } from 'lucide-react';
 import { MockTestPermissionModal } from './MockTestPermissionModal';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Textarea } from '../../components/ui/textarea';
+import { cn } from '../../lib/utils';
+
+// RGB equivalents of the Foundry design tokens, for canvas drawing (CSS vars aren't
+// readable inside a 2D canvas context, so these are kept in sync by hand).
+const EMBER_RGB = '255, 117, 66';
+const GOLD_RGB = '243, 192, 73';
+const STEEL_RGB = '112, 141, 255';
 
 export const LiveInterviewRoom: React.FC = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -23,11 +33,9 @@ export const LiveInterviewRoom: React.FC = () => {
   const [recognition, setRecognition] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'transcript' | 'telemetry' | 'star' | 'audit'>('transcript');
 
-  // Permission Gateway state
   const [hasGrantedPermissions, setHasGrantedPermissions] = useState(false);
   const [telemetryConsent, setTelemetryConsent] = useState(true);
 
-  // Auditable Vision Telemetry State (Zero fake random numbers)
   const [visionMetrics, setVisionMetrics] = useState<{
     status: 'active' | 'disabled';
     detection_source: string;
@@ -57,10 +65,9 @@ export const LiveInterviewRoom: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prevFrameDataRef = useRef<Uint8ClampedArray | null>(null);
 
-  // Session Timer
   useEffect(() => {
     if (session && session.status === 'active' && hasGrantedPermissions) {
-      const interval = setInterval(() => setTimer(p => p + 1), 1000);
+      const interval = setInterval(() => setTimer((p) => p + 1), 1000);
       return () => clearInterval(interval);
     }
   }, [session?.status, hasGrantedPermissions]);
@@ -71,10 +78,9 @@ export const LiveInterviewRoom: React.FC = () => {
     return `${mm}:${ss}`;
   };
 
-  // Load Session
   useEffect(() => {
     if (sessionId) {
-      apiClient.get(`/interviews/${sessionId}`).then(r => {
+      apiClient.get(`/interviews/${sessionId}`).then((r) => {
         setSession(r.data);
         const turns = r.data.turns || [];
         if (turns.length > 0) setCurrentTurn(turns[turns.length - 1]);
@@ -82,24 +88,25 @@ export const LiveInterviewRoom: React.FC = () => {
     }
   }, [sessionId]);
 
-  // Init Webcam Stream
   useEffect(() => {
     if (hasGrantedPermissions && isCameraOn && videoRef.current) {
-      navigator.mediaDevices?.getUserMedia({ video: true, audio: false })
-        .then(stream => { if (videoRef.current) videoRef.current.srcObject = stream; })
+      navigator.mediaDevices
+        ?.getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          if (videoRef.current) videoRef.current.srcObject = stream;
+        })
         .catch(() => {
           setIsCameraOn(false);
-          setVisionMetrics(prev => ({ ...prev, status: 'disabled', posture_score: null }));
+          setVisionMetrics((prev) => ({ ...prev, status: 'disabled', posture_score: null }));
         });
     }
     return () => {
       if (videoRef.current?.srcObject) {
-        (videoRef.current.srcObject as MediaStream).getTracks().forEach(t => t.stop());
+        (videoRef.current.srcObject as MediaStream).getTracks().forEach((t) => t.stop());
       }
     };
   }, [isCameraOn, hasGrantedPermissions]);
 
-  // Speech Recognition Setup
   useEffect(() => {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SR) {
@@ -116,29 +123,31 @@ export const LiveInterviewRoom: React.FC = () => {
     }
   }, []);
 
-  // Web Audio API Frequency Soundwave Analyzer
   useEffect(() => {
     let audioCtx: AudioContext | null = null;
     let analyser: AnalyserNode | null = null;
     let animId: number;
 
     if (isMicOn && hasGrantedPermissions) {
-      navigator.mediaDevices?.getUserMedia({ audio: true }).then((stream) => {
-        audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 32;
-        const source = audioCtx.createMediaStreamSource(stream);
-        source.connect(analyser);
+      navigator.mediaDevices
+        ?.getUserMedia({ audio: true })
+        .then((stream) => {
+          audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+          analyser = audioCtx.createAnalyser();
+          analyser.fftSize = 32;
+          const source = audioCtx.createMediaStreamSource(stream);
+          source.connect(analyser);
 
-        const dataArray = new Uint8Array(analyser.frequencyBinCount);
-        const updateAudio = () => {
-          analyser?.getByteFrequencyData(dataArray);
-          const sliced = Array.from(dataArray.slice(0, 9)).map(v => Math.max(12, Math.min(100, (v / 255) * 100)));
-          setAudioLevels(sliced);
-          animId = requestAnimationFrame(updateAudio);
-        };
-        updateAudio();
-      }).catch(() => {});
+          const dataArray = new Uint8Array(analyser.frequencyBinCount);
+          const updateAudio = () => {
+            analyser?.getByteFrequencyData(dataArray);
+            const sliced = Array.from(dataArray.slice(0, 9)).map((v) => Math.max(12, Math.min(100, (v / 255) * 100)));
+            setAudioLevels(sliced);
+            animId = requestAnimationFrame(updateAudio);
+          };
+          updateAudio();
+        })
+        .catch(() => {});
     }
 
     return () => {
@@ -147,14 +156,14 @@ export const LiveInterviewRoom: React.FC = () => {
     };
   }, [isMicOn, hasGrantedPermissions]);
 
-  // Deterministic Frame Pixel-Variance Telemetry & Overlay Loop (NO Math.random())
+  // Deterministic frame pixel-variance telemetry & overlay loop (no Math.random())
   useEffect(() => {
     let animId: number;
     const canvas = canvasRef.current;
     const video = videoRef.current;
 
     if (!canvas || !isCameraOn || !hasGrantedPermissions) {
-      setVisionMetrics(prev => ({
+      setVisionMetrics((prev) => ({
         ...prev,
         status: 'disabled',
         posture_score: null,
@@ -180,7 +189,6 @@ export const LiveInterviewRoom: React.FC = () => {
 
       ctx.clearRect(0, 0, w, h);
 
-      // Draw alignment overlay bounds
       const boxW = w * 0.45;
       const boxH = h * 0.6;
       const boxX = (w - boxW) / 2;
@@ -188,15 +196,14 @@ export const LiveInterviewRoom: React.FC = () => {
 
       const postureVal = visionMetrics.posture_score ?? 85;
 
-      ctx.strokeStyle = postureVal > 80 ? 'rgba(16, 185, 129, 0.5)' : 'rgba(245, 158, 11, 0.6)';
+      ctx.strokeStyle = postureVal > 80 ? `rgba(${GOLD_RGB}, 0.5)` : `rgba(${EMBER_RGB}, 0.6)`;
       ctx.lineWidth = 1.5;
       ctx.setLineDash([8, 6]);
       ctx.strokeRect(boxX, boxY, boxW, boxH);
       ctx.setLineDash([]);
 
-      // Corner target brackets
       const bracketLen = 20;
-      ctx.strokeStyle = 'rgba(99, 102, 241, 0.9)';
+      ctx.strokeStyle = `rgba(${EMBER_RGB}, 0.9)`;
       ctx.lineWidth = 3;
 
       ctx.beginPath(); ctx.moveTo(boxX, boxY + bracketLen); ctx.lineTo(boxX, boxY); ctx.lineTo(boxX + bracketLen, boxY); ctx.stroke();
@@ -204,16 +211,14 @@ export const LiveInterviewRoom: React.FC = () => {
       ctx.beginPath(); ctx.moveTo(boxX, boxY + boxH - bracketLen); ctx.lineTo(boxX, boxY + boxH); ctx.lineTo(boxX + bracketLen, boxY + boxH); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(boxX + boxW - bracketLen, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH - bracketLen); ctx.stroke();
 
-      // Eye level tracker line
       const eyeY = boxY + boxH * 0.35;
-      ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+      ctx.strokeStyle = `rgba(${STEEL_RGB}, 0.5)`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(boxX + 15, eyeY);
       ctx.lineTo(boxX + boxW - 15, eyeY);
       ctx.stroke();
 
-      // Perform real canvas pixel variance calculations every 15 frames (~500ms)
       sampleCounter++;
       if (video && video.readyState === 4 && sampleCounter % 15 === 0) {
         try {
@@ -233,10 +238,9 @@ export const LiveInterviewRoom: React.FC = () => {
               }
               const avgDiff = pixelDiffSum / (data.length / 16);
 
-              // Calculate deterministic posture stability from pixel delta
-              const newStability = Math.max(60, Math.min(99, Math.round(98 - (avgDiff * 0.8))));
-              const newPosture = Math.max(65, Math.min(98, Math.round(95 - (avgDiff * 0.5))));
-              const newEyeContact = Math.max(70, Math.min(96, Math.round(92 - (avgDiff * 0.4))));
+              const newStability = Math.max(60, Math.min(99, Math.round(98 - avgDiff * 0.8)));
+              const newPosture = Math.max(65, Math.min(98, Math.round(95 - avgDiff * 0.5)));
+              const newEyeContact = Math.max(70, Math.min(96, Math.round(92 - avgDiff * 0.4)));
 
               setVisionMetrics({
                 status: 'active',
@@ -262,6 +266,7 @@ export const LiveInterviewRoom: React.FC = () => {
 
     processFrame();
     return () => cancelAnimationFrame(animId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCameraOn, hasGrantedPermissions]);
 
   useEffect(() => {
@@ -270,8 +275,14 @@ export const LiveInterviewRoom: React.FC = () => {
 
   const toggleMic = () => {
     if (!recognition) return;
-    if (isMicOn) { recognition.stop(); setIsMicOn(false); }
-    else { setUserAnswer(''); recognition.start(); setIsMicOn(true); }
+    if (isMicOn) {
+      recognition.stop();
+      setIsMicOn(false);
+    } else {
+      setUserAnswer('');
+      recognition.start();
+      setIsMicOn(true);
+    }
   };
 
   const toggleFullscreen = () => {
@@ -284,7 +295,10 @@ export const LiveInterviewRoom: React.FC = () => {
 
   const handleSubmitTurn = async () => {
     if (!userAnswer.trim() || !sessionId) return;
-    if (isMicOn && recognition) { recognition.stop(); setIsMicOn(false); }
+    if (isMicOn && recognition) {
+      recognition.stop();
+      setIsMicOn(false);
+    }
     setLoading(true);
 
     try {
@@ -312,18 +326,24 @@ export const LiveInterviewRoom: React.FC = () => {
 
   if (!session) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[#0B0F19]">
-        <div className="flex items-center gap-3 text-slate-400">
-          <Sparkles className="w-5 h-5 animate-pulse text-indigo-400" />
+      <div className="flex h-screen items-center justify-center bg-background">
+        <div className="flex items-center gap-3 text-muted-foreground">
+          <Sparkles className="h-5 w-5 animate-pulse text-ember" />
           Loading interview session...
         </div>
       </div>
     );
   }
 
+  const TABS = [
+    { id: 'transcript', label: 'Transcript', icon: MessageSquare },
+    { id: 'telemetry', label: 'Telemetry', icon: Activity },
+    { id: 'star', label: 'STAR Guide', icon: Layers },
+    { id: 'audit', label: 'Audit Log', icon: Terminal },
+  ] as const;
+
   return (
-    <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-200 overflow-hidden select-none">
-      {/* Pre-Round Explicit Permission Gateway Modal */}
+    <div className="flex h-screen select-none flex-col overflow-hidden bg-background text-foreground">
       {!hasGrantedPermissions && (
         <MockTestPermissionModal
           targetRole={session.target_role}
@@ -337,243 +357,291 @@ export const LiveInterviewRoom: React.FC = () => {
         />
       )}
 
-      {/* Top Header Bar */}
-      <div className="h-12 bg-[#111621] border-b border-[#1E2532] flex items-center justify-between px-4 shrink-0 z-30">
+      {/* Top header bar */}
+      <div className="z-30 flex h-12 shrink-0 items-center justify-between border-b border-border bg-card px-4">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/30">
-            <Circle className="w-2 h-2 fill-rose-500 text-rose-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">AUDITABLE MOCK TEST</span>
+          <div className="flex items-center gap-1.5 rounded border border-destructive/30 bg-destructive/10 px-2 py-0.5">
+            <Circle className="h-2 w-2 animate-pulse fill-destructive text-destructive" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-destructive">
+              Auditable mock test
+            </span>
           </div>
-          <span className="text-xs font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded">{formatTime(timer)}</span>
+          <span className="rounded bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground">
+            {formatTime(timer)}
+          </span>
         </div>
 
         <div className="flex items-center gap-4">
           {visionMetrics.status === 'active' ? (
             <div className="flex items-center gap-1.5">
-              <Wifi className="w-3.5 h-3.5 text-emerald-400" />
-              <span className="text-[10px] text-emerald-400 font-bold">Sensors Active (Pixel Variance)</span>
+              <Wifi className="h-3.5 w-3.5 text-gold" />
+              <span className="text-[10px] font-bold text-gold">Sensors active (pixel variance)</span>
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-[10px] text-amber-400 font-bold">Degraded Mode (No Fake Metrics)</span>
+              <AlertTriangle className="h-3.5 w-3.5 text-ember" />
+              <span className="text-[10px] font-bold text-ember">Degraded mode (no fake metrics)</span>
             </div>
           )}
-          <span className="text-xs text-slate-400 border-l border-slate-700 pl-3">
-            <span className="text-indigo-400 font-medium uppercase">{session.mode}</span> • {session.target_role}
+          <span className="border-l border-border pl-3 text-xs text-muted-foreground">
+            <span className="font-medium uppercase text-ember">{session.mode}</span> • {session.target_role}
           </span>
-          <button onClick={toggleFullscreen} className="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors">
-            <Maximize className="w-4 h-4" />
-          </button>
+          <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="h-8 w-8">
+            <Maximize className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Left: Video & Computer Vision HUD */}
-        <div className="w-1/2 flex flex-col border-r border-[#1E2532] bg-[#0B0F19] relative">
-          {/* Transparent Vision Metrics Floating HUD */}
+        {/* Left: video & vision HUD */}
+        <div className="relative flex w-1/2 flex-col border-r border-border bg-background">
           {visionMetrics.status === 'active' ? (
-            <div className="absolute top-4 left-4 z-20 space-y-2 max-w-[260px]">
+            <div className="absolute left-4 top-4 z-20 max-w-[260px] space-y-2">
               {[
-                { label: 'Posture Score', value: visionMetrics.posture_score, icon: Activity, color: 'text-indigo-400' },
-                { label: 'Eye Contact', value: visionMetrics.eye_contact_percentage, icon: Eye, color: 'text-cyan-400' },
-                { label: 'Alignment', value: visionMetrics.shoulder_alignment_score, icon: ShieldCheck, color: 'text-emerald-400' },
-                { label: 'Attention Focus', value: visionMetrics.attention_score, icon: Brain, color: 'text-purple-400' },
+                { label: 'Posture score', value: visionMetrics.posture_score, icon: Activity, color: 'text-ember' },
+                { label: 'Eye contact', value: visionMetrics.eye_contact_percentage, icon: Eye, color: 'text-steel' },
+                { label: 'Alignment', value: visionMetrics.shoulder_alignment_score, icon: ShieldCheck, color: 'text-gold' },
+                { label: 'Attention focus', value: visionMetrics.attention_score, icon: Brain, color: 'text-steel' },
               ].map((m, i) => (
-                <div key={i} className="flex items-center gap-2.5 px-3 py-1.5 bg-black/75 backdrop-blur-md border border-slate-800/80 rounded-xl shadow-lg">
-                  <m.icon className={`w-3.5 h-3.5 ${m.color}`} />
-                  <span className="text-[10px] text-slate-300 font-medium w-24 truncate">{m.label}</span>
-                  <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden shrink-0">
+                <div
+                  key={i}
+                  className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-background/80 px-3 py-1.5 shadow-lg backdrop-blur-md"
+                >
+                  <m.icon className={cn('h-3.5 w-3.5', m.color)} />
+                  <span className="w-24 truncate text-[10px] font-medium text-muted-foreground">{m.label}</span>
+                  <div className="h-1.5 w-16 shrink-0 overflow-hidden rounded-full bg-secondary">
                     <div
-                      className={`h-full rounded-full transition-all duration-300 ${m.value && m.value > 80 ? 'bg-emerald-500' : m.value && m.value > 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                      className={cn(
+                        'h-full rounded-full transition-all duration-300',
+                        m.value && m.value > 80 ? 'bg-gold' : m.value && m.value > 60 ? 'bg-ember' : 'bg-destructive'
+                      )}
                       style={{ width: `${m.value || 0}%` }}
                     />
                   </div>
-                  <span className="text-[10px] font-bold text-white w-7 text-right">{m.value !== null ? `${Math.round(m.value)}%` : 'N/A'}</span>
+                  <span className="w-7 text-right text-[10px] font-bold text-foreground">
+                    {m.value !== null ? `${Math.round(m.value)}%` : 'N/A'}
+                  </span>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="absolute top-4 left-4 z-20 px-3 py-2 bg-amber-950/80 backdrop-blur-md border border-amber-500/40 rounded-xl text-amber-300 text-xs font-semibold flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              Camera Sensor Off — Zero Fabricated Data Policy Active
+            <div className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-ember/30 bg-ember/10 px-3 py-2 text-xs font-semibold text-ember backdrop-blur-md">
+              <AlertTriangle className="h-4 w-4" />
+              Camera sensor off — zero fabricated data policy active
             </div>
           )}
 
-          {/* Soundwave Meter */}
           {isMicOn && (
-            <div className="absolute top-4 right-4 z-20 flex items-center gap-1 p-2.5 bg-indigo-950/80 backdrop-blur-md border border-indigo-500/40 rounded-xl shadow-xl">
-              <Volume2 className="w-4 h-4 text-indigo-400 animate-pulse mr-1" />
+            <div className="absolute right-4 top-4 z-20 flex items-center gap-1 rounded-xl border border-ember/30 bg-ember/10 p-2.5 shadow-xl backdrop-blur-md">
+              <Volume2 className="mr-1 h-4 w-4 animate-pulse text-ember" />
               {audioLevels.map((lvl, i) => (
-                <div key={i} className="w-1 bg-indigo-400 rounded-full transition-all duration-75" style={{ height: `${Math.max(4, (lvl / 100) * 24)}px` }} />
+                <div
+                  key={i}
+                  className="w-1 rounded-full bg-ember transition-all duration-75"
+                  style={{ height: `${Math.max(4, (lvl / 100) * 24)}px` }}
+                />
               ))}
             </div>
           )}
 
-          {/* Main Video View with Canvas Overlay */}
-          <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden bg-slate-950">
+          <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-[#0a0b0e]">
             {isCameraOn ? (
               <>
-                <video ref={videoRef} autoPlay muted playsInline className="absolute inset-0 w-full h-full object-cover z-0 scale-x-[-1]" />
-                <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-10 scale-x-[-1]" />
+                <video ref={videoRef} autoPlay muted playsInline className="absolute inset-0 z-0 h-full w-full scale-x-[-1] object-cover" />
+                <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-10 h-full w-full scale-x-[-1]" />
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center text-slate-500 space-y-3 z-10 p-6 text-center">
-                <div className="p-4 bg-slate-900 border border-slate-800 rounded-full">
-                  <VideoOff className="w-8 h-8 text-slate-400" />
+              <div className="z-10 flex flex-col items-center justify-center space-y-3 p-6 text-center text-muted-foreground">
+                <div className="rounded-full border border-border bg-secondary p-4">
+                  <VideoOff className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <p className="text-xs font-semibold text-slate-300">Camera disabled for this turn</p>
-                <p className="text-[10px] text-slate-500 max-w-xs leading-relaxed">
-                  Evaluation fallback policy active. Scoring will rely strictly on spoken transcript & response structure.
+                <p className="text-xs font-semibold text-foreground">Camera disabled for this turn</p>
+                <p className="max-w-xs text-[10px] leading-relaxed text-muted-foreground">
+                  Evaluation fallback policy active. Scoring will rely strictly on spoken transcript &amp; response
+                  structure.
                 </p>
               </div>
             )}
 
-            {/* AI Interviewer Badge */}
-            <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 p-3 bg-slate-900/90 backdrop-blur-xl border border-indigo-500/40 rounded-2xl shadow-2xl">
+            <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 rounded-2xl border border-ember/30 bg-card/90 p-3 shadow-2xl backdrop-blur-xl">
               <div className="relative">
-                <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ${isMicOn ? 'ring-2 ring-indigo-400 animate-pulse' : ''}`}>
-                  <Bot className="w-5 h-5 text-white" />
+                <div
+                  className={cn(
+                    'flex h-10 w-10 items-center justify-center rounded-full bg-ember-gradient',
+                    isMicOn && 'animate-pulse ring-2 ring-ember'
+                  )}
+                >
+                  <Bot className="h-5 w-5 text-ember-foreground" />
                 </div>
-                {isMicOn && <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-slate-900 animate-ping" />}
+                {isMicOn && (
+                  <div className="absolute -right-1 -top-1 h-3 w-3 animate-ping rounded-full border-2 border-card bg-gold" />
+                )}
               </div>
               <div>
-                <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                <h4 className="flex items-center gap-1.5 text-xs font-bold text-foreground">
                   AI Mock Examiner
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="h-2 w-2 animate-pulse rounded-full bg-gold" />
                 </h4>
-                <p className="text-[10px] text-indigo-300 font-medium">
-                  {isMicOn ? 'Listening to candidate response...' : session.status === 'completed' ? 'Mock Test Completed' : 'Ready for candidate response'}
+                <p className="text-[10px] font-medium text-ember">
+                  {isMicOn
+                    ? 'Listening to candidate response...'
+                    : session.status === 'completed'
+                    ? 'Mock test completed'
+                    : 'Ready for candidate response'}
                 </p>
               </div>
             </div>
           </div>
 
           {/* Controls */}
-          <div className="h-20 bg-[#111621] border-t border-[#1E2532] flex items-center justify-center gap-6 shrink-0 z-20">
-            <button onClick={() => setIsCameraOn(!isCameraOn)} className="flex flex-col items-center gap-1 group">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${isCameraOn ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-rose-500/20 border border-rose-500/40 text-rose-400'}`}>
-                {isCameraOn ? <Video className="w-5 h-5" /> : <VideoOff className="w-5 h-5" />}
+          <div className="z-20 flex h-20 shrink-0 items-center justify-center gap-6 border-t border-border bg-card">
+            <button onClick={() => setIsCameraOn(!isCameraOn)} className="flex flex-col items-center gap-1">
+              <div
+                className={cn(
+                  'flex h-12 w-12 items-center justify-center rounded-2xl transition-all',
+                  isCameraOn
+                    ? 'bg-secondary text-foreground hover:bg-secondary/70'
+                    : 'border border-destructive/40 bg-destructive/15 text-destructive'
+                )}
+              >
+                {isCameraOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
               </div>
-              <span className="text-[9px] text-slate-400 font-medium">{isCameraOn ? 'Camera On' : 'Camera Off'}</span>
+              <span className="text-[9px] font-medium text-muted-foreground">
+                {isCameraOn ? 'Camera on' : 'Camera off'}
+              </span>
             </button>
 
-            <button onClick={toggleMic} className="flex flex-col items-center gap-1 group">
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all border ${isMicOn ? 'bg-indigo-600/30 border-indigo-500 text-indigo-400 shadow-lg shadow-indigo-500/20' : 'bg-slate-800 border-transparent hover:bg-slate-700 text-slate-300'}`}>
-                {isMicOn ? <Mic className="w-6 h-6 animate-pulse" /> : <MicOff className="w-6 h-6" />}
+            <button onClick={toggleMic} className="flex flex-col items-center gap-1">
+              <div
+                className={cn(
+                  'flex h-14 w-14 items-center justify-center rounded-2xl border transition-all',
+                  isMicOn
+                    ? 'border-ember bg-ember/20 text-ember shadow-lg shadow-ember/10'
+                    : 'border-transparent bg-secondary text-foreground hover:bg-secondary/70'
+                )}
+              >
+                {isMicOn ? <Mic className="h-6 w-6 animate-pulse" /> : <MicOff className="h-6 w-6" />}
               </div>
-              <span className="text-[9px] text-slate-400 font-semibold">{isMicOn ? 'Stop Mic' : 'Start Mic'}</span>
+              <span className="text-[9px] font-semibold text-muted-foreground">
+                {isMicOn ? 'Stop mic' : 'Start mic'}
+              </span>
             </button>
 
-            <button onClick={handleEndInterview} className="flex flex-col items-center gap-1 group">
-              <div className="w-12 h-12 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-rose-400 transition-colors">
-                <PhoneOff className="w-5 h-5" />
+            <button onClick={handleEndInterview} className="flex flex-col items-center gap-1">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-destructive/30 bg-destructive/10 text-destructive transition-colors hover:bg-destructive/20">
+                <PhoneOff className="h-5 w-5" />
               </div>
-              <span className="text-[9px] text-slate-400 font-medium">End Test</span>
+              <span className="text-[9px] font-medium text-muted-foreground">End test</span>
             </button>
           </div>
         </div>
 
-        {/* Right: Multi-Tab Sidebar with Raw Audit Inspector */}
-        <div className="w-1/2 flex flex-col bg-[#111621]">
-          {/* Tab Navigation Header */}
-          <div className="flex items-center justify-between px-5 pt-3 border-b border-[#1E2532] bg-[#111621] shrink-0">
+        {/* Right: multi-tab sidebar */}
+        <div className="flex w-1/2 flex-col bg-card">
+          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 pt-3">
             <div className="flex items-center gap-1">
-              {[
-                { id: 'transcript', label: 'Transcript', icon: MessageSquare },
-                { id: 'telemetry', label: 'Telemetry', icon: Activity },
-                { id: 'star', label: 'STAR Guide', icon: Layers },
-                { id: 'audit', label: 'Audit Log', icon: Terminal },
-              ].map((tab) => (
+              {TABS.map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-3 py-2.5 text-xs font-semibold rounded-t-xl transition-colors border-b-2 ${
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    'flex items-center gap-2 rounded-t-xl border-b-2 px-3 py-2.5 text-xs font-semibold transition-colors',
                     activeTab === tab.id
-                      ? 'border-indigo-500 text-indigo-400 bg-slate-800/40'
-                      : 'border-transparent text-slate-400 hover:text-slate-200'
-                  }`}
+                      ? 'border-ember bg-secondary/40 text-ember'
+                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                  )}
                 >
-                  <tab.icon className="w-3.5 h-3.5" />
+                  <tab.icon className="h-3.5 w-3.5" />
                   {tab.label}
                 </button>
               ))}
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-400 pb-2">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 pb-2 font-mono text-xs text-muted-foreground">
+              <Clock className="h-3.5 w-3.5" />
               {formatTime(timer)}
             </div>
           </div>
 
-          {/* Tab Body */}
           <div className="flex-1 overflow-y-auto p-5" ref={scrollRef}>
-            {/* Tab 1: Transcript */}
             {activeTab === 'transcript' && (
               <div className="space-y-5">
                 {session.turns?.map((t: any, idx: number) => (
                   <div key={idx} className="space-y-4">
                     <div className="flex gap-3">
-                      <div className="w-8 h-8 shrink-0 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center">
-                        <Bot className="w-4 h-4 text-indigo-400" />
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ember/30 bg-ember/15">
+                        <Bot className="h-4 w-4 text-ember" />
                       </div>
-                      <div className="flex-1 bg-slate-800/60 border border-slate-700/50 rounded-2xl rounded-tl-sm p-4">
-                        <span className="text-[10px] font-bold text-indigo-400 mb-1 block uppercase tracking-wider">AI Examiner</span>
-                        <p className="text-sm text-slate-200 leading-relaxed">{t.question}</p>
+                      <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-secondary/30 p-4">
+                        <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-ember">
+                          AI Examiner
+                        </span>
+                        <p className="text-sm leading-relaxed text-foreground">{t.question}</p>
                       </div>
                     </div>
 
                     {t.user_answer && (
-                      <div className="flex gap-3 flex-row-reverse">
-                        <div className="w-8 h-8 shrink-0 rounded-full bg-purple-600/20 border border-purple-500/30 flex items-center justify-center">
-                          <User className="w-4 h-4 text-purple-400" />
+                      <div className="flex flex-row-reverse gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-steel/30 bg-steel/15">
+                          <User className="h-4 w-4 text-steel" />
                         </div>
-                        <div className="flex-1 bg-[#0F1219] border border-[#1E2532] rounded-2xl rounded-tr-sm p-4">
-                          <span className="text-[10px] font-bold text-slate-400 mb-1 block text-right uppercase tracking-wider">Candidate</span>
-                          <p className="text-sm text-slate-300 leading-relaxed text-right">{t.user_answer}</p>
+                        <div className="flex-1 rounded-2xl rounded-tr-sm border border-border bg-background p-4">
+                          <span className="mb-1 block text-right text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                            Candidate
+                          </span>
+                          <p className="text-right text-sm leading-relaxed text-foreground/85">{t.user_answer}</p>
                         </div>
                       </div>
                     )}
 
                     {t.feedback && (
-                      <div className="ml-11 p-3 bg-emerald-950/30 border border-emerald-500/30 rounded-xl">
-                        <span className="text-[10px] font-bold text-emerald-400 block mb-1 uppercase tracking-wider">Evaluation Result</span>
-                        <p className="text-xs text-slate-300 leading-relaxed">{t.feedback}</p>
+                      <div className="ml-11 rounded-xl border border-gold/30 bg-gold/10 p-3">
+                        <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-gold">
+                          Evaluation result
+                        </span>
+                        <p className="text-xs leading-relaxed text-foreground/85">{t.feedback}</p>
                       </div>
                     )}
                   </div>
                 ))}
 
                 {session.status !== 'completed' && (
-                  <div className="flex gap-3 flex-row-reverse pt-2">
-                    <div className="w-8 h-8 shrink-0 rounded-full bg-purple-600/20 border border-purple-500/30 flex items-center justify-center relative">
-                      <User className="w-4 h-4 text-purple-400" />
-                      {isMicOn && <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-rose-500 rounded-full animate-pulse" />}
+                  <div className="flex flex-row-reverse gap-3 pt-2">
+                    <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-steel/30 bg-steel/15">
+                      <User className="h-4 w-4 text-steel" />
+                      {isMicOn && (
+                        <div className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 animate-pulse rounded-full bg-destructive" />
+                      )}
                     </div>
-                    <div className="flex-1 border border-dashed border-slate-700 bg-[#0F1219]/60 rounded-2xl p-4">
+                    <div className="flex-1 rounded-2xl border border-dashed border-border bg-background/60 p-4">
                       {isMicOn ? (
-                        <p className="text-sm text-slate-300 text-right min-h-[48px]">
-                          {userAnswer || <span className="text-slate-500 animate-pulse">Listening... speak your response...</span>}
+                        <p className="min-h-[48px] text-right text-sm text-foreground/85">
+                          {userAnswer || (
+                            <span className="animate-pulse text-muted-foreground">
+                              Listening... speak your response...
+                            </span>
+                          )}
                         </p>
                       ) : (
                         <div className="space-y-3">
-                          <textarea
+                          <Textarea
                             rows={3}
                             value={userAnswer}
                             onChange={(e) => setUserAnswer(e.target.value)}
-                            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmitTurn(); } }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSubmitTurn();
+                              }
+                            }}
                             placeholder="Type your answer or speak using the microphone..."
-                            className="w-full bg-transparent border-none text-sm text-slate-200 resize-none placeholder-slate-600 outline-none"
+                            className="resize-none border-none bg-transparent p-0 shadow-none focus-visible:ring-0"
                           />
                           <div className="flex justify-end">
-                            <button
-                              onClick={handleSubmitTurn}
-                              disabled={!userAnswer.trim() || loading}
-                              className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl disabled:opacity-50 transition-colors shadow-md shadow-indigo-600/20"
-                            >
-                              <Send className="w-3.5 h-3.5" />
-                              {loading ? 'Evaluating...' : 'Submit Turn'}
-                            </button>
+                            <Button size="sm" onClick={handleSubmitTurn} disabled={!userAnswer.trim() || loading} className="gap-1.5">
+                              <Send className="h-3.5 w-3.5" />
+                              {loading ? 'Evaluating...' : 'Submit turn'}
+                            </Button>
                           </div>
                         </div>
                       )}
@@ -583,82 +651,82 @@ export const LiveInterviewRoom: React.FC = () => {
               </div>
             )}
 
-            {/* Tab 2: Telemetry */}
             {activeTab === 'telemetry' && (
               <div className="space-y-6">
-                <div className="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl space-y-4">
-                  <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
-                    <span className="flex items-center gap-2"><Activity className="w-4 h-4 text-indigo-400" /> Non-Verbal Telemetry</span>
-                    <span className="text-[10px] text-emerald-400 font-mono">Source: {visionMetrics.detection_source}</span>
+                <div className="space-y-4 rounded-2xl border border-border bg-background p-4">
+                  <h3 className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-foreground">
+                    <span className="flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-ember" /> Non-verbal telemetry
+                    </span>
+                    <span className="font-mono text-[10px] text-gold">Source: {visionMetrics.detection_source}</span>
                   </h3>
 
                   {visionMetrics.status === 'active' ? (
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl">
-                        <span className="text-[10px] text-slate-500 block mb-1 font-medium">Posture Score</span>
-                        <span className="text-xl font-bold text-indigo-400">{visionMetrics.posture_score}%</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Posture score</span>
+                        <span className="text-xl font-bold text-ember">{visionMetrics.posture_score}%</span>
                       </div>
-                      <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl">
-                        <span className="text-[10px] text-slate-500 block mb-1 font-medium">Eye Contact</span>
-                        <span className="text-xl font-bold text-cyan-400">{visionMetrics.eye_contact_percentage}%</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Eye contact</span>
+                        <span className="text-xl font-bold text-steel">{visionMetrics.eye_contact_percentage}%</span>
                       </div>
-                      <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl">
-                        <span className="text-[10px] text-slate-500 block mb-1 font-medium">Head Pose Stability</span>
-                        <span className="text-xl font-bold text-emerald-400">{visionMetrics.head_pose_stability}%</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Head pose stability</span>
+                        <span className="text-xl font-bold text-gold">{visionMetrics.head_pose_stability}%</span>
                       </div>
-                      <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl">
-                        <span className="text-[10px] text-slate-500 block mb-1 font-medium">Attention Level</span>
-                        <span className="text-xl font-bold text-purple-400">{visionMetrics.attention_score}%</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Attention level</span>
+                        <span className="text-xl font-bold text-steel">{visionMetrics.attention_score}%</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="p-4 bg-amber-950/20 border border-amber-500/30 rounded-xl text-xs text-amber-300">
-                      Camera sensor disabled. Non-verbal telemetry is suspended. Evaluation will focus on transcript structure.
+                    <div className="rounded-xl border border-ember/30 bg-ember/10 p-4 text-xs text-ember">
+                      Camera sensor disabled. Non-verbal telemetry is suspended. Evaluation will focus on transcript
+                      structure.
                     </div>
                   )}
                 </div>
               </div>
             )}
 
-            {/* Tab 3: STAR Guide */}
             {activeTab === 'star' && (
               <div className="space-y-4">
-                <div className="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl">
-                  <h3 className="text-xs font-bold text-indigo-300 uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <HelpCircle className="w-4 h-4 text-indigo-400" /> STAR Framework Structuring
+                <div className="rounded-2xl border border-ember/25 bg-ember/10 p-4">
+                  <h3 className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ember">
+                    <HelpCircle className="h-4 w-4" /> STAR framework structuring
                   </h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs leading-relaxed text-muted-foreground">
                     Use the STAR framework to structure behavioral and technical experience answers clearly.
                   </p>
                 </div>
                 {[
-                  { title: 'S - Situation', desc: 'Set the context. Describe the specific event or challenge you faced.', color: 'border-blue-500/40 bg-blue-950/20' },
-                  { title: 'T - Task', desc: 'Explain your responsibility in that situation. What goal were you trying to achieve?', color: 'border-purple-500/40 bg-purple-950/20' },
-                  { title: 'A - Action', desc: 'Describe the specific steps YOU took to address the challenge.', color: 'border-emerald-500/40 bg-emerald-950/20' },
-                  { title: 'R - Result', desc: 'Share the outcomes, metrics, lessons, or achievements resulting from your actions.', color: 'border-amber-500/40 bg-amber-950/20' },
+                  { title: 'S — Situation', desc: 'Set the context. Describe the specific event or challenge you faced.', border: 'border-steel/30', bg: 'bg-steel/5' },
+                  { title: 'T — Task', desc: 'Explain your responsibility in that situation. What goal were you trying to achieve?', border: 'border-steel/30', bg: 'bg-steel/5' },
+                  { title: 'A — Action', desc: 'Describe the specific steps YOU took to address the challenge.', border: 'border-gold/30', bg: 'bg-gold/5' },
+                  { title: 'R — Result', desc: 'Share the outcomes, metrics, lessons, or achievements resulting from your actions.', border: 'border-ember/30', bg: 'bg-ember/5' },
                 ].map((item, idx) => (
-                  <div key={idx} className={`p-4 border rounded-xl ${item.color}`}>
-                    <h4 className="text-xs font-bold text-white mb-1">{item.title}</h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">{item.desc}</p>
+                  <div key={idx} className={cn('rounded-xl border p-4', item.border, item.bg)}>
+                    <h4 className="mb-1 text-xs font-bold text-foreground">{item.title}</h4>
+                    <p className="text-xs leading-relaxed text-muted-foreground">{item.desc}</p>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* Tab 4: Auditable Telemetry Inspector */}
             {activeTab === 'audit' && (
               <div className="space-y-4">
-                <div className="p-4 bg-slate-900 border border-slate-800 rounded-2xl space-y-3">
+                <div className="space-y-3 rounded-2xl border border-border bg-background p-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2 font-mono">
-                      <Terminal className="w-4 h-4 text-emerald-400" /> Raw Telemetry Inspector
+                    <h3 className="flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground">
+                      <Terminal className="h-4 w-4 text-gold" /> Raw telemetry inspector
                     </h3>
-                    <span className="text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded">
-                      Auditable Payload
-                    </span>
+                    <Badge variant="gold" className="rounded font-mono text-[10px]">
+                      Auditable payload
+                    </Badge>
                   </div>
 
-                  <pre className="p-3 bg-black rounded-xl text-[11px] font-mono text-emerald-400 overflow-x-auto border border-slate-800 leading-relaxed">
+                  <pre className="overflow-x-auto rounded-xl border border-border bg-[#050608] p-3 font-mono text-[11px] leading-relaxed text-gold">
                     {JSON.stringify(
                       {
                         session_id: sessionId,
