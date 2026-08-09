@@ -41,6 +41,31 @@ def test_parse_resume_r2_key_round_trip():
 def test_parse_resume_r2_key_invalid():
     assert parse_resume_r2_key("resumes/user/file.pdf") is None
     assert parse_resume_r2_key("uploads/user/id/original/resume.pdf") is None
+    assert parse_resume_r2_key("resumes/user/id/original/resume-backup.pdf") is None
+    assert parse_resume_r2_key("resumes//resume-id/original/resume.pdf") is None
+    assert parse_resume_r2_key("resumes/user-id//original/resume.pdf") is None
+
+
+def test_validate_resume_upload_rejects_zero_file_size():
+    with pytest.raises(StudyForgeException) as exc:
+        validate_resume_upload(
+            original_filename="resume.pdf",
+            content_type="application/pdf",
+            file_size=0,
+        )
+
+    assert exc.value.code == "INVALID_RESUME_FILE_SIZE"
+
+
+def test_validate_resume_upload_rejects_negative_file_size():
+    with pytest.raises(StudyForgeException) as exc:
+        validate_resume_upload(
+            original_filename="resume.pdf",
+            content_type="application/pdf",
+            file_size=-1,
+        )
+
+    assert exc.value.code == "INVALID_RESUME_FILE_SIZE"
 
 
 def test_validate_resume_upload_pdf():
@@ -99,7 +124,7 @@ def test_resume_model_defaults():
 
     from app.models.resume import Resume
 
-    resume = Resume(
+    resume = Resume.model_construct(
         user_id="user-1",
         original_filename="resume.pdf",
         content_type="application/pdf",

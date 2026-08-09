@@ -74,6 +74,13 @@ def validate_resume_upload(
             },
         )
 
+    if file_size <= 0:
+        raise StudyForgeException(
+            code="INVALID_RESUME_FILE_SIZE",
+            message="Resume file size must be greater than zero.",
+            details={"file_size": file_size},
+        )
+
     if file_size > max_size_bytes:
         raise StudyForgeException(
             code="RESUME_FILE_TOO_LARGE",
@@ -102,11 +109,13 @@ def parse_resume_r2_key(r2_key: str) -> Optional[dict[str, str]]:
     prefix, user_id, resume_id, folder, filename = parts
     if prefix != RESUME_R2_PREFIX or folder != "original":
         return None
-    if not filename.startswith("resume"):
+    if not user_id or not resume_id or not filename:
         return None
 
     extension = normalize_extension(filename)
     if extension not in ALLOWED_RESUME_EXTENSIONS:
+        return None
+    if filename != f"resume{extension}":
         return None
 
     return {
