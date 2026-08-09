@@ -7,6 +7,7 @@ from app.models.user import User, RefreshToken, EmailOTP
 from app.models.practice import Topic, Question, PracticeSession, Attempt, MasteryProfile, LearningResource
 from app.models.interview import InterviewSession, InterviewReport, ResumeAnalysis
 from app.models.feedback import Feedback, UserRoadmap
+from app.models.resume import Resume
 
 # Monkeypatch for Beanie 2.1.0 + PyMongo 4.x compatibility
 if not hasattr(AsyncIOMotorClient, "append_metadata"):
@@ -37,6 +38,7 @@ async def init_db():
                 InterviewSession,
                 InterviewReport,
                 ResumeAnalysis,
+                Resume,
                 LearningResource,
                 Feedback,
                 UserRoadmap,
