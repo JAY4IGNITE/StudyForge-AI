@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
+import { Card, CardContent, CardTitle } from '../components/ui/card';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { TemperBar } from '../components/ui/temper-gauge';
+import { Sparkles, Volume2, PointerIcon, History, Check } from 'lucide-react';
 
 export function Flashcards() {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -8,20 +12,21 @@ export function Flashcards() {
 
   const mockCards = [
     {
-      q: "What is the primary function of the mitochondria in a eukaryotic cell?",
-      a: "They generate most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy. Often referred to as the \"powerhouse of the cell.\""
+      q: 'What is the primary function of the mitochondria in a eukaryotic cell?',
+      a: "They generate most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy. Often referred to as the \"powerhouse of the cell.\"",
     },
     {
-      q: "What is the process of Mitosis?",
-      a: "A type of cell division that results in two daughter cells each having the same number and kind of chromosomes as the parent nucleus."
+      q: 'What is the process of Mitosis?',
+      a: 'A type of cell division that results in two daughter cells each having the same number and kind of chromosomes as the parent nucleus.',
     },
     {
-      q: "What is the Krebs Cycle?",
-      a: "A series of chemical reactions used by all aerobic organisms to release stored energy through the oxidation of acetyl-CoA derived from carbohydrates, fats, and proteins."
-    }
+      q: 'What is the Krebs Cycle?',
+      a: 'A series of chemical reactions used by all aerobic organisms to release stored energy through the oxidation of acetyl-CoA derived from carbohydrates, fats, and proteins.',
+    },
   ];
 
   const currentCard = mockCards[currentIndex];
+  const progressPct = ((currentIndex + 1) / mockCards.length) * 100;
 
   const handleNext = () => {
     setIsFlipped(false);
@@ -29,82 +34,111 @@ export function Flashcards() {
       setCurrentIndex((prev) => (prev + 1) % mockCards.length);
     }, 150);
   };
+
   return (
     <Layout>
-      <div className="min-h-screen flex flex-col gap-stack-lg max-w-container-max mx-auto">
+      <div className="mx-auto flex max-w-7xl flex-col gap-8">
+        <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="flex flex-col justify-center lg:col-span-2">
+            <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
+              Cellular Biology Review
+            </h1>
+            <p className="mt-1 text-muted-foreground">Mastering mitochondria and cellular respiration.</p>
 
-<section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-<div className="lg:col-span-2 flex flex-col justify-center">
-<h1 className="font-headline-xl text-headline-xl text-on-background mb-2">Cellular Biology Review</h1>
-<p className="font-body-lg text-body-lg text-on-surface-variant">Mastering mitochondria and cellular respiration.</p>
+            <Card className="mt-6 w-max px-5 py-4">
+              <div className="flex items-center gap-4">
+                <TemperBar value={progressPct} showValue={false} className="w-48" />
+                <span className="whitespace-nowrap font-mono text-sm font-medium text-muted-foreground">
+                  {mockCards.length - currentIndex - 1} cards remaining
+                </span>
+              </div>
+            </Card>
+          </div>
 
-<div className="mt-6 flex items-center gap-4 bg-surface-container-lowest p-4 rounded-xl border border-outline-variant/50 shadow-sm w-max">
-<div className="w-48 h-2 bg-surface-variant rounded-full overflow-hidden">
-<div className="h-full bg-primary rounded-full transition-all" style={{ width: `${((currentIndex + 1) / mockCards.length) * 100}%`, background: 'linear-gradient(90deg, rgb(195, 192, 255) 0%, rgb(53, 37, 205) 100%)' }}></div>
-</div>
-<span className="font-label-md text-label-md text-on-surface-variant font-medium">{mockCards.length - currentIndex - 1} cards remaining</span>
-</div>
-</div>
+          <Card>
+            <CardContent className="p-6">
+              <CardTitle className="mb-4 flex items-center gap-2 text-lg">
+                <Sparkles className="h-4 w-4 text-ember" />
+                Quick generate
+              </CardTitle>
+              <div className="space-y-3">
+                <Input placeholder="e.g. Krebs Cycle, Mitosis..." />
+                <Button className="w-full">Generate 8 flashcards</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
 
-<div className="bg-surface-container-lowest p-stack-md rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
-<h3 className="font-headline-md text-headline-md text-on-background mb-4 flex items-center gap-2">
-<span className="material-symbols-outlined text-primary">auto_awesome</span>
-                    Quick Generate
-                </h3>
-<div className="space-y-4">
-<input className="w-full px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline" placeholder="e.g. Krebs Cycle, Mitosis..." type="text"/>
-<button className="w-full bg-primary text-on-primary font-label-md text-label-md py-3 rounded-lg font-semibold hover:bg-surface-tint transition-colors btn-actionable flex items-center justify-center gap-2" style={{ background: 'linear-gradient(rgb(79, 70, 229) 0%, rgb(53, 37, 205) 100%)' }}>
-                        Generate 8 Flashcards
-                    </button>
-</div>
-</div>
-</section>
-
-<section className="flex flex-col items-center justify-center flex-1 w-full max-w-3xl mx-auto py-8">
-
-<div className="w-full aspect-[4/3] md:aspect-[16/9] cursor-pointer group" style={{ perspective: '1000px' }} onClick={() => setIsFlipped(!isFlipped)}>
-<div className="relative w-full h-full shadow-sm rounded-2xl group-hover:-translate-y-1 group-hover:shadow-md transition-all duration-300" style={{ transformStyle: 'preserve-3d', transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
-
-<div className="absolute inset-0 w-full h-full bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center" style={{ backfaceVisibility: 'hidden', background: 'radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(229, 238, 255) 100%)' }}>
-<div className="absolute top-6 left-6 text-outline font-label-md text-label-md">Question</div>
-<div className="absolute top-6 right-6" onClick={(e) => e.stopPropagation()}>
-<span className="material-symbols-outlined text-outline cursor-help hover:text-primary transition-colors">volume_up</span>
-</div>
-<h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background max-w-xl">
-                            {currentCard.q}
-                        </h2>
-<div className="absolute bottom-6 flex items-center gap-2 text-outline opacity-60">
-<span className="material-symbols-outlined text-sm">touch_app</span>
-<span className="font-caption text-caption">Click to flip</span>
-</div>
-</div>
-
-<div className="absolute inset-0 w-full h-full bg-inverse-on-surface border border-primary-fixed-dim rounded-2xl p-8 md:p-12 flex flex-col items-center justify-center text-center" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-<div className="absolute top-6 left-6 text-primary font-label-md text-label-md">Answer</div>
-<p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
-                            {currentCard.a}
-                        </p>
-</div>
-</div>
-</div>
-
-<div className="mt-8 flex items-center justify-between w-full max-w-md">
-<button onClick={handleNext} className="px-6 py-3 rounded-lg font-label-md text-label-md font-semibold text-error bg-error-container/50 hover:bg-error-container transition-colors flex items-center gap-2 btn-actionable">
-<span className="material-symbols-outlined text-sm">history</span>
-                    Review Later
+        <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col items-center justify-center py-4">
+          <div
+            className="group aspect-[4/3] w-full cursor-pointer md:aspect-[16/9]"
+            style={{ perspective: '1000px' }}
+            onClick={() => setIsFlipped(!isFlipped)}
+          >
+            <div
+              className="relative h-full w-full rounded-2xl shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_16px_40px_-16px_hsl(var(--ember)/0.3)]"
+              style={{
+                transformStyle: 'preserve-3d',
+                transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+              }}
+            >
+              {/* Front — question */}
+              <div
+                className="bg-forge-glow absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-border bg-card p-8 text-center md:p-12"
+                style={{ backfaceVisibility: 'hidden' }}
+              >
+                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                  Question
+                </div>
+                <button
+                  className="absolute right-6 top-6 text-muted-foreground transition-colors hover:text-ember"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Volume2 className="h-5 w-5" />
                 </button>
-<div className="flex items-center gap-4 text-outline font-caption text-caption hidden md:flex">
-<kbd className="px-2 py-1 bg-surface-container-high rounded border border-outline-variant">←</kbd>
-<span className="">/</span>
-<kbd className="px-2 py-1 bg-surface-container-high rounded border border-outline-variant">→</kbd>
-</div>
-<button onClick={handleNext} className="px-8 py-3 rounded-lg font-label-md text-label-md font-semibold text-on-tertiary-fixed-variant bg-tertiary-fixed hover:bg-tertiary-fixed-dim transition-colors flex items-center gap-2 btn-actionable shadow-sm" style={{ background: 'linear-gradient(rgb(111, 251, 190) 0%, rgb(78, 222, 163) 100%)' }}>
-                    Got it
-                    <span className="material-symbols-outlined text-sm">check</span>
-</button>
-</div>
-</section>
-</div>
+                <h2 className="max-w-xl font-display text-2xl font-medium leading-snug text-foreground text-balance md:text-3xl">
+                  {currentCard.q}
+                </h2>
+                <div className="absolute bottom-6 flex items-center gap-2 text-muted-foreground opacity-70">
+                  <PointerIcon className="h-3.5 w-3.5" />
+                  <span className="text-xs">Click to flip</span>
+                </div>
+              </div>
+
+              {/* Back — answer */}
+              <div
+                className="absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-ember/25 bg-card p-8 text-center md:p-12"
+                style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+              >
+                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-ember">
+                  Answer
+                </div>
+                <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">{currentCard.a}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex w-full max-w-md items-center justify-between">
+            <Button
+              onClick={handleNext}
+              variant="secondary"
+              className="gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive"
+            >
+              <History className="h-4 w-4" />
+              Review later
+            </Button>
+            <div className="hidden items-center gap-2 font-mono text-xs text-muted-foreground md:flex">
+              <kbd className="rounded border border-border bg-secondary px-2 py-1">←</kbd>
+              <span>/</span>
+              <kbd className="rounded border border-border bg-secondary px-2 py-1">→</kbd>
+            </div>
+            <Button onClick={handleNext} className="gap-2">
+              Got it
+              <Check className="h-4 w-4" />
+            </Button>
+          </div>
+        </section>
+      </div>
     </Layout>
   );
 }
