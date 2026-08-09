@@ -4,9 +4,20 @@ import Editor, { OnMount } from '@monaco-editor/react';
 import { apiClient } from '../../lib/axios';
 import {
   Bot, Play, Send, CheckCircle2, XCircle, Clock, Code, Sparkles,
-  ArrowRight, ShieldCheck, Layers, FileText, HelpCircle, Terminal,
-  Cpu, AlertCircle, Maximize2, Settings2, Check, Copy
+  ShieldCheck, Layers, FileText, HelpCircle, Terminal, Cpu,
 } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Textarea } from '../../components/ui/textarea';
+import { Badge } from '../../components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/ui/select';
+import { cn } from '../../lib/utils';
 
 const LANGUAGES = [
   { id: 'python', label: 'Python 3', monacoId: 'python' },
@@ -143,19 +154,16 @@ export const CodingInterviewRoom: React.FC = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [timer, setTimer] = useState(0);
 
-  // Tab State
   const [leftTab, setLeftTab] = useState<'problem' | 'rubric' | 'hints' | 'chat'>('problem');
   const [bottomTab, setBottomTab] = useState<'results' | 'custom' | 'review'>('results');
 
-  // Custom Test Case Inputs
   const [customInput, setCustomInput] = useState('"A man, a plan, a canal: Panama"');
 
   const editorRef = useRef<any>(null);
 
-  // Session Timer
   useEffect(() => {
     if (session && session.status === 'active') {
-      const interval = setInterval(() => setTimer(p => p + 1), 1000);
+      const interval = setInterval(() => setTimer((p) => p + 1), 1000);
       return () => clearInterval(interval);
     }
   }, [session?.status]);
@@ -168,7 +176,7 @@ export const CodingInterviewRoom: React.FC = () => {
 
   useEffect(() => {
     if (sessionId) {
-      apiClient.get(`/interviews/${sessionId}`).then(r => setSession(r.data));
+      apiClient.get(`/interviews/${sessionId}`).then((r) => setSession(r.data));
     }
   }, [sessionId]);
 
@@ -178,7 +186,6 @@ export const CodingInterviewRoom: React.FC = () => {
     editorRef.current = editor;
     editor.focus();
 
-    // Keybindings: Ctrl+Enter -> Run Code
     editor.addAction({
       id: 'studyforge-run-code',
       label: 'Run Code',
@@ -253,126 +260,150 @@ export const CodingInterviewRoom: React.FC = () => {
 
   if (!session) {
     return (
-      <div className="flex items-center justify-center h-screen bg-[#0B0F19] text-slate-400">
-        <Sparkles className="w-5 h-5 animate-pulse mr-2 text-indigo-400" /> Loading coding interview...
+      <div className="flex h-screen items-center justify-center bg-background text-muted-foreground">
+        <Sparkles className="mr-2 h-5 w-5 animate-pulse text-ember" /> Loading coding interview...
       </div>
     );
   }
 
+  const LEFT_TABS = [
+    { id: 'problem', label: 'Description', icon: FileText },
+    { id: 'rubric', label: 'Rubric (5-Axis)', icon: ShieldCheck },
+    { id: 'hints', label: 'Hints', icon: HelpCircle },
+    { id: 'chat', label: 'Approach Chat', icon: Bot },
+  ] as const;
+
+  const BOTTOM_TABS = [
+    { id: 'results', label: 'Test Case Results', icon: CheckCircle2 },
+    { id: 'custom', label: 'Custom Test Input', icon: Terminal },
+    { id: 'review', label: 'AI Review & Complexity', icon: Cpu },
+  ] as const;
+
   return (
-    <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-200 overflow-hidden select-none font-sans">
-      {/* Top IDE Bar */}
-      <div className="h-12 bg-[#111621] border-b border-[#1E2532] flex items-center justify-between px-4 shrink-0">
+    <div className="flex h-screen select-none flex-col overflow-hidden bg-background font-sans text-foreground">
+      {/* Top IDE bar */}
+      <div className="flex h-12 shrink-0 items-center justify-between border-b border-border bg-card px-4">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
-            <Code className="w-4 h-4 text-emerald-400" />
-            <span className="text-xs font-bold text-white tracking-wide">LEETCODE IDE SIMULATION</span>
+            <Code className="h-4 w-4 text-gold" />
+            <span className="text-xs font-bold tracking-wide text-foreground">LEETCODE IDE SIMULATION</span>
           </div>
-          <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono">
+          <Badge variant="gold" className="rounded-full font-mono">
             Easy • 125 pt
-          </span>
-          <span className="text-xs text-slate-400 border-l border-slate-700 pl-3">
-            Role: <span className="text-indigo-400 font-semibold">{session.target_role}</span>
+          </Badge>
+          <span className="border-l border-border pl-3 text-xs text-muted-foreground">
+            Role: <span className="font-semibold text-ember">{session.target_role}</span>
           </span>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-            <Clock className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
+            <Clock className="h-3.5 w-3.5" />
             {formatTime(timer)}
           </div>
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => navigate(`/interview/report/${sessionId}`)}
-            className="px-3 py-1.5 text-xs text-rose-400 hover:text-rose-300 font-semibold bg-rose-500/10 border border-rose-500/30 rounded-lg transition-colors"
+            className="border-destructive/30 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive"
           >
-            End Interview
-          </button>
+            End interview
+          </Button>
         </div>
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        {/* Left Pane: Structured LeetCode Problem Panel */}
-        <div className="w-[42%] flex flex-col border-r border-[#1E2532] bg-[#0F131C]">
-          {/* Left Tab Navigation */}
-          <div className="flex items-center gap-1 px-4 pt-2.5 bg-[#111621] border-b border-[#1E2532] shrink-0">
-            {[
-              { id: 'problem', label: 'Description', icon: FileText },
-              { id: 'rubric', label: 'Rubric (5-Axis)', icon: ShieldCheck },
-              { id: 'hints', label: 'Hints', icon: HelpCircle },
-              { id: 'chat', label: 'Approach Chat', icon: Bot },
-            ].map(tab => (
+        {/* Left pane: problem panel */}
+        <div className="flex w-[42%] flex-col border-r border-border bg-card/40">
+          <div className="flex shrink-0 items-center gap-1 border-b border-border bg-card px-4 pt-2.5">
+            {LEFT_TABS.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setLeftTab(tab.id as any)}
-                className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-t-xl transition-colors border-b-2 ${
+                onClick={() => setLeftTab(tab.id)}
+                className={cn(
+                  'flex items-center gap-1.5 rounded-t-xl border-b-2 px-3 py-2 text-xs font-semibold transition-colors',
                   leftTab === tab.id
-                    ? 'border-indigo-500 text-indigo-400 bg-slate-800/40'
-                    : 'border-transparent text-slate-400 hover:text-slate-200'
-                }`}
+                    ? 'border-ember bg-secondary/40 text-ember'
+                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                )}
               >
-                <tab.icon className="w-3.5 h-3.5" />
+                <tab.icon className="h-3.5 w-3.5" />
                 {tab.label}
               </button>
             ))}
           </div>
 
-          {/* Left Tab Contents */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-6">
-            {/* Tab 1: Structured Problem Statement */}
+          <div className="flex-1 space-y-6 overflow-y-auto p-5">
             {leftTab === 'problem' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-lg font-bold text-white mb-2">Valid Palindrome</h2>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    A phrase is a <strong>palindrome</strong> if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+                  <h2 className="mb-2 font-display text-lg font-medium text-foreground">Valid Palindrome</h2>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    A phrase is a <strong className="text-foreground">palindrome</strong> if, after converting all
+                    uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads
+                    the same forward and backward. Alphanumeric characters include letters and numbers.
                   </p>
-                  <p className="text-xs text-slate-300 leading-relaxed mt-2">
-                    Given a string <code className="px-1.5 py-0.5 bg-slate-800 text-emerald-400 font-mono rounded">s</code>, return <code className="px-1.5 py-0.5 bg-slate-800 text-emerald-400 font-mono rounded">true</code> if it is a palindrome, or <code className="px-1.5 py-0.5 bg-slate-800 text-emerald-400 font-mono rounded">false</code> otherwise.
+                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                    Given a string <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">s</code>,
+                    return <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">true</code> if it
+                    is a palindrome, or <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">false</code>{' '}
+                    otherwise.
                   </p>
                 </div>
 
-                {/* Formatted Examples */}
                 <div className="space-y-4">
-                  <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Example Test Cases</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Example test cases
+                  </h3>
 
-                  <div className="p-3.5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1.5 font-mono text-xs">
-                    <div className="text-slate-400"><span className="text-indigo-400 font-bold">Input:</span> s = "A man, a plan, a canal: Panama"</div>
-                    <div className="text-slate-400"><span className="text-emerald-400 font-bold">Output:</span> true</div>
-                    <div className="text-slate-500 font-sans text-[11px] pt-1">
-                      <span className="font-bold text-slate-400">Explanation:</span> "amanaplanacanalpanama" is a palindrome.
+                  <div className="space-y-1.5 rounded-xl border border-border bg-background p-3.5 font-mono text-xs">
+                    <div className="text-muted-foreground">
+                      <span className="font-bold text-ember">Input:</span> s = "A man, a plan, a canal: Panama"
+                    </div>
+                    <div className="text-muted-foreground">
+                      <span className="font-bold text-gold">Output:</span> true
+                    </div>
+                    <div className="pt-1 font-sans text-[11px] text-muted-foreground/80">
+                      <span className="font-bold text-muted-foreground">Explanation:</span> "amanaplanacanalpanama"
+                      is a palindrome.
                     </div>
                   </div>
 
-                  <div className="p-3.5 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1.5 font-mono text-xs">
-                    <div className="text-slate-400"><span className="text-indigo-400 font-bold">Input:</span> s = "race a car"</div>
-                    <div className="text-slate-400"><span className="text-rose-400 font-bold">Output:</span> false</div>
-                    <div className="text-slate-500 font-sans text-[11px] pt-1">
-                      <span className="font-bold text-slate-400">Explanation:</span> "raceacar" is not a palindrome.
+                  <div className="space-y-1.5 rounded-xl border border-border bg-background p-3.5 font-mono text-xs">
+                    <div className="text-muted-foreground">
+                      <span className="font-bold text-ember">Input:</span> s = "race a car"
+                    </div>
+                    <div className="text-muted-foreground">
+                      <span className="font-bold text-destructive">Output:</span> false
+                    </div>
+                    <div className="pt-1 font-sans text-[11px] text-muted-foreground/80">
+                      <span className="font-bold text-muted-foreground">Explanation:</span> "raceacar" is not a
+                      palindrome.
                     </div>
                   </div>
                 </div>
 
-                {/* Constraints */}
                 <div className="space-y-2">
-                  <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Constraints & Complexity Targets</h3>
-                  <ul className="space-y-1 text-xs font-mono text-slate-400 list-disc list-inside bg-slate-950 p-3 rounded-xl border border-slate-800">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Constraints &amp; complexity targets
+                  </h3>
+                  <ul className="list-inside list-disc space-y-1 rounded-xl border border-border bg-background p-3 font-mono text-xs text-muted-foreground">
                     <li>1 &le; s.length &le; 2 &times; 10<sup>5</sup></li>
                     <li>s consists only of printable ASCII characters.</li>
-                    <li><span className="text-indigo-400">Target Time Complexity:</span> O(N)</li>
-                    <li><span className="text-purple-400">Target Space Complexity:</span> O(1) auxiliary space</li>
+                    <li><span className="text-ember">Target time complexity:</span> O(N)</li>
+                    <li><span className="text-steel">Target space complexity:</span> O(1) auxiliary space</li>
                   </ul>
                 </div>
               </div>
             )}
 
-            {/* Tab 2: 5-Axis Rubric Scorecard */}
             {leftTab === 'rubric' && (
               <div className="space-y-4">
-                <div className="p-4 bg-indigo-950/40 border border-indigo-500/30 rounded-2xl">
-                  <h3 className="text-xs font-bold text-indigo-300 uppercase tracking-wider mb-1 flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-indigo-400" /> Evaluation Rubric Standard
+                <div className="rounded-2xl border border-ember/25 bg-ember/10 p-4">
+                  <h3 className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ember">
+                    <ShieldCheck className="h-4 w-4" /> Evaluation rubric standard
                   </h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs leading-relaxed text-muted-foreground">
                     Your code and explanation will be scored across 5 dimensions upon submission.
                   </p>
                 </div>
@@ -384,49 +415,56 @@ export const CodingInterviewRoom: React.FC = () => {
                   { name: '4. Code Readability & Style (15%)', desc: 'Clean variable naming, modular structure, comments.', weight: '15 pts' },
                   { name: '5. Approach Communication (10%)', desc: 'Clear verbal or written explanation in approach chat.', weight: '10 pts' },
                 ].map((r, i) => (
-                  <div key={i} className="p-3.5 bg-slate-900/60 border border-slate-800 rounded-xl flex justify-between items-start">
+                  <div key={i} className="flex items-start justify-between rounded-xl border border-border bg-background p-3.5">
                     <div>
-                      <h4 className="text-xs font-bold text-white mb-0.5">{r.name}</h4>
-                      <p className="text-[11px] text-slate-400">{r.desc}</p>
+                      <h4 className="mb-0.5 text-xs font-bold text-foreground">{r.name}</h4>
+                      <p className="text-[11px] text-muted-foreground">{r.desc}</p>
                     </div>
-                    <span className="text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/30 shrink-0">
+                    <Badge variant="ember" className="shrink-0 rounded font-mono">
                       {r.weight}
-                    </span>
+                    </Badge>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* Tab 3: Hints */}
             {leftTab === 'hints' && (
               <div className="space-y-3">
-                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                  <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">Hint 1: Pre-processing</span>
-                  <p className="text-xs text-slate-300">Convert the entire string to lowercase and filter out all non-alphanumeric characters first.</p>
+                <div className="space-y-2 rounded-xl border border-border bg-background p-4">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-gold">
+                    Hint 1: Pre-processing
+                  </span>
+                  <p className="text-xs text-muted-foreground">
+                    Convert the entire string to lowercase and filter out all non-alphanumeric characters first.
+                  </p>
                 </div>
-                <div className="p-4 bg-slate-900 border border-slate-800 rounded-xl space-y-2">
-                  <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider block">Hint 2: Two Pointers</span>
-                  <p className="text-xs text-slate-300">You can test palindrome validity in O(1) space by placing two pointers at start and end, advancing toward center.</p>
+                <div className="space-y-2 rounded-xl border border-border bg-background p-4">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-ember">
+                    Hint 2: Two pointers
+                  </span>
+                  <p className="text-xs text-muted-foreground">
+                    You can test palindrome validity in O(1) space by placing two pointers at start and end,
+                    advancing toward center.
+                  </p>
                 </div>
               </div>
             )}
 
-            {/* Tab 4: Approach Chat */}
             {leftTab === 'chat' && (
               <div className="space-y-4">
                 <div className="space-y-3">
                   {session.turns?.map((t: any, idx: number) => (
                     <div key={idx} className="space-y-2">
                       {t.user_answer && (
-                        <div className="p-3 bg-slate-900 border border-slate-800 rounded-xl">
-                          <span className="text-[10px] font-bold text-indigo-400 block mb-1">Your Explanation</span>
-                          <p className="text-xs text-slate-300">{t.user_answer}</p>
+                        <div className="rounded-xl border border-border bg-background p-3">
+                          <span className="mb-1 block text-[10px] font-bold text-ember">Your explanation</span>
+                          <p className="text-xs text-muted-foreground">{t.user_answer}</p>
                         </div>
                       )}
                       {t.feedback && (
-                        <div className="p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl">
-                          <span className="text-[10px] font-bold text-emerald-400 block mb-1">AI Evaluator</span>
-                          <p className="text-xs text-slate-300">{t.feedback}</p>
+                        <div className="rounded-xl border border-gold/30 bg-gold/10 p-3">
+                          <span className="mb-1 block text-[10px] font-bold text-gold">AI evaluator</span>
+                          <p className="text-xs text-muted-foreground">{t.feedback}</p>
                         </div>
                       )}
                     </div>
@@ -434,80 +472,84 @@ export const CodingInterviewRoom: React.FC = () => {
                 </div>
 
                 <div className="flex gap-2">
-                  <input
+                  <Input
                     value={userAnswer}
                     onChange={(e) => setUserAnswer(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleSubmitTurn(); }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') handleSubmitTurn();
+                    }}
                     placeholder="Explain your approach or complexity analysis..."
-                    className="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+                    className="h-10 flex-1 text-xs"
                   />
-                  <button
+                  <Button
+                    size="icon"
                     onClick={handleSubmitTurn}
                     disabled={!userAnswer.trim() || submittingTurn}
-                    className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl disabled:opacity-50 transition-colors"
+                    className="h-10 w-10 shrink-0"
                   >
-                    <Send className="w-3.5 h-3.5" />
-                  </button>
+                    <Send className="h-3.5 w-3.5" />
+                  </Button>
                 </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Right Pane: Monaco IDE Editor & Interactive Test Harness */}
-        <div className="w-[58%] flex flex-col bg-[#0D1117]">
-          {/* Top IDE Toolbar */}
-          <div className="flex items-center justify-between px-4 py-2 bg-[#111621] border-b border-[#1E2532] shrink-0">
+        {/* Right pane: Monaco IDE editor & test harness */}
+        <div className="flex w-[58%] flex-col bg-[#0D1117]">
+          <div className="flex shrink-0 items-center justify-between border-b border-border bg-card px-4 py-2">
             <div className="flex items-center gap-3">
-              <select
+              <Select
                 value={language}
-                onChange={(e) => {
-                  const newLang = e.target.value;
-                  setLanguage(newLang);
-                  setCode(DEFAULT_CODE[newLang] || '');
+                onValueChange={(v) => {
+                  setLanguage(v);
+                  setCode(DEFAULT_CODE[v] || '');
                 }}
-                className="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:outline-none font-medium"
               >
-                {LANGUAGES.map(l => (
-                  <option key={l.id} value={l.id}>{l.label}</option>
-                ))}
-              </select>
-              <span className="text-[10px] text-slate-500 font-mono">VS Code Dark Theme</span>
+                <SelectTrigger className="h-8 w-[190px] text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {LANGUAGES.map((l) => (
+                    <SelectItem key={l.id} value={l.id}>
+                      {l.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="font-mono text-[10px] text-muted-foreground">VS Code Dark Theme</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                size="sm"
                 onClick={handleRunCode}
                 disabled={loading}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl disabled:opacity-50 transition-all shadow-md shadow-emerald-600/20"
+                variant="steel"
+                className="gap-1.5 text-xs font-bold"
               >
-                <Play className="w-3.5 h-3.5 fill-white" />
-                {loading ? 'Executing Code...' : 'Run Code (Ctrl+Enter)'}
-              </button>
+                <Play className="h-3.5 w-3.5 fill-current" />
+                {loading ? 'Executing code...' : 'Run code (Ctrl+Enter)'}
+              </Button>
 
-              <button
-                onClick={handleRunCode}
-                disabled={loading}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl disabled:opacity-50 transition-all shadow-md shadow-indigo-600/20"
-              >
-                <Send className="w-3.5 h-3.5" />
-                Submit Solution
-              </button>
+              <Button size="sm" onClick={handleRunCode} disabled={loading} className="gap-1.5 text-xs font-bold">
+                <Send className="h-3.5 w-3.5" />
+                Submit solution
+              </Button>
             </div>
           </div>
 
-          {/* Monaco Editor Container */}
-          <div className="flex-1 relative overflow-hidden">
+          <div className="relative flex-1 overflow-hidden">
             <Editor
               height="100%"
-              language={LANGUAGES.find(l => l.id === language)?.monacoId || 'python'}
+              language={LANGUAGES.find((l) => l.id === language)?.monacoId || 'python'}
               theme="vs-dark"
               value={code}
               onChange={(v) => setCode(v || '')}
               onMount={handleEditorMount}
               options={{
                 fontSize: 13,
-                fontFamily: "'Fira Code', 'Cascadia Code', Consolas, monospace",
+                fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,
                 automaticLayout: true,
@@ -518,112 +560,104 @@ export const CodingInterviewRoom: React.FC = () => {
             />
           </div>
 
-          {/* Bottom Interactive Test Harness & Console */}
-          <div className="h-60 border-t border-[#1E2532] bg-[#111621] flex flex-col shrink-0">
-            {/* Console Tab Header */}
-            <div className="flex items-center justify-between px-4 pt-2 bg-[#111621] border-b border-[#1E2532] shrink-0">
+          {/* Bottom test harness & console */}
+          <div className="flex h-60 shrink-0 flex-col border-t border-border bg-card">
+            <div className="flex shrink-0 items-center justify-between border-b border-border bg-card px-4 pt-2">
               <div className="flex items-center gap-1">
-                {[
-                  { id: 'results', label: 'Test Case Results', icon: CheckCircle2 },
-                  { id: 'custom', label: 'Custom Test Input', icon: Terminal },
-                  { id: 'review', label: 'AI Review & Complexity', icon: Cpu },
-                ].map(tab => (
+                {BOTTOM_TABS.map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => setBottomTab(tab.id as any)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-t-lg transition-colors border-b-2 ${
+                    onClick={() => setBottomTab(tab.id)}
+                    className={cn(
+                      'flex items-center gap-1.5 rounded-t-lg border-b-2 px-3 py-1.5 text-xs font-semibold transition-colors',
                       bottomTab === tab.id
-                        ? 'border-indigo-500 text-indigo-400 bg-slate-800/40'
-                        : 'border-transparent text-slate-400 hover:text-slate-200'
-                    }`}
+                        ? 'border-ember bg-secondary/40 text-ember'
+                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                    )}
                   >
-                    <tab.icon className="w-3.5 h-3.5" />
+                    <tab.icon className="h-3.5 w-3.5" />
                     {tab.label}
                   </button>
                 ))}
               </div>
 
               {aiReview && (
-                <div className="flex items-center gap-3 text-[10px] font-mono">
-                  <span className="text-indigo-400 font-bold">Time: {aiReview.time_complexity}</span>
-                  <span className="text-purple-400 font-bold">Space: {aiReview.space_complexity}</span>
-                  <span className="text-emerald-400 font-bold">Rubric Score: {aiReview.rubric_score}/100</span>
+                <div className="flex items-center gap-3 font-mono text-[10px]">
+                  <span className="font-bold text-ember">Time: {aiReview.time_complexity}</span>
+                  <span className="font-bold text-steel">Space: {aiReview.space_complexity}</span>
+                  <span className="font-bold text-gold">Rubric score: {aiReview.rubric_score}/100</span>
                 </div>
               )}
             </div>
 
-            {/* Console Tab Contents */}
             <div className="flex-1 overflow-y-auto p-4">
-              {/* Tab 1: Test Results */}
               {bottomTab === 'results' && (
                 <div className="space-y-3">
                   {testResults.length > 0 ? (
                     <div className="space-y-2">
                       {testResults.map((tc: any, i: number) => (
-                        <div key={i} className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between font-mono text-xs">
+                        <div
+                          key={i}
+                          className="flex items-center justify-between rounded-xl border border-border bg-background p-3 font-mono text-xs"
+                        >
                           <div className="flex items-center gap-2.5">
                             {tc.status === 'PASSED' ? (
-                              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                              <CheckCircle2 className="h-4 w-4 shrink-0 text-gold" />
                             ) : (
-                              <XCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                              <XCircle className="h-4 w-4 shrink-0 text-destructive" />
                             )}
                             <div>
-                              <span className="text-white font-bold block">{tc.name}</span>
-                              <span className="text-[11px] text-slate-500">Input: {tc.input}</span>
+                              <span className="block font-bold text-foreground">{tc.name}</span>
+                              <span className="text-[11px] text-muted-foreground">Input: {tc.input}</span>
                             </div>
                           </div>
                           <div className="text-right">
-                            <span className={`text-xs font-bold block ${tc.status === 'PASSED' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                            <span className={cn('block text-xs font-bold', tc.status === 'PASSED' ? 'text-gold' : 'text-destructive')}>
                               {tc.status}
                             </span>
-                            <span className="text-[10px] text-slate-600">{tc.duration_ms}ms</span>
+                            <span className="text-[10px] text-muted-foreground">{tc.duration_ms}ms</span>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-full text-slate-500 text-xs space-y-1">
-                      <Terminal className="w-5 h-5 opacity-40 mb-1" />
+                    <div className="flex h-full flex-col items-center justify-center space-y-1 text-xs text-muted-foreground">
+                      <Terminal className="mb-1 h-5 w-5 opacity-40" />
                       <p>Run code to evaluate public test cases</p>
                     </div>
                   )}
                 </div>
               )}
 
-              {/* Tab 2: Custom Test Builder */}
               {bottomTab === 'custom' && (
                 <div className="space-y-3">
-                  <label className="text-xs font-bold text-slate-300 block">Custom Input Parameter (s: string)</label>
-                  <textarea
+                  <label className="block text-xs font-bold text-foreground">Custom input parameter (s: string)</label>
+                  <Textarea
                     rows={3}
                     value={customInput}
                     onChange={(e) => setCustomInput(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 font-mono text-xs text-emerald-300 outline-none focus:border-indigo-500"
+                    className="font-mono text-xs text-gold"
                   />
                   <div className="flex justify-end">
-                    <button
-                      onClick={handleRunCode}
-                      className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-colors"
-                    >
-                      Run Custom Test
-                    </button>
+                    <Button size="sm" onClick={handleRunCode} variant="steel" className="text-xs font-bold">
+                      Run custom test
+                    </Button>
                   </div>
                 </div>
               )}
 
-              {/* Tab 3: AI Code Review */}
               {bottomTab === 'review' && (
                 <div className="space-y-3">
                   {aiReview ? (
-                    <div className="p-3.5 bg-slate-950 border border-slate-800 rounded-xl space-y-2 text-xs">
-                      <div className="flex items-center gap-2 text-indigo-400 font-bold">
-                        <Sparkles className="w-4 h-4" /> AI Complexity & Optimization Feedback
+                    <div className="space-y-2 rounded-xl border border-border bg-background p-3.5 text-xs">
+                      <div className="flex items-center gap-2 font-bold text-ember">
+                        <Sparkles className="h-4 w-4" /> AI complexity &amp; optimization feedback
                       </div>
-                      <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">{aiReview.feedback}</p>
+                      <p className="whitespace-pre-wrap leading-relaxed text-muted-foreground">{aiReview.feedback}</p>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-center h-full text-slate-500 text-xs">
-                      Run solution to generate AI time & space complexity feedback.
+                    <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                      Run solution to generate AI time &amp; space complexity feedback.
                     </div>
                   )}
                 </div>
