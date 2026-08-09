@@ -1,6 +1,0 @@
-services:
-  - type: web
-    name: studyforge-ai
-    env: python
-    buildCommand: npm install --prefix frontend && npm run build --prefix frontend && pip install -r backend/requirements.txt
-    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
