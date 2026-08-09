@@ -2,6 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { apiClient } from '../../lib/axios';
 import { Bot, User, Mic, MicOff, VideoOff, PhoneOff, CheckCircle2 } from 'lucide-react';
 import { FeedbackModal } from '../feedback/FeedbackModal';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Textarea } from '../../components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../components/ui/select';
+import { cn } from '../../lib/utils';
 
 export const MockInterview: React.FC = () => {
   const [targetRole, setTargetRole] = useState('Software Engineer');
@@ -84,7 +97,7 @@ export const MockInterview: React.FC = () => {
         target_role: targetRole,
         interview_type: interviewType,
         turns: [res.data.turn],
-        status: 'active'
+        status: 'active',
       };
       setInterview(interviewData);
       setCurrentTurn(res.data.turn);
@@ -120,47 +133,40 @@ export const MockInterview: React.FC = () => {
 
   if (!interview) {
     return (
-      <div className="min-h-screen bg-[#0B0F19] text-slate-200 flex items-center justify-center p-6">
-        <div className="w-full max-w-md p-8 bg-[#151923] border border-[#1E2532] rounded-3xl space-y-6">
-          <div className="flex flex-col items-center mb-8">
-             <div className="w-20 h-20 rounded-full bg-cyan-500/10 flex items-center justify-center mb-4">
-                <Bot className="w-10 h-10 text-cyan-400" />
-             </div>
-             <h2 className="text-2xl font-bold text-white">Setup Mock Interview</h2>
+      <div className="flex min-h-screen items-center justify-center bg-background p-6 text-foreground">
+        <Card className="w-full max-w-md space-y-6 p-8">
+          <div className="mb-8 flex flex-col items-center">
+            <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-steel/10">
+              <Bot className="h-10 w-10 text-steel" />
+            </div>
+            <h2 className="font-display text-2xl font-medium text-foreground">Setup mock interview</h2>
+            <p className="mt-1 text-xs text-muted-foreground">Legacy quick-start flow</p>
           </div>
-          
+
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1.5">Target Role</label>
-              <input
-                type="text"
-                value={targetRole}
-                onChange={(e) => setTargetRole(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0B0F19] border border-[#1E2532] rounded-xl focus:ring-1 focus:ring-cyan-500 focus:outline-none text-slate-100"
-              />
+              <Label className="mb-1.5 block text-sm font-medium text-foreground">Target role</Label>
+              <Input value={targetRole} onChange={(e) => setTargetRole(e.target.value)} className="h-12" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1.5">Interview Type</label>
-              <select
-                value={interviewType}
-                onChange={(e) => setInterviewType(e.target.value)}
-                className="w-full px-4 py-3 bg-[#0B0F19] border border-[#1E2532] rounded-xl focus:ring-1 focus:ring-cyan-500 focus:outline-none text-slate-100"
-              >
-                <option value="technical">Technical & System Architecture</option>
-                <option value="behavioral">Behavioral & STAR Method</option>
-                <option value="situational">Situational Problem Solving</option>
-              </select>
+              <Label className="mb-1.5 block text-sm font-medium text-foreground">Interview type</Label>
+              <Select value={interviewType} onValueChange={setInterviewType}>
+                <SelectTrigger className="h-12">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="technical">Technical &amp; system architecture</SelectItem>
+                  <SelectItem value="behavioral">Behavioral &amp; STAR method</SelectItem>
+                  <SelectItem value="situational">Situational problem solving</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          <button
-            onClick={handleStartInterview}
-            disabled={loading}
-            className="w-full py-4 mt-4 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-xl transition-all disabled:opacity-50"
-          >
-            {loading ? 'Connecting to Interviewer...' : 'Start Session'}
-          </button>
-        </div>
+          <Button onClick={handleStartInterview} disabled={loading} variant="steel" className="mt-4 h-14 w-full">
+            {loading ? 'Connecting to interviewer...' : 'Start session'}
+          </Button>
+        </Card>
       </div>
     );
   }
@@ -168,175 +174,180 @@ export const MockInterview: React.FC = () => {
   const latestFeedback = interview.turns?.slice().reverse().find((t: any) => t.feedback)?.feedback;
 
   return (
-    <div className="flex flex-col h-screen bg-[#0B0F19] text-slate-200 overflow-hidden font-sans">
-      <div className="h-10 bg-[#0B0F19] border-b border-[#1E2532] flex items-center px-4 overflow-hidden shrink-0">
-        <p className="text-xs text-cyan-400 whitespace-nowrap overflow-hidden text-ellipsis w-full font-mono">
-          [AI Analysis] {latestFeedback || "System initialized. Preparing adaptive questioning logic..."}
+    <div className="flex h-screen flex-col overflow-hidden bg-background font-sans text-foreground">
+      <div className="flex h-10 shrink-0 items-center overflow-hidden border-b border-border bg-background px-4">
+        <p className="w-full overflow-hidden text-ellipsis whitespace-nowrap font-mono text-xs text-steel">
+          [AI Analysis] {latestFeedback || 'System initialized. Preparing adaptive questioning logic...'}
         </p>
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        
-        <div className="w-1/2 flex flex-col border-r border-[#1E2532] bg-[#0B0F19] relative">
-          <div className="absolute top-6 left-6 p-4 border border-[#1E2532] rounded-xl bg-[#0F1219]">
-            <p className="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Confidence</p>
-            <div className="w-24 h-1 bg-slate-800 rounded-full overflow-hidden">
-               <div className="h-full bg-cyan-400 w-3/4 rounded-full"></div>
+        <div className="relative flex w-1/2 flex-col border-r border-border bg-background">
+          <div className="absolute left-6 top-6 rounded-xl border border-border bg-card p-4">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Confidence</p>
+            <div className="h-1 w-24 overflow-hidden rounded-full bg-secondary">
+              <div className="h-full w-3/4 rounded-full bg-steel" />
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center">
-             <div className="relative w-64 h-64 flex items-center justify-center">
-                <div className={`absolute w-full h-full rounded-full border border-cyan-500/20 ${isListening ? 'animate-ping duration-1000' : ''}`}></div>
-                <div className="absolute w-48 h-48 rounded-full border 2 border-cyan-500/30"></div>
-                <div className="absolute w-32 h-32 rounded-full border-4 border-cyan-500/40"></div>
-                <div className="w-16 h-16 rounded-full bg-cyan-400 shadow-[0_0_50px_20px_rgba(6,182,212,0.5)] z-10"></div>
-             </div>
-             
-             <div className="mt-12 flex flex-col items-center">
-                <h2 className="text-2xl font-bold text-white mb-2">Interviewer AI</h2>
-                <div className="flex items-center gap-2">
-                   <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
-                   <span className="text-sm font-semibold tracking-widest text-cyan-400 uppercase">LISTENING</span>
-                </div>
-             </div>
+          <div className="flex flex-1 flex-col items-center justify-center">
+            <div className="relative flex h-64 w-64 items-center justify-center">
+              <div className={cn('absolute h-full w-full rounded-full border border-steel/20', isListening && 'animate-ping duration-1000')} />
+              <div className="absolute h-48 w-48 rounded-full border-2 border-steel/30" />
+              <div className="absolute h-32 w-32 rounded-full border-4 border-steel/40" />
+              <div className="z-10 h-16 w-16 rounded-full bg-steel shadow-[0_0_50px_20px_hsl(228_100%_72%/0.35)]" />
+            </div>
+
+            <div className="mt-12 flex flex-col items-center">
+              <h2 className="mb-2 font-display text-2xl font-medium text-foreground">Interviewer AI</h2>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 animate-pulse rounded-full bg-steel" />
+                <span className="text-sm font-semibold uppercase tracking-widest text-steel">Listening</span>
+              </div>
+            </div>
           </div>
 
-          <div className="h-24 bg-[#111621] border-t border-[#1E2532] flex items-center justify-center gap-8 shrink-0">
-             <button className="flex flex-col items-center gap-2 group">
-                <div className="w-12 h-12 rounded-full bg-[#1E2532] group-hover:bg-[#2A3441] flex items-center justify-center transition-colors">
-                   <VideoOff className="w-5 h-5 text-slate-400" />
-                </div>
-                <span className="text-[10px] text-slate-400 font-semibold">Stop Video</span>
-             </button>
-             
-             <button 
-                onClick={toggleListening}
-                className="flex flex-col items-center gap-2 group"
-             >
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-colors border-2 ${isListening ? 'bg-cyan-500/20 border-cyan-500' : 'bg-[#1E2532] border-transparent group-hover:bg-[#2A3441]'}`}>
-                   {isListening ? <Mic className="w-6 h-6 text-cyan-400" /> : <MicOff className="w-6 h-6 text-slate-400" />}
-                </div>
-                <span className="text-[10px] text-slate-400 font-semibold">{isListening ? 'Mute Mic' : 'Unmute Mic'}</span>
-             </button>
+          <div className="flex h-24 shrink-0 items-center justify-center gap-8 border-t border-border bg-card">
+            <button className="flex flex-col items-center gap-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary/70">
+                <VideoOff className="h-5 w-5 text-muted-foreground" />
+              </div>
+              <span className="text-[10px] font-semibold text-muted-foreground">Stop video</span>
+            </button>
 
-             <button 
-                onClick={() => setInterview({ ...interview, status: 'completed' })}
-                className="flex flex-col items-center gap-2 group"
-             >
-                <div className="w-12 h-12 rounded-full bg-rose-500/10 group-hover:bg-rose-500/20 flex items-center justify-center transition-colors border border-rose-500/30">
-                   <PhoneOff className="w-5 h-5 text-rose-500" />
-                </div>
-                <span className="text-[10px] text-slate-400 font-semibold">End Interview</span>
-             </button>
+            <button onClick={toggleListening} className="flex flex-col items-center gap-2">
+              <div
+                className={cn(
+                  'flex h-14 w-14 items-center justify-center rounded-full border-2 transition-colors',
+                  isListening ? 'border-steel bg-steel/20' : 'border-transparent bg-secondary hover:bg-secondary/70'
+                )}
+              >
+                {isListening ? <Mic className="h-6 w-6 text-steel" /> : <MicOff className="h-6 w-6 text-muted-foreground" />}
+              </div>
+              <span className="text-[10px] font-semibold text-muted-foreground">
+                {isListening ? 'Mute mic' : 'Unmute mic'}
+              </span>
+            </button>
+
+            <button onClick={() => setInterview({ ...interview, status: 'completed' })} className="flex flex-col items-center gap-2">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-destructive/30 bg-destructive/10 transition-colors hover:bg-destructive/20">
+                <PhoneOff className="h-5 w-5 text-destructive" />
+              </div>
+              <span className="text-[10px] font-semibold text-muted-foreground">End interview</span>
+            </button>
           </div>
         </div>
 
-        <div className="w-1/2 flex flex-col bg-[#111621] relative">
-           <div className="flex items-center justify-between p-6 border-b border-[#1E2532] shrink-0">
-              <h2 className="text-xl font-bold text-white">Live Transcript</h2>
-              <div className="px-3 py-1 rounded-md bg-[#1E2532] text-xs font-mono text-slate-300">
-                {formatTime(timer)}
+        <div className="relative flex w-1/2 flex-col bg-card">
+          <div className="flex shrink-0 items-center justify-between border-b border-border p-6">
+            <h2 className="font-display text-xl font-medium text-foreground">Live transcript</h2>
+            <div className="rounded-md bg-secondary px-3 py-1 font-mono text-xs text-muted-foreground">
+              {formatTime(timer)}
+            </div>
+          </div>
+
+          <div className="flex-1 space-y-6 overflow-y-auto p-6" ref={scrollRef}>
+            {interview.turns?.map((t: any, idx: number) => (
+              <div key={idx} className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                    <Bot className="h-5 w-5 text-steel" />
+                  </div>
+                  <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-secondary/40 p-5">
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="text-xs font-bold text-steel">Interviewer AI</span>
+                      <span className="text-[10px] text-muted-foreground">
+                        {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-foreground/85">{t.question}</p>
+                  </div>
+                </div>
+
+                {t.answer && (
+                  <div className="flex flex-row-reverse gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                      <User className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <div className="flex-1 rounded-2xl rounded-tr-sm border border-border bg-background p-5">
+                      <div className="mb-2 flex items-center justify-end gap-2">
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                        <span className="text-xs font-bold text-foreground">You</span>
+                      </div>
+                      <p className="text-right text-sm leading-relaxed text-foreground/85">{t.answer}</p>
+                    </div>
+                  </div>
+                )}
               </div>
-           </div>
+            ))}
 
-           <div className="flex-1 overflow-y-auto p-6 space-y-6" ref={scrollRef}>
-              {interview.turns?.map((t: any, idx: number) => (
-                <div key={idx} className="space-y-6">
-                   <div className="flex gap-4">
-                      <div className="w-10 h-10 shrink-0 rounded-full bg-[#1E2532] flex items-center justify-center">
-                         <Bot className="w-5 h-5 text-cyan-400" />
-                      </div>
-                      <div className="flex-1 bg-[#1E2532] border border-[#2A3441] rounded-2xl rounded-tl-sm p-5">
-                         <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs font-bold text-cyan-400">Interviewer AI</span>
-                            <span className="text-[10px] text-slate-500">{(new Date()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                         </div>
-                         <p className="text-sm text-slate-300 leading-relaxed">{t.question}</p>
-                      </div>
-                   </div>
-
-                   {t.answer && (
-                      <div className="flex gap-4 flex-row-reverse">
-                         <div className="w-10 h-10 shrink-0 rounded-full bg-[#1E2532] flex items-center justify-center">
-                            <User className="w-5 h-5 text-slate-400" />
-                         </div>
-                         <div className="flex-1 bg-[#0F1219] border border-[#1E2532] rounded-2xl rounded-tr-sm p-5">
-                            <div className="flex items-center justify-end gap-2 mb-2">
-                               <span className="text-[10px] text-slate-500">{(new Date()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                               <span className="text-xs font-bold text-slate-300">You</span>
-                            </div>
-                            <p className="text-sm text-slate-300 leading-relaxed text-right">{t.answer}</p>
-                         </div>
-                      </div>
-                   )}
+            {interview.status !== 'completed' && (
+              <div className="mt-6 flex flex-row-reverse gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                  <div className="relative">
+                    <User className="h-5 w-5 text-muted-foreground" />
+                    {isListening && (
+                      <div className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full bg-destructive" />
+                    )}
+                  </div>
                 </div>
-              ))}
+                <div className="relative flex-1 rounded-2xl border border-dashed border-border bg-background/50 p-5">
+                  <div className="mb-2 flex items-center justify-end gap-2">
+                    <span className="text-xs font-bold text-muted-foreground">Now • You</span>
+                  </div>
 
-              {interview.status !== 'completed' && (
-                <div className="flex gap-4 flex-row-reverse mt-6">
-                   <div className="w-10 h-10 shrink-0 rounded-full bg-[#1E2532] flex items-center justify-center">
-                      <div className="relative">
-                         <User className="w-5 h-5 text-slate-400" />
-                         {isListening && <div className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full animate-pulse"></div>}
+                  {isListening ? (
+                    <p className="text-right text-sm leading-relaxed text-foreground/85">
+                      {userAnswer || <span className="animate-pulse text-muted-foreground">Listening...</span>}
+                    </p>
+                  ) : (
+                    <div className="flex flex-col gap-3">
+                      <Textarea
+                        rows={2}
+                        value={userAnswer}
+                        onChange={(e) => setUserAnswer(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleSubmitTurn();
+                          }
+                        }}
+                        placeholder="Type your response or enable mic..."
+                        className="resize-none border-none bg-transparent p-0 text-right shadow-none focus-visible:ring-0"
+                      />
+                      <div className="flex justify-end">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={handleSubmitTurn}
+                          disabled={!userAnswer.trim() || loading}
+                          className="text-xs"
+                        >
+                          Send (Enter)
+                        </Button>
                       </div>
-                   </div>
-                   <div className="flex-1 border border-dashed border-[#2A3441] bg-[#0F1219]/50 rounded-2xl p-5 relative">
-                      <div className="flex items-center justify-end gap-2 mb-2">
-                         <span className="text-xs font-bold text-slate-400">Now • You</span>
-                      </div>
-                      
-                      {isListening ? (
-                         <p className="text-sm text-slate-300 leading-relaxed text-right">
-                           {userAnswer || <span className="text-slate-500 animate-pulse">Listening...</span>}
-                         </p>
-                      ) : (
-                         <div className="flex flex-col gap-3">
-                           <textarea
-                             rows={2}
-                             value={userAnswer}
-                             onChange={(e) => setUserAnswer(e.target.value)}
-                             onKeyDown={(e) => {
-                               if (e.key === 'Enter' && !e.shiftKey) {
-                                 e.preventDefault();
-                                 handleSubmitTurn();
-                               }
-                             }}
-                             placeholder="Type your response or enable mic..."
-                             className="w-full bg-transparent border-none focus:ring-0 text-sm text-slate-300 text-right resize-none placeholder-slate-600 outline-none"
-                           />
-                           <div className="flex justify-end">
-                             <button 
-                               onClick={handleSubmitTurn}
-                               disabled={!userAnswer.trim() || loading}
-                               className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-300 disabled:opacity-50 transition-colors"
-                             >
-                               Send (Enter)
-                             </button>
-                           </div>
-                         </div>
-                      )}
-                      
-                   </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+            )}
 
-              {interview.status === 'completed' && (
-                <div className="p-6 mt-8 bg-cyan-950/20 border border-cyan-900/30 rounded-2xl text-center">
-                   <CheckCircle2 className="w-8 h-8 text-cyan-500 mx-auto mb-3" />
-                   <h3 className="text-lg font-bold text-cyan-400 mb-2">Interview Completed</h3>
-                   <p className="text-sm text-slate-400 mb-4">
-                     Great job! The AI has finished its evaluation. Check the feedback dashboard for a comprehensive review.
-                   </p>
-                   <button
-                     onClick={() => setIsFeedbackOpen(true)}
-                     className="px-6 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-bold rounded-lg transition-colors"
-                   >
-                     View Feedback
-                   </button>
-                </div>
-              )}
-           </div>
+            {interview.status === 'completed' && (
+              <div className="mt-8 rounded-2xl border border-steel/25 bg-steel/10 p-6 text-center">
+                <CheckCircle2 className="mx-auto mb-3 h-8 w-8 text-steel" />
+                <h3 className="mb-2 font-display text-lg font-medium text-steel">Interview completed</h3>
+                <p className="mb-4 text-sm text-muted-foreground">
+                  Great job! The AI has finished its evaluation. Check the feedback dashboard for a comprehensive
+                  review.
+                </p>
+                <Button variant="steel" size="sm" onClick={() => setIsFeedbackOpen(true)}>
+                  View feedback
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
