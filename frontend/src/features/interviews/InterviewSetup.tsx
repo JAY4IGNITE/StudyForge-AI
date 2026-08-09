@@ -2,9 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
 import {
-  Code, Users, FileText, Briefcase, Mic, Upload, ArrowRight, Sparkles, AlertCircle
+  Code, Users, FileText, Briefcase, Mic, Upload, ArrowRight, Sparkles, AlertCircle, CheckCircle2
 } from 'lucide-react';
 import { Layout } from '../../components/layout/Layout';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Textarea } from '../../components/ui/textarea';
+import { cn } from '../../lib/utils';
 
 const MODES = [
   { id: 'technical', label: 'Technical', icon: Code },
@@ -35,7 +40,7 @@ export const InterviewSetup: React.FC = () => {
       const formData = new FormData();
       formData.append('file', resumeFile);
       const res = await apiClient.post('/interviews/parse-resume', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       setResumeId(res.data.resume_id);
     } catch {
@@ -71,120 +76,124 @@ export const InterviewSetup: React.FC = () => {
 
   return (
     <Layout>
-    <div className="max-w-2xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-white mb-2">Setup Interview</h1>
-        <p className="text-slate-400 text-sm">Configure your AI mock interview session</p>
-      </div>
-
-      {error && (
-        <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-sm">
-          <AlertCircle className="w-4 h-4 shrink-0" />
-          {error}
-        </div>
-      )}
-
-      {/* Mode Selection */}
-      <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-3">Interview Mode</label>
-        <div className="grid grid-cols-3 gap-3">
-          {MODES.map((m) => {
-            const Icon = m.icon;
-            return (
-              <button
-                key={m.id}
-                onClick={() => setMode(m.id)}
-                className={`p-3 rounded-xl border text-left transition-all ${
-                  mode === m.id
-                    ? 'bg-indigo-600/20 border-indigo-500/50 text-indigo-300'
-                    : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                }`}
-              >
-                <Icon className="w-4 h-4 mb-1.5" />
-                <p className="text-xs font-bold">{m.label}</p>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Target Role */}
-      <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">Target Role</label>
-        <input
-          type="text"
-          value={targetRole}
-          onChange={(e) => setTargetRole(e.target.value)}
-          className="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-indigo-500/50 text-sm"
-          placeholder="e.g. Senior Backend Engineer"
-        />
-      </div>
-
-      {/* Target Company */}
-      <div>
-        <label className="block text-sm font-semibold text-slate-300 mb-2">Target Company (optional)</label>
-        <input
-          type="text"
-          value={targetCompany}
-          onChange={(e) => setTargetCompany(e.target.value)}
-          className="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-indigo-500/50 text-sm"
-          placeholder="e.g. Google, Meta, Amazon"
-        />
-      </div>
-
-      {/* Resume Upload (Resume Mode) */}
-      {mode === 'resume' && (
+      <div className="mx-auto max-w-2xl space-y-8">
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">Upload Resume</label>
-          <div className="p-4 bg-slate-900/60 border border-dashed border-slate-700 rounded-xl">
-            <input
-              type="file"
-              accept=".pdf,.txt,.docx"
-              onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-              className="text-sm text-slate-400"
-            />
-            {resumeFile && !resumeId && (
-              <button
-                onClick={handleResumeUpload}
-                disabled={uploadingResume}
-                className="mt-3 flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg disabled:opacity-50"
-              >
-                <Upload className="w-3.5 h-3.5" />
-                {uploadingResume ? 'Parsing...' : 'Parse Resume with AI'}
-              </button>
-            )}
-            {resumeId && (
-              <p className="mt-2 text-xs text-emerald-400 font-semibold">✓ Resume parsed successfully</p>
-            )}
+          <h1 className="font-display text-2xl font-medium text-foreground">Setup interview</h1>
+          <p className="text-sm text-muted-foreground">Configure your AI mock interview session</p>
+        </div>
+
+        {error && (
+          <div className="flex items-center gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            {error}
+          </div>
+        )}
+
+        {/* Mode selection */}
+        <div>
+          <Label className="mb-3 block text-sm font-semibold text-foreground">Interview mode</Label>
+          <div className="grid grid-cols-3 gap-3">
+            {MODES.map((m) => {
+              const Icon = m.icon;
+              const isActive = mode === m.id;
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => setMode(m.id)}
+                  className={cn(
+                    'rounded-xl border p-3 text-left transition-all',
+                    isActive
+                      ? 'border-ember/40 bg-ember/10 text-ember'
+                      : 'border-border bg-card text-muted-foreground hover:border-ember/20'
+                  )}
+                >
+                  <Icon className="mb-1.5 h-4 w-4" />
+                  <p className="text-xs font-semibold">{m.label}</p>
+                </button>
+              );
+            })}
           </div>
         </div>
-      )}
 
-      {/* Job Description (JD Mode) */}
-      {mode === 'job_description' && (
         <div>
-          <label className="block text-sm font-semibold text-slate-300 mb-2">Paste Job Description</label>
-          <textarea
-            rows={6}
-            value={jdText}
-            onChange={(e) => setJdText(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-900/80 border border-slate-800 rounded-xl text-slate-100 focus:outline-none focus:border-indigo-500/50 text-sm resize-none"
-            placeholder="Paste the full job description here..."
+          <Label htmlFor="role" className="mb-2 block text-sm font-semibold text-foreground">
+            Target role
+          </Label>
+          <Input
+            id="role"
+            value={targetRole}
+            onChange={(e) => setTargetRole(e.target.value)}
+            placeholder="e.g. Senior Backend Engineer"
+            className="h-12"
           />
         </div>
-      )}
 
-      {/* Start Button */}
-      <button
-        onClick={handleStartInterview}
-        disabled={loading || (mode === 'resume' && !resumeId)}
-        className="w-full flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/30 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
-      >
-        <Sparkles className="w-5 h-5" />
-        {loading ? 'Initializing AI Interviewer...' : 'Begin Interview Session'}
-        <ArrowRight className="w-5 h-5" />
-      </button>
-    </div>
+        <div>
+          <Label htmlFor="company" className="mb-2 block text-sm font-semibold text-foreground">
+            Target company (optional)
+          </Label>
+          <Input
+            id="company"
+            value={targetCompany}
+            onChange={(e) => setTargetCompany(e.target.value)}
+            placeholder="e.g. Google, Meta, Amazon"
+            className="h-12"
+          />
+        </div>
+
+        {mode === 'resume' && (
+          <div>
+            <Label className="mb-2 block text-sm font-semibold text-foreground">Upload resume</Label>
+            <div className="rounded-xl border border-dashed border-border bg-secondary/20 p-4">
+              <input
+                type="file"
+                accept=".pdf,.txt,.docx"
+                onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+                className="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-foreground"
+              />
+              {resumeFile && !resumeId && (
+                <Button
+                  size="sm"
+                  onClick={handleResumeUpload}
+                  disabled={uploadingResume}
+                  className="mt-3 gap-1.5"
+                >
+                  <Upload className="h-3.5 w-3.5" />
+                  {uploadingResume ? 'Parsing...' : 'Parse resume with AI'}
+                </Button>
+              )}
+              {resumeId && (
+                <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-gold">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Resume parsed successfully
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {mode === 'job_description' && (
+          <div>
+            <Label className="mb-2 block text-sm font-semibold text-foreground">Paste job description</Label>
+            <Textarea
+              rows={6}
+              value={jdText}
+              onChange={(e) => setJdText(e.target.value)}
+              placeholder="Paste the full job description here..."
+              className="resize-none"
+            />
+          </div>
+        )}
+
+        <Button
+          onClick={handleStartInterview}
+          disabled={loading || (mode === 'resume' && !resumeId)}
+          className="h-14 w-full gap-3"
+        >
+          <Sparkles className="h-5 w-5" />
+          {loading ? 'Initializing AI interviewer...' : 'Begin interview session'}
+          <ArrowRight className="h-5 w-5" />
+        </Button>
+      </div>
     </Layout>
   );
 };
