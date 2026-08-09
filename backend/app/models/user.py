@@ -10,7 +10,9 @@ class UserPreferences(BaseModel):
 
 class User(Document):
     email: Indexed(str, unique=True) # type: ignore
-    password_hash: str
+    password_hash: Optional[str] = None
+    auth_provider: str = "local" # local, google, github
+    oauth_id: Optional[Indexed(str)] = None # type: ignore
     display_name: str
     role: str = "learner"
     email_verified_at: Optional[datetime] = None

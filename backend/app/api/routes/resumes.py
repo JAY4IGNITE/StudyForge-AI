@@ -70,19 +70,24 @@ async def process_resume(
     # Download file (using a presigned GET for simplicity in reading bytes)
     url_data = await r2_service.generate_presigned_download_url(resume.r2_key)
     try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.get(url_data["url"])
-            if resp.status_code != 200:
-                raise Exception("Failed to download from R2")
-            file_bytes = resp.content
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            async with client.stream("GET", url_data["url"]) as resp:
+                resp.raise_for_status()
+                chunks = bytearray()
+                async for chunk in resp.aiter_bytes():
+                    chunks.extend(chunk)
+                    if len(chunks) > MAX_RESUME_BYTES:
+                        raise ValueError("Resume exceeds the maximum supported size")
+                file_bytes = bytes(chunks)
     except Exception as e:
         resume.status = "failed"
         resume.parse_status = "failed"
         await resume.save()
-        raise HTTPException(status_code=500, detail=f"Failed to fetch file: {str(e)}")
+        raise HTTPException(status_code=502, detail=f"Failed to fetch file: {e}") from e
         
     # Parse
-    parsed_resume = resume_parser_service.parse_resume_file(
+    parsed_resume = await asyncio.to_thread(
+        resume_parser_service.parse_resume_file,
         file_bytes=file_bytes,
         filename=resume.original_filename,
         content_type=resume.content_type

@@ -14,7 +14,15 @@ class MockUser:
 async def override_get_current_user():
     return MockUser()
 
-app.dependency_overrides[get_current_user] = override_get_current_user
+@pytest.fixture(autouse=True)
+def override_current_user_dependency():
+    previous = app.dependency_overrides.get(get_current_user)
+    app.dependency_overrides[get_current_user] = override_get_current_user
+    yield
+    if previous is None:
+        app.dependency_overrides.pop(get_current_user, None)
+    else:
+        app.dependency_overrides[get_current_user] = previous
 
 @pytest.mark.asyncio
 def test_create_session_endpoint(monkeypatch):

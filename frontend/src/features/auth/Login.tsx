@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
 import { useAuth } from '../../app/AuthProvider';
-import { Flame, Mail, Lock, ArrowRight, Github } from 'lucide-react';
+import { Flame, Mail, Lock, ArrowRight, Github, Eye, EyeOff } from 'lucide-react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -12,6 +12,7 @@ import { Separator } from '../../components/ui/separator';
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -85,13 +86,20 @@ export const Login: React.FC = () => {
               <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 id="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="h-12 pl-10 tracking-[0.2em]"
+                className={`h-12 pl-10 pr-10 ${showPassword ? '' : 'tracking-[0.2em]'}`}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
             </div>
           </div>
 
@@ -109,7 +117,11 @@ export const Login: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          <Button variant="secondary" className="h-12 w-full gap-3">
+          <Button 
+            variant="secondary" 
+            className="h-12 w-full gap-3"
+            onClick={() => window.location.href = 'http://localhost:8000/api/v1/oauth/google/login'}
+          >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
                 fill="currentColor"
@@ -118,7 +130,11 @@ export const Login: React.FC = () => {
             </svg>
             Continue with Google
           </Button>
-          <Button variant="secondary" className="h-12 w-full gap-3">
+          <Button 
+            variant="secondary" 
+            className="h-12 w-full gap-3"
+            onClick={() => window.location.href = 'http://localhost:8000/api/v1/oauth/github/login'}
+          >
             <Github className="h-5 w-5" />
             Continue with GitHub
           </Button>
@@ -127,7 +143,7 @@ export const Login: React.FC = () => {
         <p className="mt-8 text-center text-xs text-muted-foreground">
           New researcher?{' '}
           <Link to="/register" className="font-medium text-ember hover:text-ember/80 hover:underline">
-            Request access
+            Sign up
           </Link>
         </p>
       </Card>

@@ -5,6 +5,7 @@ import { Loader2 } from 'lucide-react';
 
 const Login = React.lazy(() => import('../features/auth/Login').then(m => ({ default: m.Login })));
 const Register = React.lazy(() => import('../features/auth/Register').then(m => ({ default: m.Register })));
+const OAuthCallback = React.lazy(() => import('../features/auth/OAuthCallback').then(m => ({ default: m.OAuthCallback })));
 const VerifyEmail = React.lazy(() => import('../features/auth/VerifyEmail').then(m => ({ default: m.VerifyEmail })));
 const ForgotPassword = React.lazy(() => import('../features/auth/ForgotPassword').then(m => ({ default: m.ForgotPassword })));
 const ResetPassword = React.lazy(() => import('../features/auth/ResetPassword').then(m => ({ default: m.ResetPassword })));
@@ -58,6 +59,7 @@ export const AppRoutes: React.FC = () => {
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
