@@ -58,7 +58,7 @@ export function Flashcards() {
           <Card>
             <CardContent className="p-6">
               <CardTitle className="mb-4 flex items-center gap-2 text-lg">
-                <Sparkles className="h-4 w-4 text-ember" />
+                <Sparkles className="h-4 w-4 text-primary" />
                 Quick generate
               </CardTitle>
               <div className="space-y-3">
@@ -91,7 +91,7 @@ export function Flashcards() {
                   Question
                 </div>
                 <button
-                  className="absolute right-6 top-6 text-muted-foreground transition-colors hover:text-ember"
+                  className="absolute right-6 top-6 text-muted-foreground transition-colors hover:text-primary"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Volume2 className="h-5 w-5" />
@@ -107,10 +107,10 @@ export function Flashcards() {
 
               {/* Back — answer */}
               <div
-                className="absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-ember/25 bg-card p-8 text-center md:p-12"
+                className="absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-primary/25 bg-card p-8 text-center md:p-12"
                 style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
               >
-                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-ember">
+                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-primary">
                   Answer
                 </div>
                 <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">{currentCard.a}</p>
@@ -128,9 +128,9 @@ export function Flashcards() {
               Review later
             </Button>
             <div className="hidden items-center gap-2 font-mono text-xs text-muted-foreground md:flex">
-              <kbd className="rounded border border-border bg-secondary px-2 py-1">←</kbd>
+              <kbd className="rounded border border-border bg-surface px-2 py-1">←</kbd>
               <span>/</span>
-              <kbd className="rounded border border-border bg-secondary px-2 py-1">→</kbd>
+              <kbd className="rounded border border-border bg-surface px-2 py-1">→</kbd>
             </div>
             <Button onClick={handleNext} className="gap-2">
               Got it

@@ -79,15 +79,15 @@ export const MockTestPermissionModal: React.FC<MockTestPermissionModalProps> = (
       <DialogContent className="max-w-xl space-y-6 rounded-3xl">
         <div className="flex items-start justify-between border-b border-border pb-4">
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl border border-ember/30 bg-ember/15 p-3">
-              <Shield className="h-6 w-6 text-ember" />
+            <div className="rounded-2xl border border-primary/30 bg-primary/15 p-3">
+              <Shield className="h-6 w-6 text-primary" />
             </div>
             <div>
               <h2 className="font-display text-lg font-medium text-foreground">
                 Mock Test Permission &amp; Sensor Gateway
               </h2>
               <p className="text-xs text-muted-foreground">
-                Target role: <span className="font-semibold text-ember">{targetRole}</span> • Mode:{' '}
+                Target role: <span className="font-semibold text-primary">{targetRole}</span> • Mode:{' '}
                 <span className="font-semibold text-steel">{mode}</span>
               </p>
             </div>
@@ -102,7 +102,7 @@ export const MockTestPermissionModal: React.FC<MockTestPermissionModalProps> = (
           <div className="flex flex-col justify-between space-y-2 rounded-2xl border border-border bg-background p-3">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
-                <Camera className="h-3.5 w-3.5 text-ember" /> Video sensor
+                <Camera className="h-3.5 w-3.5 text-primary" /> Video sensor
               </span>
               {hasCameraAccess ? (
                 <span className="flex items-center gap-1 text-[10px] font-semibold text-gold">
@@ -115,7 +115,7 @@ export const MockTestPermissionModal: React.FC<MockTestPermissionModalProps> = (
               )}
             </div>
 
-            <div className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border border-border bg-secondary/20">
+            <div className="relative flex h-32 items-center justify-center overflow-hidden rounded-xl border border-border bg-surface/20">
               {hasCameraAccess ? (
                 <video ref={videoPreviewRef} autoPlay muted playsInline className="h-full w-full scale-x-[-1] object-cover" />
               ) : (
@@ -145,9 +145,9 @@ export const MockTestPermissionModal: React.FC<MockTestPermissionModalProps> = (
 
             <div className="space-y-2">
               <span className="block text-[10px] font-medium text-muted-foreground">Microphone signal meter:</span>
-              <div className="h-3 overflow-hidden rounded-full border border-border bg-secondary/40 p-0.5">
+              <div className="h-3 overflow-hidden rounded-full border border-border bg-surface/40 p-0.5">
                 <div
-                  className="h-full rounded-full bg-ember-gradient transition-all duration-100"
+                  className="h-full rounded-full bg-primary-gradient transition-all duration-100"
                   style={{ width: `${micLevel}%` }}
                 />
               </div>
@@ -159,7 +159,7 @@ export const MockTestPermissionModal: React.FC<MockTestPermissionModalProps> = (
         </div>
 
         {/* Consent */}
-        <div className="rounded-2xl border border-border bg-secondary/20 p-4">
+        <div className="rounded-2xl border border-border bg-surface/20 p-4">
           <label className="flex cursor-pointer items-start gap-3">
             <Checkbox
               checked={telemetryConsent}

@@ -261,7 +261,7 @@ export const CodingInterviewRoom: React.FC = () => {
   if (!session) {
     return (
       <div className="flex h-screen items-center justify-center bg-background text-muted-foreground">
-        <Sparkles className="mr-2 h-5 w-5 animate-pulse text-ember" /> Loading coding interview...
+        <Sparkles className="mr-2 h-5 w-5 animate-pulse text-primary" /> Loading coding interview...
       </div>
     );
   }
@@ -292,7 +292,7 @@ export const CodingInterviewRoom: React.FC = () => {
             Easy • 125 pt
           </Badge>
           <span className="border-l border-border pl-3 text-xs text-muted-foreground">
-            Role: <span className="font-semibold text-ember">{session.target_role}</span>
+            Role: <span className="font-semibold text-primary">{session.target_role}</span>
           </span>
         </div>
 
@@ -323,7 +323,7 @@ export const CodingInterviewRoom: React.FC = () => {
                 className={cn(
                   'flex items-center gap-1.5 rounded-t-xl border-b-2 px-3 py-2 text-xs font-semibold transition-colors',
                   leftTab === tab.id
-                    ? 'border-ember bg-secondary/40 text-ember'
+                    ? 'border-primary bg-surface/40 text-primary'
                     : 'border-transparent text-muted-foreground hover:text-foreground'
                 )}
               >
@@ -344,9 +344,9 @@ export const CodingInterviewRoom: React.FC = () => {
                     the same forward and backward. Alphanumeric characters include letters and numbers.
                   </p>
                   <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                    Given a string <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">s</code>,
-                    return <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">true</code> if it
-                    is a palindrome, or <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">false</code>{' '}
+                    Given a string <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-gold">s</code>,
+                    return <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-gold">true</code> if it
+                    is a palindrome, or <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-gold">false</code>{' '}
                     otherwise.
                   </p>
                 </div>
@@ -358,7 +358,7 @@ export const CodingInterviewRoom: React.FC = () => {
 
                   <div className="space-y-1.5 rounded-xl border border-border bg-background p-3.5 font-mono text-xs">
                     <div className="text-muted-foreground">
-                      <span className="font-bold text-ember">Input:</span> s = "A man, a plan, a canal: Panama"
+                      <span className="font-bold text-primary">Input:</span> s = "A man, a plan, a canal: Panama"
                     </div>
                     <div className="text-muted-foreground">
                       <span className="font-bold text-gold">Output:</span> true
@@ -371,7 +371,7 @@ export const CodingInterviewRoom: React.FC = () => {
 
                   <div className="space-y-1.5 rounded-xl border border-border bg-background p-3.5 font-mono text-xs">
                     <div className="text-muted-foreground">
-                      <span className="font-bold text-ember">Input:</span> s = "race a car"
+                      <span className="font-bold text-primary">Input:</span> s = "race a car"
                     </div>
                     <div className="text-muted-foreground">
                       <span className="font-bold text-destructive">Output:</span> false
@@ -390,7 +390,7 @@ export const CodingInterviewRoom: React.FC = () => {
                   <ul className="list-inside list-disc space-y-1 rounded-xl border border-border bg-background p-3 font-mono text-xs text-muted-foreground">
                     <li>1 &le; s.length &le; 2 &times; 10<sup>5</sup></li>
                     <li>s consists only of printable ASCII characters.</li>
-                    <li><span className="text-ember">Target time complexity:</span> O(N)</li>
+                    <li><span className="text-primary">Target time complexity:</span> O(N)</li>
                     <li><span className="text-steel">Target space complexity:</span> O(1) auxiliary space</li>
                   </ul>
                 </div>
@@ -399,8 +399,8 @@ export const CodingInterviewRoom: React.FC = () => {
 
             {leftTab === 'rubric' && (
               <div className="space-y-4">
-                <div className="rounded-2xl border border-ember/25 bg-ember/10 p-4">
-                  <h3 className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ember">
+                <div className="rounded-2xl border border-primary/25 bg-primary/10 p-4">
+                  <h3 className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
                     <ShieldCheck className="h-4 w-4" /> Evaluation rubric standard
                   </h3>
                   <p className="text-xs leading-relaxed text-muted-foreground">
@@ -420,7 +420,7 @@ export const CodingInterviewRoom: React.FC = () => {
                       <h4 className="mb-0.5 text-xs font-bold text-foreground">{r.name}</h4>
                       <p className="text-[11px] text-muted-foreground">{r.desc}</p>
                     </div>
-                    <Badge variant="ember" className="shrink-0 rounded font-mono">
+                    <Badge variant="default" className="shrink-0 rounded font-mono">
                       {r.weight}
                     </Badge>
                   </div>
@@ -439,7 +439,7 @@ export const CodingInterviewRoom: React.FC = () => {
                   </p>
                 </div>
                 <div className="space-y-2 rounded-xl border border-border bg-background p-4">
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-ember">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-primary">
                     Hint 2: Two pointers
                   </span>
                   <p className="text-xs text-muted-foreground">
@@ -457,7 +457,7 @@ export const CodingInterviewRoom: React.FC = () => {
                     <div key={idx} className="space-y-2">
                       {t.user_answer && (
                         <div className="rounded-xl border border-border bg-background p-3">
-                          <span className="mb-1 block text-[10px] font-bold text-ember">Your explanation</span>
+                          <span className="mb-1 block text-[10px] font-bold text-primary">Your explanation</span>
                           <p className="text-xs text-muted-foreground">{t.user_answer}</p>
                         </div>
                       )}
@@ -571,7 +571,7 @@ export const CodingInterviewRoom: React.FC = () => {
                     className={cn(
                       'flex items-center gap-1.5 rounded-t-lg border-b-2 px-3 py-1.5 text-xs font-semibold transition-colors',
                       bottomTab === tab.id
-                        ? 'border-ember bg-secondary/40 text-ember'
+                        ? 'border-primary bg-surface/40 text-primary'
                         : 'border-transparent text-muted-foreground hover:text-foreground'
                     )}
                   >
@@ -583,7 +583,7 @@ export const CodingInterviewRoom: React.FC = () => {
 
               {aiReview && (
                 <div className="flex items-center gap-3 font-mono text-[10px]">
-                  <span className="font-bold text-ember">Time: {aiReview.time_complexity}</span>
+                  <span className="font-bold text-primary">Time: {aiReview.time_complexity}</span>
                   <span className="font-bold text-steel">Space: {aiReview.space_complexity}</span>
                   <span className="font-bold text-gold">Rubric score: {aiReview.rubric_score}/100</span>
                 </div>
@@ -650,7 +650,7 @@ export const CodingInterviewRoom: React.FC = () => {
                 <div className="space-y-3">
                   {aiReview ? (
                     <div className="space-y-2 rounded-xl border border-border bg-background p-3.5 text-xs">
-                      <div className="flex items-center gap-2 font-bold text-ember">
+                      <div className="flex items-center gap-2 font-bold text-primary">
                         <Sparkles className="h-4 w-4" /> AI complexity &amp; optimization feedback
                       </div>
                       <p className="whitespace-pre-wrap leading-relaxed text-muted-foreground">{aiReview.feedback}</p>

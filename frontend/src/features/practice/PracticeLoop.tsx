@@ -128,7 +128,7 @@ export const PracticeLoop: React.FC = () => {
             </p>
           </div>
           <Button variant="secondary" size="sm" onClick={() => setIsFeedbackOpen(true)} className="gap-2">
-            <MessageSquare className="h-4 w-4 text-ember" /> Give feedback
+            <MessageSquare className="h-4 w-4 text-primary" /> Give feedback
           </Button>
         </div>
 
@@ -144,8 +144,8 @@ export const PracticeLoop: React.FC = () => {
                   className={cn(
                     'rounded-2xl border p-5 text-left transition-all',
                     selectedTopic === t.id
-                      ? 'border-ember/40 bg-ember/10 shadow-[0_10px_28px_-16px_hsl(var(--ember)/0.5)]'
-                      : 'border-border bg-secondary/20 hover:bg-secondary/40'
+                      ? 'border-primary/40 bg-primary/10 shadow-[0_10px_28px_-16px_hsl(var(--ember)/0.5)]'
+                      : 'border-border bg-surface/20 hover:bg-surface/40'
                   )}
                 >
                   <p className="font-medium text-foreground">{t.name}</p>
@@ -165,7 +165,7 @@ export const PracticeLoop: React.FC = () => {
         {session && question && !attemptResult && (
           <Card className="space-y-6 p-8">
             <div className="flex items-center justify-between">
-              <Badge variant="ember" className="rounded-full font-sans uppercase tracking-wider">
+              <Badge variant="default" className="rounded-full font-sans uppercase tracking-wider">
                 Difficulty: {question.difficulty}
               </Badge>
               <span className="font-mono text-xs text-muted-foreground">
@@ -173,7 +173,7 @@ export const PracticeLoop: React.FC = () => {
               </span>
             </div>
 
-            <div className="rounded-2xl border border-border bg-secondary/20 p-6">
+            <div className="rounded-2xl border border-border bg-surface/20 p-6">
               <h3 className="text-lg font-medium text-foreground">{question.prompt}</h3>
             </div>
 
@@ -188,7 +188,7 @@ export const PracticeLoop: React.FC = () => {
                       'flex items-center gap-1.5 rounded-lg border px-3 py-1 text-xs font-semibold transition-all',
                       isListening
                         ? 'animate-pulse border-destructive/40 bg-destructive/15 text-destructive'
-                        : 'border-ember/25 bg-ember/10 text-ember hover:bg-ember/15'
+                        : 'border-primary/25 bg-primary/10 text-primary hover:bg-primary/15'
                     )}
                   >
                     {isListening ? <MicOff className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />}
@@ -226,13 +226,13 @@ export const PracticeLoop: React.FC = () => {
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-mono text-3xl font-semibold text-ember">{attemptResult.score}/100</p>
+                <p className="font-mono text-3xl font-semibold text-primary">{attemptResult.score}/100</p>
                 <p className="text-xs text-muted-foreground">Semantic score: {attemptResult.semantic_score}%</p>
               </div>
             </div>
 
             <div className="space-y-4">
-              <div className="rounded-xl border border-border bg-secondary/20 p-4">
+              <div className="rounded-xl border border-border bg-surface/20 p-4">
                 <h4 className="mb-1 text-sm font-semibold text-foreground">Explanation</h4>
                 <p className="text-sm text-muted-foreground">{attemptResult.evaluation.explanation}</p>
               </div>

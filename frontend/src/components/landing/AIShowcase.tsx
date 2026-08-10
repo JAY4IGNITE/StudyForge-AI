@@ -27,14 +27,14 @@ export const AIShowcase: React.FC = () => {
             AI Coach Session
           </div>
           <div className="mt-4 space-y-3 text-sm">
-            <div className="rounded-md bg-secondary/60 p-3 text-muted-foreground">
+            <div className="rounded-md bg-surface/60 p-3 text-muted-foreground">
               You've missed 3 dynamic programming problems this week.
             </div>
-            <div className="rounded-md border border-ember/20 bg-ember/5 p-3">
+            <div className="rounded-md border border-primary/20 bg-primary/5 p-3">
               Recommending: knapsack variants, then interview replay of your
               last DP session.
             </div>
-            <div className="flex items-center gap-2 rounded-md bg-secondary/40 p-3 font-mono text-xs text-muted-foreground">
+            <div className="flex items-center gap-2 rounded-md bg-surface/40 p-3 font-mono text-xs text-muted-foreground">
               <Code2 className="h-3.5 w-3.5 text-gold" />
               Next: Coin Change II — adaptive difficulty: medium
             </div>

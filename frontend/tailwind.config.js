@@ -13,16 +13,27 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Fraunces"', 'ui-serif', 'serif'],
+        display: ['"Sora"', 'sans-serif'],
         sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
+      fontSize: {
+        'xs': '12px',
+        'sm': '14px',
+        'base': '16px',
+        'lg': '20px',
+        'xl': '24px',
+        '2xl': '32px',
+        '3xl': '48px',
+        '4xl': '64px',
+      },
       colors: {
-        border: 'hsl(var(--border))',
+        border: 'rgba(255,255,255,0.06)',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        surface: 'hsl(var(--surface))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
@@ -34,6 +45,10 @@ export default {
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
@@ -51,24 +66,24 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        ember: {
-          DEFAULT: 'hsl(var(--ember))',
-          dim: 'hsl(var(--ember-dim))',
-          foreground: 'hsl(var(--ember-foreground))',
-        },
-        steel: {
-          DEFAULT: 'hsl(var(--steel))',
-        },
         gold: {
           DEFAULT: 'hsl(var(--gold))',
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+        pill: 'var(--radius-pill)',
+      },
+      boxShadow: {
+        'card': '0 4px 24px rgba(0,0,0,0.4)',
+        'glow-primary': '0 0 24px rgba(108,99,255,0.35)',
+        'glow-accent': '0 0 20px rgba(0,217,192,0.3)',
       },
       backgroundImage: {
+        'primary-gradient': 'linear-gradient(135deg, #6C63FF, #9B59B6)',
         'blueprint-grid':
           'linear-gradient(hsl(var(--border) / 0.5) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.5) 1px, transparent 1px)',
         'forge-glow':

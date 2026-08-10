@@ -56,7 +56,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
     problem.difficulty === 'Easy'
       ? 'bg-gold/15 text-gold border-gold/25'
       : problem.difficulty === 'Medium'
-        ? 'bg-ember/15 text-ember border-ember/25'
+        ? 'bg-primary/15 text-primary border-primary/25'
         : 'bg-destructive/15 text-destructive border-destructive/25';
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
@@ -75,7 +75,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-t-lg transition-all ${
               activeTab === tab.key
-                ? 'bg-secondary/80 text-foreground border border-border border-b-transparent -mb-px'
+                ? 'bg-surface/80 text-foreground border border-border border-b-transparent -mb-px'
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
@@ -85,10 +85,10 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
         ))}
         <div className="flex-1" />
         <div className="flex items-center gap-1 pb-1">
-          <button className="p-1.5 text-muted-foreground hover:text-ember transition-colors rounded-md hover:bg-secondary" title="Bookmark">
+          <button className="p-1.5 text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-surface" title="Bookmark">
             <Bookmark className="w-3.5 h-3.5" />
           </button>
-          <button className="p-1.5 text-muted-foreground hover:text-ember transition-colors rounded-md hover:bg-secondary" title="Share">
+          <button className="p-1.5 text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-surface" title="Share">
             <Share2 className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -110,7 +110,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                 {problem.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] px-2 py-0.5 rounded-md bg-secondary text-muted-foreground border border-border/50 font-medium"
+                    className="text-[10px] px-2 py-0.5 rounded-md bg-surface text-muted-foreground border border-border/50 font-medium"
                   >
                     {tag}
                   </span>
@@ -136,7 +136,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
             {/* Input / Output Spec */}
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-background/60 border border-border/60 rounded-xl p-4 space-y-1.5">
-                <h4 className="text-[10px] font-bold text-ember uppercase tracking-wider">
+                <h4 className="text-[10px] font-bold text-primary uppercase tracking-wider">
                   Input
                 </h4>
                 <p className="text-xs text-foreground/85 font-mono">{problem.inputSpecification}</p>
@@ -152,13 +152,13 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
             {/* Constraints */}
             <div className="space-y-2">
               <h3 className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-ember" />
+                <AlertTriangle className="w-3.5 h-3.5 text-primary" />
                 Constraints
               </h3>
               <ul className="space-y-1">
                 {problem.constraints.map((c, i) => (
                   <li key={i} className="text-xs text-muted-foreground pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-muted-foreground/50">
-                    <code className="text-[11px] text-foreground/85 font-mono bg-secondary/50 px-1 py-0.5 rounded">
+                    <code className="text-[11px] text-foreground/85 font-mono bg-surface/50 px-1 py-0.5 rounded">
                       {c}
                     </code>
                   </li>
@@ -178,7 +178,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                   >
                     <button
                       onClick={() => setExpandedCase(isExpanded ? null : tc.id)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-secondary/30 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-surface/30 transition-colors"
                     >
                       <span className="text-xs font-semibold text-foreground/85">
                         Example {idx + 1}
@@ -255,11 +255,11 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                     ? 'text-gold'
                     : sub.status === 'Runtime Error'
                       ? 'text-destructive'
-                      : 'text-ember';
+                      : 'text-primary';
                 const StatusIcon = sub.status === 'Accepted' ? CheckCircle2 : XCircle;
                 const timeAgo = formatTimeAgo(sub.submittedAt);
                 return (
-                  <div key={idx} className="flex items-center gap-3 px-5 py-3 hover:bg-secondary/20 transition-colors">
+                  <div key={idx} className="flex items-center gap-3 px-5 py-3 hover:bg-surface/20 transition-colors">
                     <StatusIcon className={`w-4 h-4 shrink-0 ${statusColor}`} />
                     <div className="flex-1 min-w-0">
                       <p className={`text-xs font-bold ${statusColor}`}>{sub.status}</p>
@@ -267,7 +267,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                         {sub.passedCount}/{sub.totalCount} passed · {timeAgo}
                       </p>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-secondary text-muted-foreground border border-border/50 font-mono flex items-center gap-1">
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-surface text-muted-foreground border border-border/50 font-mono flex items-center gap-1">
                       <Code2 className="w-2.5 h-2.5" />
                       {sub.language}
                     </span>

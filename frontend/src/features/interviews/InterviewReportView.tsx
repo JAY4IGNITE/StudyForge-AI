@@ -15,7 +15,7 @@ import { Button } from '../../components/ui/button';
 
 function scoreClass(val: number) {
   if (val >= 85) return 'text-gold';
-  if (val >= 70) return 'text-ember';
+  if (val >= 70) return 'text-primary';
   return 'text-destructive';
 }
 
@@ -36,7 +36,7 @@ export const InterviewReportView: React.FC = () => {
     return (
       <Layout>
         <div className="flex min-h-[60vh] items-center justify-center text-muted-foreground">
-          <Sparkles className="mr-2 h-5 w-5 animate-pulse text-ember" /> Generating AI evaluation report...
+          <Sparkles className="mr-2 h-5 w-5 animate-pulse text-primary" /> Generating AI evaluation report...
         </div>
       </Layout>
     );
@@ -68,7 +68,7 @@ export const InterviewReportView: React.FC = () => {
         </Button>
 
         {/* Overall score hero */}
-        <Card className="bg-blueprint bg-forge-glow relative overflow-hidden border-ember/15 p-8">
+        <Card className="bg-blueprint bg-forge-glow relative overflow-hidden border-primary/15 p-8">
           <div className="relative z-10 flex flex-col items-center gap-8 md:flex-row">
             <div className="text-center">
               <p className="mb-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">
@@ -125,14 +125,14 @@ export const InterviewReportView: React.FC = () => {
               ))}
             </ul>
           </Card>
-          <Card className="border-ember/20 bg-ember/5 p-5">
-            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ember">
+          <Card className="border-primary/20 bg-primary/5 p-5">
+            <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-primary">
               <AlertTriangle className="h-4 w-4" /> Areas for improvement
             </h3>
             <ul className="space-y-2">
               {(report.weaknesses || []).map((w: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-foreground/85">
-                  <span className="mt-0.5 text-ember">•</span> {w}
+                  <span className="mt-0.5 text-primary">•</span> {w}
                 </li>
               ))}
             </ul>
@@ -156,7 +156,7 @@ export const InterviewReportView: React.FC = () => {
               </div>
               <div className="rounded-xl bg-card p-2">
                 <p className="font-mono text-[10px] text-muted-foreground">Alignment</p>
-                <p className="font-mono text-lg font-semibold text-ember">94%</p>
+                <p className="font-mono text-lg font-semibold text-primary">94%</p>
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
@@ -165,14 +165,14 @@ export const InterviewReportView: React.FC = () => {
             </p>
           </Card>
 
-          <Card className="space-y-3 border-ember/20 bg-ember/5 p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-ember">
+          <Card className="space-y-3 border-primary/20 bg-primary/5 p-5">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-primary">
               <BookOpen className="h-4 w-4" /> Voice delivery &amp; pacing
             </h3>
             <div className="grid grid-cols-3 gap-2 py-2 text-center">
               <div className="rounded-xl bg-card p-2">
                 <p className="font-mono text-[10px] text-muted-foreground">Pacing (WPM)</p>
-                <p className="font-mono text-lg font-semibold text-ember">142 WPM</p>
+                <p className="font-mono text-lg font-semibold text-primary">142 WPM</p>
               </div>
               <div className="rounded-xl bg-card p-2">
                 <p className="font-mono text-[10px] text-muted-foreground">Filler words</p>
@@ -208,13 +208,13 @@ export const InterviewReportView: React.FC = () => {
             )}
             {report.resume_improvements?.length > 0 && (
               <Card className="p-5">
-                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-ember">
+                <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-primary">
                   <FileText className="h-4 w-4" /> Resume improvements
                 </h3>
                 <ul className="space-y-2">
                   {report.resume_improvements.map((r: string, i: number) => (
                     <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <Lightbulb className="mt-0.5 h-3 w-3 shrink-0 text-ember" /> {r}
+                      <Lightbulb className="mt-0.5 h-3 w-3 shrink-0 text-primary" /> {r}
                     </li>
                   ))}
                 </ul>
@@ -226,13 +226,13 @@ export const InterviewReportView: React.FC = () => {
         {/* Learning plan */}
         {report.learning_plan_7_days?.length > 0 && (
           <Card className="p-5">
-            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-ember">
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-primary">
               <BookOpen className="h-4 w-4" /> 7-day learning plan
             </h3>
             <div className="space-y-3">
               {report.learning_plan_7_days.map((d: any, i: number) => (
-                <div key={i} className="flex items-start gap-4 rounded-xl bg-secondary/20 p-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ember/30 bg-ember/15 text-xs font-bold text-ember">
+                <div key={i} className="flex items-start gap-4 rounded-xl bg-surface/20 p-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/15 text-xs font-bold text-primary">
                     D{d.day}
                   </div>
                   <div>
@@ -251,8 +251,8 @@ export const InterviewReportView: React.FC = () => {
             <h3 className="mb-4 text-sm font-semibold text-foreground">Answer-by-answer breakdown</h3>
             <div className="space-y-4">
               {session.turns.map((t: any, idx: number) => (
-                <div key={idx} className="space-y-2 rounded-xl bg-secondary/20 p-4">
-                  <p className="text-xs font-semibold text-ember">
+                <div key={idx} className="space-y-2 rounded-xl bg-surface/20 p-4">
+                  <p className="text-xs font-semibold text-primary">
                     Q{idx + 1}: {t.question}
                   </p>
                   {t.user_answer && <p className="text-xs text-muted-foreground">Your answer: {t.user_answer}</p>}

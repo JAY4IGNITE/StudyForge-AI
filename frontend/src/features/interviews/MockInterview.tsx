@@ -185,7 +185,7 @@ export const MockInterview: React.FC = () => {
         <div className="relative flex w-1/2 flex-col border-r border-border bg-background">
           <div className="absolute left-6 top-6 rounded-xl border border-border bg-card p-4">
             <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Confidence</p>
-            <div className="h-1 w-24 overflow-hidden rounded-full bg-secondary">
+            <div className="h-1 w-24 overflow-hidden rounded-full bg-surface">
               <div className="h-full w-3/4 rounded-full bg-steel" />
             </div>
           </div>
@@ -209,7 +209,7 @@ export const MockInterview: React.FC = () => {
 
           <div className="flex h-24 shrink-0 items-center justify-center gap-8 border-t border-border bg-card">
             <button className="flex flex-col items-center gap-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary/70">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface transition-colors hover:bg-surface/70">
                 <VideoOff className="h-5 w-5 text-muted-foreground" />
               </div>
               <span className="text-[10px] font-semibold text-muted-foreground">Stop video</span>
@@ -219,7 +219,7 @@ export const MockInterview: React.FC = () => {
               <div
                 className={cn(
                   'flex h-14 w-14 items-center justify-center rounded-full border-2 transition-colors',
-                  isListening ? 'border-steel bg-steel/20' : 'border-transparent bg-secondary hover:bg-secondary/70'
+                  isListening ? 'border-steel bg-steel/20' : 'border-transparent bg-surface hover:bg-surface/70'
                 )}
               >
                 {isListening ? <Mic className="h-6 w-6 text-steel" /> : <MicOff className="h-6 w-6 text-muted-foreground" />}
@@ -241,7 +241,7 @@ export const MockInterview: React.FC = () => {
         <div className="relative flex w-1/2 flex-col bg-card">
           <div className="flex shrink-0 items-center justify-between border-b border-border p-6">
             <h2 className="font-display text-xl font-medium text-foreground">Live transcript</h2>
-            <div className="rounded-md bg-secondary px-3 py-1 font-mono text-xs text-muted-foreground">
+            <div className="rounded-md bg-surface px-3 py-1 font-mono text-xs text-muted-foreground">
               {formatTime(timer)}
             </div>
           </div>
@@ -250,10 +250,10 @@ export const MockInterview: React.FC = () => {
             {interview.turns?.map((t: any, idx: number) => (
               <div key={idx} className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface">
                     <Bot className="h-5 w-5 text-steel" />
                   </div>
-                  <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-secondary/40 p-5">
+                  <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-surface/40 p-5">
                     <div className="mb-2 flex items-center gap-2">
                       <span className="text-xs font-bold text-steel">Interviewer AI</span>
                       <span className="text-[10px] text-muted-foreground">
@@ -266,7 +266,7 @@ export const MockInterview: React.FC = () => {
 
                 {t.answer && (
                   <div className="flex flex-row-reverse gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface">
                       <User className="h-5 w-5 text-muted-foreground" />
                     </div>
                     <div className="flex-1 rounded-2xl rounded-tr-sm border border-border bg-background p-5">
@@ -285,7 +285,7 @@ export const MockInterview: React.FC = () => {
 
             {interview.status !== 'completed' && (
               <div className="mt-6 flex flex-row-reverse gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface">
                   <div className="relative">
                     <User className="h-5 w-5 text-muted-foreground" />
                     {isListening && (

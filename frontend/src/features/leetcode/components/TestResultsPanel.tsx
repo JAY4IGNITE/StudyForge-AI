@@ -46,13 +46,13 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ results, isS
     ? 'text-gold'
     : hasErrors
       ? 'text-destructive'
-      : 'text-ember';
+      : 'text-primary';
 
   const statusBg = allPassed
     ? 'bg-gold/10 border-gold/25'
     : hasErrors
       ? 'bg-destructive/10 border-destructive/25'
-      : 'bg-ember/10 border-ember/25';
+      : 'bg-primary/10 border-primary/25';
 
   const statusLabel = allPassed
     ? 'Accepted'
@@ -80,7 +80,7 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ results, isS
           <div className="text-right">
             <p className="text-[10px] text-muted-foreground font-medium">Runtime</p>
             <p className="text-xs font-mono font-bold text-foreground/85 flex items-center gap-1">
-              <Zap className="w-3 h-3 text-ember" />
+              <Zap className="w-3 h-3 text-primary" />
               {avgRuntime}ms
             </p>
           </div>
@@ -94,10 +94,10 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ results, isS
       </div>
 
       {/* Progress Bar */}
-      <div className="h-1 bg-secondary">
+      <div className="h-1 bg-surface">
         <div
           className={`h-full transition-all duration-700 ease-out ${
-            allPassed ? 'bg-gold' : hasErrors ? 'bg-destructive' : 'bg-ember'
+            allPassed ? 'bg-gold' : hasErrors ? 'bg-destructive' : 'bg-primary'
           }`}
           style={{ width: `${(passedCount / totalCount) * 100}%` }}
         />
@@ -115,7 +115,7 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ results, isS
               <button
                 onClick={() => setExpandedId(isExpanded ? null : r.testCaseId)}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-                  isExpanded ? 'bg-secondary/40' : 'hover:bg-secondary/20'
+                  isExpanded ? 'bg-surface/40' : 'hover:bg-surface/20'
                 }`}
               >
                 {r.passed ? (
@@ -123,7 +123,7 @@ export const TestResultsPanel: React.FC<TestResultsPanelProps> = ({ results, isS
                 ) : r.error ? (
                   <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
                 ) : (
-                  <XCircle className="w-4 h-4 text-ember shrink-0" />
+                  <XCircle className="w-4 h-4 text-primary shrink-0" />
                 )}
                 <span className="text-xs font-semibold text-foreground/85 flex-1">
                   Case {idx + 1}

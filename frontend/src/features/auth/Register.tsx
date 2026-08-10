@@ -39,8 +39,8 @@ export const Register: React.FC = () => {
     <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-md p-8 shadow-2xl">
         <div className="mb-8 text-center">
-          <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
-            <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
+          <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
+            <Flame className="h-6 w-6 text-primary-foreground" strokeWidth={2.25} />
           </div>
           <h1 className="font-display text-2xl font-medium text-foreground">Create your StudyForge account</h1>
           <p className="mt-1 text-sm text-muted-foreground">Start your adaptive practice journey today</p>
@@ -105,7 +105,7 @@ export const Register: React.FC = () => {
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-ember hover:underline">
+          <Link to="/login" className="font-medium text-primary hover:underline">
             Log in
           </Link>
         </p>

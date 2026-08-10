@@ -24,7 +24,7 @@ interface ProblemListProps {
 
 const DIFFICULTY_CLASSES: Record<string, string> = {
   Easy: 'text-gold bg-gold/10 border-gold/25',
-  Medium: 'text-ember bg-ember/10 border-ember/25',
+  Medium: 'text-primary bg-primary/10 border-primary/25',
   Hard: 'text-destructive bg-destructive/10 border-destructive/25',
 };
 
@@ -64,7 +64,7 @@ export const ProblemList: React.FC<ProblemListProps> = ({ problems, onSelectProb
       <div className="space-y-3 border-b border-border p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Code2 className="h-5 w-5 text-ember" />
+            <Code2 className="h-5 w-5 text-primary" />
             <h2 className="text-base font-bold text-foreground">Problem Bank</h2>
           </div>
           <Badge variant="gold" className="rounded-md font-mono">
@@ -89,8 +89,8 @@ export const ProblemList: React.FC<ProblemListProps> = ({ problems, onSelectProb
               className={cn(
                 'rounded-lg px-3 py-1 text-xs font-semibold transition-colors',
                 difficultyFilter === diff
-                  ? 'bg-ember-gradient text-ember-foreground'
-                  : 'bg-secondary text-muted-foreground hover:text-foreground'
+                  ? 'bg-primary-gradient text-primary-foreground'
+                  : 'bg-surface text-muted-foreground hover:text-foreground'
               )}
             >
               {diff}
@@ -105,7 +105,7 @@ export const ProblemList: React.FC<ProblemListProps> = ({ problems, onSelectProb
               className={cn(
                 'rounded-md px-2.5 py-0.5 text-[10px] font-semibold transition-colors',
                 statusFilter === st
-                  ? 'bg-secondary text-foreground'
+                  ? 'bg-surface text-foreground'
                   : 'text-muted-foreground hover:text-foreground'
               )}
             >
@@ -125,14 +125,14 @@ export const ProblemList: React.FC<ProblemListProps> = ({ problems, onSelectProb
               onClick={() => onSelectProblem(p)}
               className={cn(
                 'group flex w-full items-center gap-3 p-4 text-left transition-colors',
-                isSelected ? 'border-l-2 border-ember bg-ember/10' : 'hover:bg-secondary/40'
+                isSelected ? 'border-l-2 border-primary bg-primary/10' : 'hover:bg-surface/40'
               )}
             >
               <div className="shrink-0">
                 {status === 'solved' ? (
                   <CheckCircle2 className="h-4 w-4 text-gold" />
                 ) : status === 'attempted' ? (
-                  <MinusCircle className="h-4 w-4 text-ember" />
+                  <MinusCircle className="h-4 w-4 text-primary" />
                 ) : (
                   <Circle className="h-4 w-4 text-muted-foreground/40" />
                 )}
@@ -141,7 +141,7 @@ export const ProblemList: React.FC<ProblemListProps> = ({ problems, onSelectProb
                 <h3
                   className={cn(
                     'truncate text-xs font-bold transition-colors',
-                    isSelected ? 'text-ember' : 'text-foreground/85 group-hover:text-foreground'
+                    isSelected ? 'text-primary' : 'text-foreground/85 group-hover:text-foreground'
                   )}
                 >
                   {p.title}
@@ -160,7 +160,7 @@ export const ProblemList: React.FC<ProblemListProps> = ({ problems, onSelectProb
               <ChevronRight
                 className={cn(
                   'h-4 w-4 shrink-0 transition-colors',
-                  isSelected ? 'text-ember' : 'text-muted-foreground/50 group-hover:text-muted-foreground'
+                  isSelected ? 'text-primary' : 'text-muted-foreground/50 group-hover:text-muted-foreground'
                 )}
               />
             </button>

@@ -114,9 +114,9 @@ export function TemperBar({
   const clamped = Math.max(0, Math.min(100, value));
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
+      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface">
         <div
-          className="h-full rounded-full bg-ember-gradient transition-[width] duration-700 ease-out"
+          className="h-full rounded-full bg-primary-gradient transition-[width] duration-700 ease-out"
           style={{ width: `${clamped}%` }}
         />
       </div>

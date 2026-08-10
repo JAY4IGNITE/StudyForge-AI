@@ -23,20 +23,31 @@ export const LandingNavbar: React.FC = () => {
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
-          ? 'border-b border-border bg-background/85 backdrop-blur-md shadow-[0_1px_0_hsl(var(--border))]'
+          ? 'border-b border-border bg-background/70 backdrop-blur-[20px] shadow-sm'
           : 'border-b border-transparent bg-transparent'
       )}
     >
       <nav className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
-          <Flame className="h-5 w-5 text-ember" />
-          StudyForge <span className="text-ember">AI</span>
+        <Link to="/" className="group flex items-center gap-2 font-display text-xl font-semibold tracking-tight">
+          <Flame className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
+          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent transition-all duration-500 group-hover:from-secondary group-hover:to-primary">
+            StudyForge
+          </span>
         </Link>
 
-        <div className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
-          <a href="#features" className="transition-colors hover:text-foreground">Features</a>
-          <a href="#how-it-works" className="transition-colors hover:text-foreground">How it works</a>
-          <a href="#ai-coach" className="transition-colors hover:text-foreground">AI Coach</a>
+        <div className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
+          <a href="#features" className="group relative transition-colors hover:text-foreground">
+            Features
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="#how-it-works" className="group relative transition-colors hover:text-foreground">
+            How it works
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="#ai-coach" className="group relative transition-colors hover:text-foreground">
+            AI Coach
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+          </a>
         </div>
 
         <div className="flex items-center gap-2">

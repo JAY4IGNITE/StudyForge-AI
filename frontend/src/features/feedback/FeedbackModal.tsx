@@ -59,7 +59,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-ember/15 p-2.5 text-ember">
+              <div className="rounded-xl bg-primary/15 p-2.5 text-primary">
                 <MessageSquare className="h-5 w-5" />
               </div>
               <div>

@@ -38,11 +38,11 @@ export const Login: React.FC = () => {
     <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-md p-10 shadow-2xl">
         <div className="mb-10 flex flex-col items-center text-center">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
-            <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
+            <Flame className="h-6 w-6 text-primary-foreground" strokeWidth={2.25} />
           </div>
           <h1 className="font-display text-2xl font-medium tracking-tight text-foreground">
-            StudyForge<span className="text-ember">.</span>
+            StudyForge<span className="text-primary">.</span>
           </h1>
           <p className="mt-2 max-w-[250px] text-sm text-muted-foreground">
             Access your AI-powered learning workspace.
@@ -79,7 +79,7 @@ export const Login: React.FC = () => {
               <Label htmlFor="password" className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 Password
               </Label>
-              <Link to="/forgot-password" className="text-[11px] font-medium text-ember hover:text-ember/80">
+              <Link to="/forgot-password" className="text-[11px] font-medium text-primary hover:text-primary/80">
                 Forgot?
               </Link>
             </div>
@@ -135,7 +135,7 @@ export const Login: React.FC = () => {
 
         <p className="mt-8 text-center text-xs text-muted-foreground">
           New researcher?{' '}
-          <Link to="/register" className="font-medium text-ember hover:text-ember/80 hover:underline">
+          <Link to="/register" className="font-medium text-primary hover:text-primary/80 hover:underline">
             Sign up
           </Link>
         </p>

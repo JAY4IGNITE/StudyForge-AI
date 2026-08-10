@@ -51,7 +51,7 @@ export function StudyRoadmap() {
             <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
               Overall progress
             </span>
-            <span className="font-mono text-sm font-semibold text-ember">4 / 7 days complete</span>
+            <span className="font-mono text-sm font-semibold text-primary">4 / 7 days complete</span>
           </div>
           <TemperBar value={57} showValue={false} />
         </Card>
@@ -68,15 +68,15 @@ export function StudyRoadmap() {
             roadmap?.steps?.map((step: any, idx: number) => (
               <div key={idx} className="group flex flex-col gap-4 md:flex-row">
                 <div className="z-10 hidden shrink-0 flex-col items-center md:flex md:w-16">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-4 border-background bg-ember-gradient text-sm font-bold text-ember-foreground shadow-md">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-4 border-background bg-primary-gradient text-sm font-bold text-primary-foreground shadow-md">
                     {step.step_number}
                   </div>
                 </div>
-                <Card className="flex-1 border-2 p-6 transition-colors hover:border-ember/40 hover:shadow-[0_12px_28px_-18px_hsl(var(--ember)/0.4)]">
+                <Card className="flex-1 border-2 p-6 transition-colors hover:border-primary/40 hover:shadow-[0_12px_28px_-18px_hsl(var(--ember)/0.4)]">
                   <div className="mb-4 flex items-start justify-between">
                     <div>
                       <h3 className="font-display text-lg font-semibold text-foreground">{step.topic_name}</h3>
-                      <Badge variant="ember" className="mt-2 rounded-full font-sans">
+                      <Badge variant="default" className="mt-2 rounded-full font-sans">
                         {step.estimated_hours} hours
                       </Badge>
                     </div>

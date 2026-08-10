@@ -1,55 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import './animations.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/*
-  === StudyForge — "The Foundry" design system ===
-  A workshop where raw practice gets forged into interview-ready skill.
-  Warm graphite ground, ember/gold heat gradient as the single accent motif,
-  tempered-steel blue as a cool counterpoint. Fraunces (ink-trap serif) carries
-  headline personality; Inter runs the UI; JetBrains Mono renders every number,
-  stat, and code fragment like a stamped measurement.
-*/
-
 @layer base {
   :root {
-    --background: 226 16% 8%;
-    --foreground: 40 30% 94%;
+    --background: 240 20% 5%;
+    --foreground: 240 100% 97%;
 
-    --card: 226 15% 11%;
-    --card-foreground: 40 30% 94%;
+    --card: 240 17% 8%;
+    --card-foreground: 240 100% 97%;
 
-    --popover: 227 16% 10%;
-    --popover-foreground: 40 30% 94%;
+    --popover: 240 17% 8%;
+    --popover-foreground: 240 100% 97%;
+    
+    --surface: 240 19% 13%;
 
-    --primary: 16 100% 63%;
-    --primary-foreground: 20 45% 9%;
+    --primary: 243 100% 69%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 226 13% 17%;
-    --secondary-foreground: 40 20% 90%;
+    --secondary: 173 100% 43%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 226 13% 15%;
-    --muted-foreground: 222 8% 62%;
+    --muted: 240 19% 13%;
+    --muted-foreground: 240 17% 60%;
 
-    --accent: 228 100% 72%;
-    --accent-foreground: 226 40% 9%;
+    --accent: 173 100% 43%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 358 72% 58%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 349 100% 65%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --success: 151 100% 45%;
+    --success-foreground: 0 0% 0%;
 
-    --border: 226 14% 19%;
-    --input: 226 14% 19%;
-    --ring: 16 100% 63%;
+    --border: 0 0% 100%;
+    --input: 240 19% 13%;
+    --ring: 243 100% 69%;
 
-    --ember: 16 100% 63%;
-    --ember-dim: 18 55% 42%;
-    --ember-foreground: 20 45% 9%;
-    --steel: 228 100% 72%;
-    --gold: 42 88% 62%;
+    --gold: 51 100% 50%;
 
-    --radius: 0.75rem;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-pill: 9999px;
   }
 }
 

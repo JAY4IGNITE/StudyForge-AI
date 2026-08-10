@@ -40,9 +40,9 @@ export function Resources() {
         {/* Upload zone */}
         <label
           htmlFor="file-input"
-          className="bg-forge-glow group flex h-48 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-border transition-colors hover:border-ember/40"
+          className="bg-forge-glow group flex h-48 w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-border transition-colors hover:border-primary/40"
         >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-ember transition-transform group-hover:scale-110">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface text-primary transition-transform group-hover:scale-110">
             <UploadCloud className="h-6 w-6" />
           </div>
           <div className="text-center">
@@ -69,7 +69,7 @@ export function Resources() {
               resources.map((r, idx) => (
                 <Card
                   key={idx}
-                  className="flex flex-col justify-between gap-4 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-16px_hsl(var(--ember)/0.3)] md:flex-row md:items-center"
+                  className="flex flex-col justify-between gap-4 p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_12px_28px_-16px_hsl(var(--ember)/0.3)] md:flex-row md:items-center"
                 >
                   <div className="flex items-start gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-destructive/10 text-destructive">
@@ -87,11 +87,11 @@ export function Resources() {
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" size="sm" className="gap-1.5 border-ember/20 text-ember hover:bg-ember/10 hover:text-ember">
+                    <Button variant="outline" size="sm" className="gap-1.5 border-primary/20 text-primary hover:bg-primary/10 hover:text-primary">
                       <ScrollText className="h-3.5 w-3.5" />
                       Summarize
                     </Button>
-                    <Button variant="outline" size="sm" className="gap-1.5 border-ember/20 text-ember hover:bg-ember/10 hover:text-ember">
+                    <Button variant="outline" size="sm" className="gap-1.5 border-primary/20 text-primary hover:bg-primary/10 hover:text-primary">
                       <Brain className="h-3.5 w-3.5" />
                       Quiz me
                     </Button>
@@ -105,8 +105,8 @@ export function Resources() {
                 </Card>
               ))
             ) : (
-              <Card className="flex flex-col items-center justify-center border-2 border-dashed border-border bg-secondary/10 px-4 py-12 text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-muted-foreground">
+              <Card className="flex flex-col items-center justify-center border-2 border-dashed border-border bg-surface/10 px-4 py-12 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-surface text-muted-foreground">
                   <FolderX className="h-8 w-8" />
                 </div>
                 <h3 className="mb-2 font-display text-xl font-medium text-foreground">No documents yet</h3>

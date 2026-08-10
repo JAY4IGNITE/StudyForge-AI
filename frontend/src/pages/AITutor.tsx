@@ -89,7 +89,7 @@ export function AITutor() {
         <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card/40 lg:flex">
           <div className="flex items-center justify-between border-b border-border p-4">
             <h2 className="text-sm font-medium text-foreground">Conversations</h2>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-ember hover:bg-ember/10 hover:text-ember">
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-primary hover:bg-primary/10 hover:text-primary">
               <SquarePen className="h-4 w-4" />
             </Button>
           </div>
@@ -108,8 +108,8 @@ export function AITutor() {
                         className={cn(
                           'w-full truncate rounded-md px-3 py-2 text-left text-sm transition-colors',
                           activeThread === thread
-                            ? 'border border-ember/25 bg-ember/10 text-ember shadow-sm'
-                            : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                            ? 'border border-primary/25 bg-primary/10 text-primary shadow-sm'
+                            : 'text-muted-foreground hover:bg-surface hover:text-foreground'
                         )}
                       >
                         {thread}
@@ -137,8 +137,8 @@ export function AITutor() {
                     className={cn(
                       'flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs transition-colors',
                       isActive
-                        ? 'border-ember/40 bg-ember/10 font-medium text-ember'
-                        : 'border-border bg-secondary/40 text-foreground hover:border-ember/30'
+                        ? 'border-primary/40 bg-primary/10 font-medium text-primary'
+                        : 'border-border bg-surface/40 text-foreground hover:border-primary/30'
                     )}
                   >
                     <Icon className="h-3.5 w-3.5" />
@@ -172,7 +172,7 @@ export function AITutor() {
                       className="flex w-full items-start gap-4"
                     >
                       <Avatar className="mt-1 h-8 w-8 shrink-0 shadow-sm">
-                        <AvatarFallback className="bg-ember-gradient">
+                        <AvatarFallback className="bg-primary-gradient">
                           <Bot className="h-4 w-4" />
                         </AvatarFallback>
                       </Avatar>
@@ -193,12 +193,12 @@ export function AITutor() {
                     >
                       <div className="flex max-w-[85%] flex-col items-end gap-2">
                         <span className="mr-1 text-xs font-medium text-muted-foreground">You</span>
-                        <div className="whitespace-pre-wrap rounded-2xl rounded-tr-sm bg-ember-gradient p-4 leading-relaxed text-ember-foreground shadow-[0_8px_20px_-10px_hsl(var(--ember)/0.5)]">
+                        <div className="whitespace-pre-wrap rounded-2xl rounded-tr-sm bg-primary-gradient p-4 leading-relaxed text-primary-foreground shadow-[0_8px_20px_-10px_hsl(var(--ember)/0.5)]">
                           {msg.content}
                         </div>
                       </div>
                       <Avatar className="mt-1 h-8 w-8 shrink-0 shadow-sm">
-                        <AvatarFallback className="bg-secondary text-foreground">U</AvatarFallback>
+                        <AvatarFallback className="bg-surface text-foreground">U</AvatarFallback>
                       </Avatar>
                     </motion.div>
                   )
@@ -213,10 +213,10 @@ export function AITutor() {
                     className="flex w-full items-start gap-4"
                   >
                     <Avatar className="relative mt-1 h-8 w-8 shrink-0 shadow-sm">
-                      <AvatarFallback className="bg-ember-gradient">
+                      <AvatarFallback className="bg-primary-gradient">
                         <Bot className="h-4 w-4" />
                       </AvatarFallback>
-                      <div className="absolute inset-0 animate-spin rounded-full border-2 border-ember border-t-gold" />
+                      <div className="absolute inset-0 animate-spin rounded-full border-2 border-primary border-t-gold" />
                     </Avatar>
                     <div className="flex w-full max-w-[85%] flex-col gap-2">
                       <div className="ml-1 flex items-center gap-2">
@@ -230,17 +230,17 @@ export function AITutor() {
                           <motion.span 
                             animate={{ y: [0, -5, 0] }} 
                             transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} 
-                            className="h-1.5 w-1.5 rounded-full bg-ember/60" 
+                            className="h-1.5 w-1.5 rounded-full bg-primary/60" 
                           />
                           <motion.span 
                             animate={{ y: [0, -5, 0] }} 
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0.1, ease: "easeInOut" }} 
-                            className="h-1.5 w-1.5 rounded-full bg-ember/60" 
+                            className="h-1.5 w-1.5 rounded-full bg-primary/60" 
                           />
                           <motion.span 
                             animate={{ y: [0, -5, 0] }} 
                             transition={{ repeat: Infinity, duration: 0.6, delay: 0.2, ease: "easeInOut" }} 
-                            className="h-1.5 w-1.5 rounded-full bg-ember/60" 
+                            className="h-1.5 w-1.5 rounded-full bg-primary/60" 
                           />
                         </div>
                       </div>
@@ -253,8 +253,8 @@ export function AITutor() {
 
           <div className="z-20 border-t border-border bg-card/60 p-4 md:px-8 md:py-6">
             <div className="mx-auto max-w-4xl">
-              <div className="flex items-end gap-2 rounded-xl border border-input bg-secondary/40 p-2 shadow-sm transition-all focus-within:border-ember/40 focus-within:ring-2 focus-within:ring-ember/15">
-                <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground hover:text-ember">
+              <div className="flex items-end gap-2 rounded-xl border border-input bg-surface/40 p-2 shadow-sm transition-all focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/15">
+                <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground hover:text-primary">
                   <Paperclip className="h-4 w-4" />
                 </Button>
                 <Textarea

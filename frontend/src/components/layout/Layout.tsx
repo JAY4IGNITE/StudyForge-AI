@@ -48,13 +48,13 @@ function initials(name?: string) {
 }
 
 const Logo: React.FC = () => (
-  <Link to="/dashboard" className="flex items-center gap-3">
-    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
-      <Flame className="h-5 w-5 text-ember-foreground animate-flicker" strokeWidth={2.25} />
+  <Link to="/dashboard" className="group flex items-center gap-3">
+    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-primary-gradient shadow-[0_0_0_1px_hsl(var(--primary)/0.4),0_8px_20px_-6px_hsl(var(--primary)/0.6)] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-6">
+      <Flame className="h-5 w-5 text-white" strokeWidth={2.25} />
     </div>
     <div className="leading-tight">
       <div className="font-display text-lg font-medium tracking-tight text-foreground">
-        StudyForge<span className="text-ember">.</span>
+        StudyForge<span className="text-primary">.</span>
       </div>
       <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
         Interview Foundry
@@ -79,18 +79,18 @@ const NavList: React.FC<{ pathname: string; onNavigate?: () => void }> = ({ path
             <motion.span
               layoutId="nav-active-indicator"
               transition={springTransitions.layoutIndicator}
-              className="absolute inset-0 rounded-md bg-secondary"
+              className="absolute inset-0 rounded-md bg-primary/10"
             />
           )}
           {isActive && (
             <motion.span
               layoutId="nav-active-bar"
               transition={springTransitions.layoutIndicator}
-              className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-ember-gradient"
+              className="absolute left-0 top-1/2 h-6 w-[4px] -translate-y-1/2 rounded-r-full bg-primary shadow-glow-primary"
             />
           )}
-          <Icon className={`relative z-10 h-4 w-4 shrink-0 ${isActive ? 'text-ember' : ''}`} />
-          <span className={`relative z-10 ${isActive ? 'text-foreground' : ''}`}>{item.label}</span>
+          <Icon className={`relative z-10 h-4 w-4 shrink-0 transition-colors ${isActive ? 'text-primary' : ''}`} />
+          <span className={`relative z-10 transition-colors ${isActive ? 'text-foreground font-semibold' : ''}`}>{item.label}</span>
         </Link>
       );
     })}
@@ -123,7 +123,7 @@ const SidebarFooter: React.FC<{ onFeedback: () => void }> = ({ onFeedback }) => 
       {user && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex w-full items-center gap-3 rounded-md px-1.5 py-1.5 text-left transition-colors hover:bg-secondary">
+            <button className="flex w-full items-center gap-3 rounded-md px-1.5 py-1.5 text-left transition-colors hover:bg-surface">
               <Avatar className="h-9 w-9">
                 <AvatarFallback>{initials(user.display_name)}</AvatarFallback>
               </Avatar>
@@ -167,7 +167,12 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground md:flex-row">
       {/* Desktop sidebar — the tool rack */}
-      <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col justify-between border-r border-border bg-card/60 p-5 backdrop-blur-sm md:flex">
+      <motion.aside 
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+        className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col justify-between border-r border-border bg-card/40 p-5 backdrop-blur-[20px] md:flex"
+      >
         <div>
           <div className="mb-8 px-1">
             <Logo />
@@ -175,7 +180,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <NavList pathname={location.pathname} />
         </div>
         <SidebarFooter onFeedback={() => setIsFeedbackOpen(true)} />
-      </aside>
+      </motion.aside>
 
       {/* Mobile top bar + Sheet nav */}
       <div className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-card/80 px-4 py-3 backdrop-blur-sm md:hidden">

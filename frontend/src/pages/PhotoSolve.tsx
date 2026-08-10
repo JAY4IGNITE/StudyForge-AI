@@ -73,16 +73,16 @@ export function PhotoSolve() {
                     'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBx06L8wdI3krJn2OcyahOgtKrMOeafNcZbxyeS60S5IGhwgWjFN256KElhsydVDl9UEDrHfzM1pA4M_XxgtesCB3azWJ69AUip3iAWIzAvUnwdC1XgH33zcxTDL-_RX0nhBasRS4aHj8d9gmjfytTQyuerHKda1ucBvfV89tCdeDvp1MlbzRHQE5VK7arByGi5OBsxCVh5Nb_L00DrDfse0bcPZ6_XDBQifVCJXTBw2AQrBAQbglYZbA")',
                 }}
               />
-              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-ember/5 backdrop-blur-[2px]">
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-primary/5 backdrop-blur-[2px]">
                 {(isAnalyzing || showSolution) && (
-                  <div className="relative aspect-[4/3] w-[80%] max-w-md overflow-hidden rounded-xl border-2 border-ember/50">
-                    <div className="absolute left-0 top-0 h-8 w-8 rounded-tl-lg border-l-4 border-t-4 border-ember" />
-                    <div className="absolute right-0 top-0 h-8 w-8 rounded-tr-lg border-r-4 border-t-4 border-ember" />
-                    <div className="absolute bottom-0 left-0 h-8 w-8 rounded-bl-lg border-b-4 border-l-4 border-ember" />
-                    <div className="absolute bottom-0 right-0 h-8 w-8 rounded-br-lg border-b-4 border-r-4 border-ember" />
+                  <div className="relative aspect-[4/3] w-[80%] max-w-md overflow-hidden rounded-xl border-2 border-primary/50">
+                    <div className="absolute left-0 top-0 h-8 w-8 rounded-tl-lg border-l-4 border-t-4 border-primary" />
+                    <div className="absolute right-0 top-0 h-8 w-8 rounded-tr-lg border-r-4 border-t-4 border-primary" />
+                    <div className="absolute bottom-0 left-0 h-8 w-8 rounded-bl-lg border-b-4 border-l-4 border-primary" />
+                    <div className="absolute bottom-0 right-0 h-8 w-8 rounded-br-lg border-b-4 border-r-4 border-primary" />
 
                     {isAnalyzing && (
-                      <div className="absolute inset-x-0 top-1/2 z-20 h-0.5 animate-pulse bg-ember shadow-[0_0_12px_2px_hsl(var(--ember)/0.8)]" />
+                      <div className="absolute inset-x-0 top-1/2 z-20 h-0.5 animate-pulse bg-primary shadow-[0_0_12px_2px_hsl(var(--ember)/0.8)]" />
                     )}
 
                     <div className="absolute inset-0 flex items-center justify-center p-4">
@@ -97,7 +97,7 @@ export function PhotoSolve() {
 
                 {isAnalyzing && (
                   <div className="mt-6 flex items-center gap-2 rounded-full bg-background/80 px-4 py-2 backdrop-blur-md">
-                    <Loader2 className="h-4 w-4 animate-spin text-ember" />
+                    <Loader2 className="h-4 w-4 animate-spin text-primary" />
                     <span className="font-mono text-xs tracking-wider text-foreground">ANALYZING EQUATION...</span>
                   </div>
                 )}
@@ -113,10 +113,10 @@ export function PhotoSolve() {
                 onClick={handleCapture}
                 disabled={isAnalyzing}
                 className={`flex h-14 w-14 items-center justify-center rounded-full border-4 border-border transition-all ${
-                  isAnalyzing ? 'cursor-not-allowed opacity-50' : 'hover:scale-105 hover:border-ember'
+                  isAnalyzing ? 'cursor-not-allowed opacity-50' : 'hover:scale-105 hover:border-primary'
                 }`}
               >
-                <div className={`h-10 w-10 rounded-full ${isAnalyzing ? 'bg-muted' : 'bg-ember-gradient'}`} />
+                <div className={`h-10 w-10 rounded-full ${isAnalyzing ? 'bg-muted' : 'bg-primary-gradient'}`} />
               </button>
 
               <Button variant="ghost" size="icon" className="h-11 w-11 rounded-full text-muted-foreground">
@@ -154,7 +154,7 @@ export function PhotoSolve() {
                     <h4 className="mb-4 border-b border-border pb-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
                       Extracted problem
                     </h4>
-                    <div className="flex justify-center overflow-x-auto rounded-xl border border-border bg-secondary/30 py-4">
+                    <div className="flex justify-center overflow-x-auto rounded-xl border border-border bg-surface/30 py-4">
                       <div className="whitespace-nowrap px-4 py-2 font-serif text-2xl text-foreground">
                         ∫ x²(x³ + 1)⁴ dx
                       </div>
@@ -165,7 +165,7 @@ export function PhotoSolve() {
                 <FadeUp>
                   <Card className="flex flex-1 flex-col p-6">
                     <div className="mb-6 flex items-center justify-between border-b border-border pb-2">
-                      <h4 className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ember">
+                      <h4 className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-primary">
                         <Sparkles className="h-3.5 w-3.5" />
                         Solution steps
                       </h4>
@@ -180,9 +180,9 @@ export function PhotoSolve() {
                       {steps.map((step) => (
                         <div
                           key={step.n}
-                          className="relative z-10 flex gap-4 rounded-xl border border-border bg-secondary/20 p-4 shadow-sm transition-transform hover:-translate-y-0.5"
+                          className="relative z-10 flex gap-4 rounded-xl border border-border bg-surface/20 p-4 shadow-sm transition-transform hover:-translate-y-0.5"
                         >
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-ember-gradient text-sm font-bold text-ember-foreground shadow-sm">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-primary-gradient text-sm font-bold text-primary-foreground shadow-sm">
                             {step.n}
                           </div>
                           <div className="flex-1">
@@ -204,7 +204,7 @@ export function PhotoSolve() {
                     Add to flashcards
                   </AnimatedButton>
                   <AnimatedButton variant="secondary" className="h-14 gap-2">
-                    <MessageSquareText className="h-4 w-4 text-ember" />
+                    <MessageSquareText className="h-4 w-4 text-primary" />
                     Ask AI about this
                   </AnimatedButton>
                 </FadeUp>
@@ -218,7 +218,7 @@ export function PhotoSolve() {
                 transition={{ duration: 0.3 }}
                 className="flex flex-1"
               >
-                <Card className="flex flex-1 flex-col items-center justify-center border-2 border-dashed border-border bg-secondary/10 p-8 text-center">
+                <Card className="flex flex-1 flex-col items-center justify-center border-2 border-dashed border-border bg-surface/10 p-8 text-center">
                   <Aperture className="mb-4 h-12 w-12 text-muted-foreground" />
                   <h3 className="mb-2 font-display text-xl font-medium text-foreground">Capture to solve</h3>
                   <p className="max-w-sm text-muted-foreground">

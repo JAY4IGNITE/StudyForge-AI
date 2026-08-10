@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { BrainCircuit, FileSearch, MessagesSquare, Gauge, ListChecks, TrendingUp } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { fadeUpVariants, staggerContainerVariants } from '../../lib/motion';
+import { motionConfig } from '../../lib/motion/motion-config';
 
 const FEATURES = [
   {
@@ -52,23 +52,23 @@ export const Features: React.FC = () => {
         </div>
 
         <motion.div 
-          variants={staggerContainerVariants}
+          variants={motionConfig.staggerChildren}
           initial="hidden"
-          whileInView="visible"
+          whileInView="animate"
           viewport={{ once: true, margin: "-100px" }}
           className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
           {FEATURES.map(({ icon: Icon, title, desc }) => (
-            <motion.div key={title} variants={fadeUpVariants}>
+            <motion.div key={title} variants={motionConfig.fadeUp}>
               <Card
-                className="border-border bg-card/60 p-1 transition-colors hover:border-ember/40 hover:shadow-[0_0_0_1px_hsl(var(--ember)/0.3)] h-full"
+                className="group h-full border-border bg-card/60 p-1"
               >
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-md bg-ember/10 text-ember">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary/20 to-secondary/20 text-primary transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110 group-hover:shadow-glow-primary">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <CardTitle>{title}</CardTitle>
-                  <CardDescription>{desc}</CardDescription>
+                  <CardTitle className="transition-opacity duration-500 opacity-80 group-hover:opacity-100">{title}</CardTitle>
+                  <CardDescription className="transition-opacity duration-500 opacity-70 group-hover:opacity-100">{desc}</CardDescription>
                 </CardHeader>
               </Card>
             </motion.div>

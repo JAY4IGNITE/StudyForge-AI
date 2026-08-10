@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthProvider';
 import { Loader2 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 
 const Login = React.lazy(() => import('../features/auth/Login').then(m => ({ default: m.Login })));
 const Register = React.lazy(() => import('../features/auth/Register').then(m => ({ default: m.Register })));
@@ -58,44 +58,46 @@ const AnimatedRoutes: React.FC = () => {
   const location = useLocation();
   
   return (
-    <Routes location={location} key={location.pathname}>
-      {/* Public Routes */}
-      <Route path="/" element={<AnimatedPage><LandingPage /></AnimatedPage>} />
-      <Route path="/login" element={<AnimatedPage><Login /></AnimatedPage>} />
-      <Route path="/register" element={<AnimatedPage><Register /></AnimatedPage>} />
-      <Route path="/oauth/callback" element={<AnimatedPage><OAuthCallback /></AnimatedPage>} />
-      <Route path="/verify-email" element={<AnimatedPage><VerifyEmail /></AnimatedPage>} />
-      <Route path="/forgot-password" element={<AnimatedPage><ForgotPassword /></AnimatedPage>} />
-      <Route path="/reset-password" element={<AnimatedPage><ResetPassword /></AnimatedPage>} />
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Public Routes */}
+        <Route path="/" element={<AnimatedPage><LandingPage /></AnimatedPage>} />
+        <Route path="/login" element={<AnimatedPage><Login /></AnimatedPage>} />
+        <Route path="/register" element={<AnimatedPage><Register /></AnimatedPage>} />
+        <Route path="/oauth/callback" element={<AnimatedPage><OAuthCallback /></AnimatedPage>} />
+        <Route path="/verify-email" element={<AnimatedPage><VerifyEmail /></AnimatedPage>} />
+        <Route path="/forgot-password" element={<AnimatedPage><ForgotPassword /></AnimatedPage>} />
+        <Route path="/reset-password" element={<AnimatedPage><ResetPassword /></AnimatedPage>} />
 
-      {/* Protected Application Routes */}
-      <Route path="/dashboard" element={<ProtectedRoute><AnimatedPage><Dashboard /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/practice" element={<ProtectedRoute><AnimatedPage><PracticeLoop /></AnimatedPage></ProtectedRoute>} />
+        {/* Protected Application Routes */}
+        <Route path="/dashboard" element={<ProtectedRoute><AnimatedPage><Dashboard /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/practice" element={<ProtectedRoute><AnimatedPage><PracticeLoop /></AnimatedPage></ProtectedRoute>} />
 
-      {/* AI Video Interview Module */}
-      <Route path="/interview" element={<ProtectedRoute><AnimatedPage><InterviewDashboard /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/interview/setup" element={<ProtectedRoute><AnimatedPage><InterviewSetup /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/interview/room/:sessionId" element={<ProtectedRoute><AnimatedPage><LiveInterviewRoom /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/interview/coding/:sessionId" element={<ProtectedRoute><AnimatedPage><CodingInterviewRoom /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/interview/report/:sessionId" element={<ProtectedRoute><AnimatedPage><InterviewReportView /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/interview/legacy" element={<ProtectedRoute><AnimatedPage><MockInterview /></AnimatedPage></ProtectedRoute>} />
+        {/* AI Video Interview Module */}
+        <Route path="/interview" element={<ProtectedRoute><AnimatedPage><InterviewDashboard /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/interview/setup" element={<ProtectedRoute><AnimatedPage><InterviewSetup /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/interview/room/:sessionId" element={<ProtectedRoute><AnimatedPage><LiveInterviewRoom /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/interview/coding/:sessionId" element={<ProtectedRoute><AnimatedPage><CodingInterviewRoom /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/interview/report/:sessionId" element={<ProtectedRoute><AnimatedPage><InterviewReportView /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/interview/legacy" element={<ProtectedRoute><AnimatedPage><MockInterview /></AnimatedPage></ProtectedRoute>} />
 
-      <Route path="/roadmap" element={<ProtectedRoute><AnimatedPage><StudyRoadmap /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/resources" element={<ProtectedRoute><AnimatedPage><Resources /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/flashcards" element={<ProtectedRoute><AnimatedPage><Flashcards /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/ai-tutor" element={<ProtectedRoute><AnimatedPage><AITutor /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/photo-solve" element={<ProtectedRoute><AnimatedPage><PhotoSolve /></AnimatedPage></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><AnimatedPage><Profile /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/roadmap" element={<ProtectedRoute><AnimatedPage><StudyRoadmap /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/resources" element={<ProtectedRoute><AnimatedPage><Resources /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/flashcards" element={<ProtectedRoute><AnimatedPage><Flashcards /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/ai-tutor" element={<ProtectedRoute><AnimatedPage><AITutor /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/photo-solve" element={<ProtectedRoute><AnimatedPage><PhotoSolve /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><AnimatedPage><Profile /></AnimatedPage></ProtectedRoute>} />
 
-      {/* LeetCode-Style Coding Practice */}
-      <Route path="/coding-practice" element={<ProtectedRoute><AnimatedPage><CodingPracticePage /></AnimatedPage></ProtectedRoute>} />
+        {/* LeetCode-Style Coding Practice */}
+        <Route path="/coding-practice" element={<ProtectedRoute><AnimatedPage><CodingPracticePage /></AnimatedPage></ProtectedRoute>} />
 
-      {/* ATS Scanner */}
-      <Route path="/ats" element={<ProtectedRoute><AnimatedPage><AtsDashboard /></AnimatedPage></ProtectedRoute>} />
+        {/* ATS Scanner */}
+        <Route path="/ats" element={<ProtectedRoute><AnimatedPage><AtsDashboard /></AnimatedPage></ProtectedRoute>} />
 
-      {/* Catch-all redirect */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
-    </Routes>
+        {/* Catch-all redirect */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </AnimatePresence>
   );
 };
 
@@ -103,6 +105,7 @@ export const AppRoutes: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <div className="fixed inset-0 z-[-1] bg-gradient-mesh particles-bg pointer-events-none" />
         <Suspense fallback={<PageLoader />}>
           <AnimatedRoutes />
         </Suspense>

@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion, HTMLMotionProps } from 'motion/react';
-import { pageTransitionVariants } from '../../lib/motion';
+import { motionConfig } from '../../lib/motion/motion-config';
 
 export const AnimatedPage = React.forwardRef<HTMLDivElement, HTMLMotionProps<'div'>>(
   ({ children, ...props }, ref) => {
     return (
       <motion.div
         ref={ref}
-        variants={pageTransitionVariants}
+        variants={motionConfig.pageTransitions}
         initial="hidden"
         animate="visible"
         exit="exit"
