@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { tweenTransitions } from '../../lib/motion';
+import { springTransitions } from '../../lib/motion';
 import { useAuth } from '../../app/AuthProvider';
 import {
   BookOpen,
@@ -78,14 +78,14 @@ const NavList: React.FC<{ pathname: string; onNavigate?: () => void }> = ({ path
           {isActive && (
             <motion.span
               layoutId="nav-active-indicator"
-              transition={tweenTransitions.fast}
+              transition={springTransitions.layoutIndicator}
               className="absolute inset-0 rounded-md bg-secondary"
             />
           )}
           {isActive && (
             <motion.span
               layoutId="nav-active-bar"
-              transition={tweenTransitions.fast}
+              transition={springTransitions.layoutIndicator}
               className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-ember-gradient"
             />
           )}

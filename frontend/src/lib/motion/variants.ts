@@ -82,18 +82,14 @@ export const staggerContainerVariants: Variants = {
 };
 
 export const pageTransitionVariants: Variants = {
-  hidden: { opacity: 0, y: motionConstants.distances.sm, filter: 'blur(6px)' },
+  hidden: { opacity: 0 },
   visible: { 
     opacity: 1, 
-    y: 0,
-    filter: 'blur(0px)',
-    transition: tweenTransitions.medium
+    transition: tweenTransitions.fast
   },
   exit: { 
     opacity: 0, 
-    y: -motionConstants.distances.sm,
-    filter: 'blur(4px)',
-    transition: tweenTransitions.fast
+    transition: tweenTransitions.instant
   },
 };
 

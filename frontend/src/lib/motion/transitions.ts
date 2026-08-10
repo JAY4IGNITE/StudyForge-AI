@@ -22,6 +22,11 @@ export const springTransitions: Record<string, Transition> = {
     stiffness: 500,
     damping: 50,
   },
+  layoutIndicator: {
+    type: 'spring',
+    bounce: 0,
+    duration: 0.25,
+  },
 };
 
 export const tweenTransitions: Record<string, Transition> = {
