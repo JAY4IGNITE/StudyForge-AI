@@ -25,6 +25,7 @@ const Flashcards = React.lazy(() => import('../pages/Flashcards').then(m => ({ d
 const AITutor = React.lazy(() => import('../pages/AITutor').then(m => ({ default: m.AITutor })));
 const PhotoSolve = React.lazy(() => import('../pages/PhotoSolve').then(m => ({ default: m.PhotoSolve })));
 const AtsDashboard = React.lazy(() => import('../pages/AtsDashboard'));
+const LandingPage = React.lazy(() => import('../pages/LandingPage').then(m => ({ default: m.LandingPage })));
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -57,6 +58,7 @@ export const AppRoutes: React.FC = () => {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {/* Public Routes */}
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/oauth/callback" element={<OAuthCallback />} />

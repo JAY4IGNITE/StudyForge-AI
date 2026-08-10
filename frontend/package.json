@@ -38,7 +38,8 @@
     "recharts": "^2.12.3",
     "sonner": "^2.0.7",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "gsap": "^3.12.5"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",
