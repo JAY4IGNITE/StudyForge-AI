@@ -20,6 +20,7 @@ const INTERVIEW_MODES = [
 ];
 
 const accentClasses = {
+  primary: 'bg-primary/15 text-primary',
   ember: 'bg-primary/15 text-primary',
   steel: 'bg-steel/15 text-steel',
   gold: 'bg-gold/15 text-gold',

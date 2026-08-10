@@ -10,7 +10,6 @@ import { motionConfig } from '../../lib/motion/motion-config';
 export const Hero: React.FC = () => {
   return (
     <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
-      <AnimatedGradient />
 
       <motion.div 
         className="container relative z-10 grid items-center gap-14 md:grid-cols-2"

@@ -37,7 +37,7 @@ const quickActions: QuickAction[] = [
 ];
 
 const accentClasses: Record<QuickAction['accent'], string> = {
-  ember: 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground',
+  primary: 'bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground',
   steel: 'bg-steel/10 text-steel group-hover:bg-steel group-hover:text-[hsl(228_40%_9%)]',
   gold: 'bg-gold/10 text-gold group-hover:bg-gold group-hover:text-[hsl(42_45%_9%)]',
 };
