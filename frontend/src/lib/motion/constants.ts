@@ -7,14 +7,14 @@ export const motionConstants = {
     slow: 0.5,
   },
   distances: {
-    sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
+    sm: 4,
+    md: 8,
+    lg: 12,
+    xl: 16,
   },
   scales: {
-    sm: 0.97,
-    md: 0.95,
-    lg: 0.9,
+    sm: 0.985,
+    md: 0.97,
+    lg: 0.95,
   },
 };

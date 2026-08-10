@@ -61,13 +61,13 @@ export const staggerContainerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.06,
+      staggerChildren: 0.04,
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      staggerChildren: 0.03,
+      staggerChildren: 0.02,
       staggerDirection: -1,
     },
   },
@@ -89,23 +89,23 @@ export const pageTransitionVariants: Variants = {
 
 export const cardInteractionVariants: Variants = {
   hover: { 
-    y: -4, 
-    scale: 1.01,
+    y: -2, 
+    scale: 1.005,
     transition: springTransitions.snappy 
   },
   tap: { 
-    scale: 0.98,
+    scale: 0.99,
     transition: springTransitions.snappy 
   },
 };
 
 export const buttonInteractionVariants: Variants = {
   hover: { 
-    scale: 1.02,
+    scale: 1.01,
     transition: tweenTransitions.fast 
   },
   tap: { 
-    scale: 0.97,
+    scale: 0.985,
     transition: tweenTransitions.instant 
   },
 };

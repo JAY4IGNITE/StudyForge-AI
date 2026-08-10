@@ -5,22 +5,22 @@ export const springTransitions: Record<string, Transition> = {
   bounce: {
     type: 'spring',
     stiffness: 400,
-    damping: 25,
+    damping: 35,
   },
   gentle: {
     type: 'spring',
     stiffness: 100,
-    damping: 20,
+    damping: 25,
   },
   snappy: {
     type: 'spring',
     stiffness: 400,
-    damping: 30,
+    damping: 40,
   },
   stiff: {
     type: 'spring',
     stiffness: 500,
-    damping: 40,
+    damping: 50,
   },
 };
 
