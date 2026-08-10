@@ -11,6 +11,8 @@ from app.services.resume_parser import resume_parser_service
 from datetime import datetime, timezone
 import httpx
 
+MAX_RESUME_BYTES = 10 * 1024 * 1024  # 10 MB
+
 router = APIRouter()
 
 @router.post("/upload-url", response_model=ResumeUploadUrlResponse)
