@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { UploadCloud, FileText, CheckCircle, AlertTriangle, ChevronRight, BarChart3, TrendingUp, History, X } from 'lucide-react';
 import { atsService, Resume, AtsReport } from '../services/atsService';
 import { Button } from '../components/ui/button';
 
+
+import { fadeUpVariants, fadeVariants } from '../lib/motion';
+import { AnimatedButton } from '../components/motion';
 
 export default function AtsDashboard() {
   const [activeTab, setActiveTab] = useState<'upload' | 'history'>('upload');
@@ -67,8 +70,9 @@ export default function AtsDashboard() {
 
   const renderProgress = () => (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      variants={fadeUpVariants}
+      initial="hidden"
+      animate="visible"
       className="flex flex-col items-center justify-center p-12 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10"
     >
       <div className="relative w-24 h-24 mb-6">
@@ -92,8 +96,9 @@ export default function AtsDashboard() {
     if (!report) return null;
     return (
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
+        variants={fadeUpVariants}
+        initial="hidden"
+        animate="visible"
         className="w-full max-w-5xl mx-auto space-y-6"
       >
         <div className="flex justify-between items-center mb-6">
@@ -215,9 +220,10 @@ export default function AtsDashboard() {
 
   const renderUpload = () => (
     <motion.div 
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      variants={fadeUpVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
       className="w-full max-w-4xl mx-auto flex flex-col md:flex-row gap-8"
     >
       <div className="w-full md:w-1/2 space-y-6">
@@ -258,13 +264,13 @@ export default function AtsDashboard() {
               <AlertTriangle size={16} /> {errorMsg}
             </div>
           )}
-          <Button 
+          <AnimatedButton 
             onClick={handleScan}
             disabled={!file || !jobText.trim()}
             className="w-full mt-6 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
           >
             Run ATS Scan <ChevronRight size={18} />
-          </Button>
+          </AnimatedButton>
         </div>
       </div>
     </motion.div>
@@ -272,8 +278,10 @@ export default function AtsDashboard() {
 
   const renderHistory = () => (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      variants={fadeVariants}
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
       className="w-full max-w-4xl mx-auto"
     >
       <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-xl">

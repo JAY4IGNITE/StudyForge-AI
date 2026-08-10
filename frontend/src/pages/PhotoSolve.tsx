@@ -14,6 +14,8 @@ import {
   MessageSquareText,
   Aperture,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { StaggerContainer, FadeUp, AnimatedButton } from '../components/motion';
 
 const steps = [
   {
@@ -126,90 +128,107 @@ export function PhotoSolve() {
 
         {/* Solution panel */}
         <section className="flex flex-[1.2] flex-col gap-4 overflow-y-auto pb-8 pr-1">
-          {showSolution ? (
-            <>
-              <Card className="flex items-start justify-between p-6">
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-gold" />
-                    <span className="text-sm font-medium text-gold">Problem detected</span>
-                  </div>
-                  <h3 className="font-display text-xl font-medium text-foreground">
-                    Integration by Substitution
-                  </h3>
-                  <p className="text-sm text-muted-foreground">Calculus II • Techniques of Integration</p>
-                </div>
-                <Badge variant="gold" className="gap-1 rounded-full">
-                  <Award className="h-3.5 w-3.5" /> +15 XP
-                </Badge>
-              </Card>
-
-              <Card className="p-6">
-                <h4 className="mb-4 border-b border-border pb-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                  Extracted problem
-                </h4>
-                <div className="flex justify-center overflow-x-auto rounded-xl border border-border bg-secondary/30 py-4">
-                  <div className="whitespace-nowrap px-4 py-2 font-serif text-2xl text-foreground">
-                    ∫ x²(x³ + 1)⁴ dx
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="flex flex-1 flex-col p-6">
-                <div className="mb-6 flex items-center justify-between border-b border-border pb-2">
-                  <h4 className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ember">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    Solution steps
-                  </h4>
-                  <Badge variant="secondary" className="rounded-md font-sans">
-                    4 steps
-                  </Badge>
-                </div>
-
-                <div className="relative flex flex-col gap-4">
-                  <div className="absolute bottom-4 left-[15px] top-4 z-0 w-px bg-border" />
-
-                  {steps.map((step) => (
-                    <div
-                      key={step.n}
-                      className="relative z-10 flex gap-4 rounded-xl border border-border bg-secondary/20 p-4 shadow-sm transition-transform hover:-translate-y-0.5"
-                    >
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-ember-gradient text-sm font-bold text-ember-foreground shadow-sm">
-                        {step.n}
+          <AnimatePresence mode="wait">
+            {showSolution ? (
+              <StaggerContainer key="solution" className="flex flex-[1.2] flex-col gap-4">
+                <FadeUp>
+                  <Card className="flex items-start justify-between p-6">
+                    <div>
+                      <div className="mb-2 flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-gold" />
+                        <span className="text-sm font-medium text-gold">Problem detected</span>
                       </div>
-                      <div className="flex-1">
-                        <p className="mb-2 font-medium text-foreground">{step.title}</p>
-                        {step.body && <p className="mb-3 text-sm leading-relaxed text-muted-foreground">{step.body}</p>}
-                        <div className="whitespace-pre-line rounded-lg border border-border/60 bg-card p-3 font-serif text-foreground">
-                          {step.math}
-                        </div>
+                      <h3 className="font-display text-xl font-medium text-foreground">
+                        Integration by Substitution
+                      </h3>
+                      <p className="text-sm text-muted-foreground">Calculus II • Techniques of Integration</p>
+                    </div>
+                    <Badge variant="gold" className="gap-1 rounded-full">
+                      <Award className="h-3.5 w-3.5" /> +15 XP
+                    </Badge>
+                  </Card>
+                </FadeUp>
+
+                <FadeUp>
+                  <Card className="p-6">
+                    <h4 className="mb-4 border-b border-border pb-2 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      Extracted problem
+                    </h4>
+                    <div className="flex justify-center overflow-x-auto rounded-xl border border-border bg-secondary/30 py-4">
+                      <div className="whitespace-nowrap px-4 py-2 font-serif text-2xl text-foreground">
+                        ∫ x²(x³ + 1)⁴ dx
                       </div>
                     </div>
-                  ))}
-                </div>
-              </Card>
+                  </Card>
+                </FadeUp>
 
-              <div className="mt-2 grid grid-cols-2 gap-4">
-                <Button className="h-14 gap-2">
-                  <Layers className="h-4 w-4" />
-                  Add to flashcards
-                </Button>
-                <Button variant="secondary" className="h-14 gap-2">
-                  <MessageSquareText className="h-4 w-4 text-ember" />
-                  Ask AI about this
-                </Button>
-              </div>
-            </>
-          ) : (
-            <Card className="flex flex-1 flex-col items-center justify-center border-2 border-dashed border-border bg-secondary/10 p-8 text-center">
-              <Aperture className="mb-4 h-12 w-12 text-muted-foreground" />
-              <h3 className="mb-2 font-display text-xl font-medium text-foreground">Capture to solve</h3>
-              <p className="max-w-sm text-muted-foreground">
-                Tap the capture button to scan a math problem. StudyForge AI will provide step-by-step solutions
-                instantly.
-              </p>
-            </Card>
-          )}
+                <FadeUp>
+                  <Card className="flex flex-1 flex-col p-6">
+                    <div className="mb-6 flex items-center justify-between border-b border-border pb-2">
+                      <h4 className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-ember">
+                        <Sparkles className="h-3.5 w-3.5" />
+                        Solution steps
+                      </h4>
+                      <Badge variant="secondary" className="rounded-md font-sans">
+                        4 steps
+                      </Badge>
+                    </div>
+
+                    <div className="relative flex flex-col gap-4">
+                      <div className="absolute bottom-4 left-[15px] top-4 z-0 w-px bg-border" />
+
+                      {steps.map((step) => (
+                        <div
+                          key={step.n}
+                          className="relative z-10 flex gap-4 rounded-xl border border-border bg-secondary/20 p-4 shadow-sm transition-transform hover:-translate-y-0.5"
+                        >
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-ember-gradient text-sm font-bold text-ember-foreground shadow-sm">
+                            {step.n}
+                          </div>
+                          <div className="flex-1">
+                            <p className="mb-2 font-medium text-foreground">{step.title}</p>
+                            {step.body && <p className="mb-3 text-sm leading-relaxed text-muted-foreground">{step.body}</p>}
+                            <div className="whitespace-pre-line rounded-lg border border-border/60 bg-card p-3 font-serif text-foreground">
+                              {step.math}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </Card>
+                </FadeUp>
+
+                <FadeUp className="mt-2 grid grid-cols-2 gap-4">
+                  <AnimatedButton className="h-14 gap-2">
+                    <Layers className="h-4 w-4" />
+                    Add to flashcards
+                  </AnimatedButton>
+                  <AnimatedButton variant="secondary" className="h-14 gap-2">
+                    <MessageSquareText className="h-4 w-4 text-ember" />
+                    Ask AI about this
+                  </AnimatedButton>
+                </FadeUp>
+              </StaggerContainer>
+            ) : (
+              <motion.div
+                key="placeholder"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+                className="flex flex-1"
+              >
+                <Card className="flex flex-1 flex-col items-center justify-center border-2 border-dashed border-border bg-secondary/10 p-8 text-center">
+                  <Aperture className="mb-4 h-12 w-12 text-muted-foreground" />
+                  <h3 className="mb-2 font-display text-xl font-medium text-foreground">Capture to solve</h3>
+                  <p className="max-w-sm text-muted-foreground">
+                    Tap the capture button to scan a math problem. StudyForge AI will provide step-by-step solutions
+                    instantly.
+                  </p>
+                </Card>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </section>
       </div>
     </Layout>

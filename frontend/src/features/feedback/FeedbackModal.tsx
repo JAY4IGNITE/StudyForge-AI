@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { apiClient } from '../../lib/axios';
 import { MessageSquare, Star, CheckCircle2 } from 'lucide-react';
 import { Dialog, DialogContent } from '../../components/ui/dialog';
-import { Button } from '../../components/ui/button';
+import { AnimatedButton as Button } from '../../components/motion';
 import { Textarea } from '../../components/ui/textarea';
 import { Label } from '../../components/ui/label';
 import {

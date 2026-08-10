@@ -1,10 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import React from 'react';
+import { motion } from 'motion/react';
 import { BrainCircuit, FileSearch, MessagesSquare, Gauge, ListChecks, TrendingUp } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-
-gsap.registerPlugin(ScrollTrigger);
+import { fadeUpVariants, staggerContainerVariants } from '../../lib/motion';
 
 const FEATURES = [
   {
@@ -40,24 +38,8 @@ const FEATURES = [
 ];
 
 export const Features: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.feature-card', {
-        opacity: 0,
-        y: 24,
-        duration: 0.5,
-        stagger: 0.08,
-        ease: 'power2.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 80%' },
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section id="features" ref={ref} className="border-t border-border bg-background py-24">
+    <section id="features" className="border-t border-border bg-background py-24">
       <div className="container">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
@@ -69,22 +51,29 @@ export const Features: React.FC = () => {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <motion.div 
+          variants={staggerContainerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+        >
           {FEATURES.map(({ icon: Icon, title, desc }) => (
-            <Card
-              key={title}
-              className="feature-card border-border bg-card/60 p-1 transition-colors hover:border-ember/40 hover:shadow-[0_0_0_1px_hsl(var(--ember)/0.3)]"
-            >
-              <CardHeader>
-                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-md bg-ember/10 text-ember">
-                  <Icon className="h-5 w-5" />
-                </div>
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{desc}</CardDescription>
-              </CardHeader>
-            </Card>
+            <motion.div key={title} variants={fadeUpVariants}>
+              <Card
+                className="border-border bg-card/60 p-1 transition-colors hover:border-ember/40 hover:shadow-[0_0_0_1px_hsl(var(--ember)/0.3)] h-full"
+              >
+                <CardHeader>
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-md bg-ember/10 text-ember">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <CardTitle>{title}</CardTitle>
+                  <CardDescription>{desc}</CardDescription>
+                </CardHeader>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

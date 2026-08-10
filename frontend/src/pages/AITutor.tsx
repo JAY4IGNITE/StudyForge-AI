@@ -16,6 +16,7 @@ import {
   Bot,
   Sparkles,
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 const conversationGroups = [
   {
@@ -160,61 +161,93 @@ export function AITutor() {
                 </Badge>
               </div>
 
-              {messages.map((msg, idx) =>
-                msg.role === 'tutor' ? (
-                  <div key={idx} className="flex w-full items-start gap-4">
-                    <Avatar className="mt-1 h-8 w-8 shrink-0 shadow-sm">
+              <AnimatePresence initial={false}>
+                {messages.map((msg, idx) =>
+                  msg.role === 'tutor' ? (
+                    <motion.div 
+                      key={idx} 
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      className="flex w-full items-start gap-4"
+                    >
+                      <Avatar className="mt-1 h-8 w-8 shrink-0 shadow-sm">
+                        <AvatarFallback className="bg-ember-gradient">
+                          <Bot className="h-4 w-4" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex max-w-[85%] flex-col gap-2">
+                        <span className="ml-1 text-xs font-medium text-muted-foreground">StudyForge Tutor</span>
+                        <div className="whitespace-pre-wrap rounded-2xl rounded-tl-sm border border-border bg-card p-4 leading-relaxed text-foreground shadow-sm">
+                          {msg.content}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key={idx} 
+                      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      className="flex w-full items-start justify-end gap-4"
+                    >
+                      <div className="flex max-w-[85%] flex-col items-end gap-2">
+                        <span className="mr-1 text-xs font-medium text-muted-foreground">You</span>
+                        <div className="whitespace-pre-wrap rounded-2xl rounded-tr-sm bg-ember-gradient p-4 leading-relaxed text-ember-foreground shadow-[0_8px_20px_-10px_hsl(var(--ember)/0.5)]">
+                          {msg.content}
+                        </div>
+                      </div>
+                      <Avatar className="mt-1 h-8 w-8 shrink-0 shadow-sm">
+                        <AvatarFallback className="bg-secondary text-foreground">U</AvatarFallback>
+                      </Avatar>
+                    </motion.div>
+                  )
+                )}
+
+                {isTyping && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex w-full items-start gap-4"
+                  >
+                    <Avatar className="relative mt-1 h-8 w-8 shrink-0 shadow-sm">
                       <AvatarFallback className="bg-ember-gradient">
                         <Bot className="h-4 w-4" />
                       </AvatarFallback>
+                      <div className="absolute inset-0 animate-spin rounded-full border-2 border-ember border-t-gold" />
                     </Avatar>
-                    <div className="flex max-w-[85%] flex-col gap-2">
-                      <span className="ml-1 text-xs font-medium text-muted-foreground">StudyForge Tutor</span>
-                      <div className="whitespace-pre-wrap rounded-2xl rounded-tl-sm border border-border bg-card p-4 leading-relaxed text-foreground shadow-sm">
-                        {msg.content}
+                    <div className="flex w-full max-w-[85%] flex-col gap-2">
+                      <div className="ml-1 flex items-center gap-2">
+                        <span className="text-xs font-medium text-muted-foreground">StudyForge Tutor</span>
+                        <span className="flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
+                          <Sparkles className="h-3 w-3 text-gold" /> Generating
+                        </span>
+                      </div>
+                      <div className="w-max rounded-2xl rounded-tl-sm border border-border bg-card p-4 shadow-sm">
+                        <div className="flex h-6 items-center gap-1 px-1">
+                          <motion.span 
+                            animate={{ y: [0, -5, 0] }} 
+                            transition={{ repeat: Infinity, duration: 0.6, ease: "easeInOut" }} 
+                            className="h-1.5 w-1.5 rounded-full bg-ember/60" 
+                          />
+                          <motion.span 
+                            animate={{ y: [0, -5, 0] }} 
+                            transition={{ repeat: Infinity, duration: 0.6, delay: 0.1, ease: "easeInOut" }} 
+                            className="h-1.5 w-1.5 rounded-full bg-ember/60" 
+                          />
+                          <motion.span 
+                            animate={{ y: [0, -5, 0] }} 
+                            transition={{ repeat: Infinity, duration: 0.6, delay: 0.2, ease: "easeInOut" }} 
+                            className="h-1.5 w-1.5 rounded-full bg-ember/60" 
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <div key={idx} className="flex w-full items-start justify-end gap-4">
-                    <div className="flex max-w-[85%] flex-col items-end gap-2">
-                      <span className="mr-1 text-xs font-medium text-muted-foreground">You</span>
-                      <div className="whitespace-pre-wrap rounded-2xl rounded-tr-sm bg-ember-gradient p-4 leading-relaxed text-ember-foreground shadow-[0_8px_20px_-10px_hsl(var(--ember)/0.5)]">
-                        {msg.content}
-                      </div>
-                    </div>
-                    <Avatar className="mt-1 h-8 w-8 shrink-0 shadow-sm">
-                      <AvatarFallback className="bg-secondary text-foreground">U</AvatarFallback>
-                    </Avatar>
-                  </div>
-                )
-              )}
-
-              {isTyping && (
-                <div className="flex w-full items-start gap-4">
-                  <Avatar className="relative mt-1 h-8 w-8 shrink-0 shadow-sm">
-                    <AvatarFallback className="bg-ember-gradient">
-                      <Bot className="h-4 w-4" />
-                    </AvatarFallback>
-                    <div className="absolute inset-0 animate-spin rounded-full border-2 border-ember border-t-gold" />
-                  </Avatar>
-                  <div className="flex w-full max-w-[85%] flex-col gap-2">
-                    <div className="ml-1 flex items-center gap-2">
-                      <span className="text-xs font-medium text-muted-foreground">StudyForge Tutor</span>
-                      <span className="flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
-                        <Sparkles className="h-3 w-3 text-gold" /> Generating
-                      </span>
-                    </div>
-                    <div className="w-max rounded-2xl rounded-tl-sm border border-border bg-card p-4 shadow-sm">
-                      <div className="flex h-6 items-center gap-1 px-1">
-                        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ember/60" />
-                        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ember/60 [animation-delay:0.1s]" />
-                        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-ember/60 [animation-delay:0.2s]" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </ScrollArea>
 

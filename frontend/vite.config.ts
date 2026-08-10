@@ -20,7 +20,7 @@ export default defineConfig({
           vendor: ['react', 'react-dom', 'react-router-dom'],
           monaco: ['@monaco-editor/react'],
           charts: ['recharts'],
-          ui: ['framer-motion', 'lucide-react']
+          ui: ['motion/react', 'lucide-react']
         }
       }
     }

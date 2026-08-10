@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { motion } from 'motion/react';
+import { fadeDownVariants } from '../../lib/motion';
+import { AnimatedButton } from '../motion';
 
 export const LandingNavbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -14,7 +16,10 @@ export const LandingNavbar: React.FC = () => {
   }, []);
 
   return (
-    <header
+    <motion.header
+      variants={fadeDownVariants}
+      initial="hidden"
+      animate="visible"
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         scrolled
@@ -35,14 +40,14 @@ export const LandingNavbar: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+          <AnimatedButton asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
             <Link to="/login">Log in</Link>
-          </Button>
-          <Button asChild size="sm">
+          </AnimatedButton>
+          <AnimatedButton asChild size="sm">
             <Link to="/register">Get Started</Link>
-          </Button>
+          </AnimatedButton>
         </div>
       </nav>
-    </header>
+    </motion.header>
   );
 };

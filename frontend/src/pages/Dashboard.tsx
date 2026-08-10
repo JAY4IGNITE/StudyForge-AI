@@ -17,9 +17,9 @@ import { useAuth } from '../app/AuthProvider';
 import { Layout } from '../components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
 import { Skeleton } from '../components/ui/skeleton';
 import { TemperBar, TemperGauge } from '../components/ui/temper-gauge';
+import { StaggerContainer, FadeUp, AnimatedCard, AnimatedButton } from '../components/motion';
 
 interface QuickAction {
   to: string;
@@ -100,77 +100,91 @@ export function Dashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
+        <StaggerContainer className="grid grid-cols-1 gap-6 md:grid-cols-12">
           {/* Quick actions */}
           <div className="grid grid-cols-2 gap-4 md:col-span-8 md:grid-cols-3">
             {quickActions.slice(0, 3).map((action) => {
               const Icon = action.icon;
               return (
-                <Link key={action.to} to={action.to} className="group">
-                  <Card className="h-full p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-14px_hsl(var(--ember)/0.35)]">
-                    <div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${accentClasses[action.accent]}`}>
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <h3 className="font-medium text-foreground">{action.title}</h3>
-                    <p className="mt-0.5 text-sm text-muted-foreground">{action.blurb}</p>
-                  </Card>
-                </Link>
+                <FadeUp key={action.to} className="h-full">
+                  <Link to={action.to} className="group block h-full">
+                    <AnimatedCard className="h-full">
+                      <Card className="h-full p-5 border-border transition-colors hover:border-ember/30">
+                        <div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${accentClasses[action.accent]}`}>
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <h3 className="font-medium text-foreground">{action.title}</h3>
+                        <p className="mt-0.5 text-sm text-muted-foreground">{action.blurb}</p>
+                      </Card>
+                    </AnimatedCard>
+                  </Link>
+                </FadeUp>
               );
             })}
 
-            <Link to="/roadmap" className="group col-span-2">
-              <Card className="h-full p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-14px_hsl(var(--ember)/0.35)]">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex-1">
-                    <h3 className="font-display text-lg font-medium text-foreground">Study Roadmap</h3>
-                    <p className="mt-0.5 text-sm text-muted-foreground">Calculus midterm prep</p>
-                    <TemperBar value={75} className="mt-4 max-w-[220px]" />
-                  </div>
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ember/10 text-ember transition-colors group-hover:bg-ember group-hover:text-ember-foreground">
-                    <Map className="h-5 w-5" />
-                  </div>
-                </div>
-              </Card>
-            </Link>
+            <FadeUp className="col-span-2 h-full">
+              <Link to="/roadmap" className="group block h-full">
+                <AnimatedCard className="h-full">
+                  <Card className="h-full p-5 border-border transition-colors hover:border-ember/30">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex-1">
+                        <h3 className="font-display text-lg font-medium text-foreground">Study Roadmap</h3>
+                        <p className="mt-0.5 text-sm text-muted-foreground">Calculus midterm prep</p>
+                        <TemperBar value={75} className="mt-4 max-w-[220px]" />
+                      </div>
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ember/10 text-ember transition-colors group-hover:bg-ember group-hover:text-ember-foreground">
+                        <Map className="h-5 w-5" />
+                      </div>
+                    </div>
+                  </Card>
+                </AnimatedCard>
+              </Link>
+            </FadeUp>
 
-            <Link to="/resources" className="group">
-              <Card className="h-full p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-ember/30 hover:shadow-[0_12px_28px_-14px_hsl(var(--ember)/0.35)]">
-                <div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${accentClasses.steel}`}>
-                  <FileText className="h-5 w-5" />
-                </div>
-                <h3 className="font-medium text-foreground">Notes</h3>
-                <p className="mt-0.5 text-sm text-muted-foreground">Auto-summarize</p>
-              </Card>
-            </Link>
+            <FadeUp className="h-full">
+              <Link to="/resources" className="group block h-full">
+                <AnimatedCard className="h-full">
+                  <Card className="h-full p-5 border-border transition-colors hover:border-ember/30">
+                    <div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-lg transition-colors ${accentClasses.steel}`}>
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <h3 className="font-medium text-foreground">Notes</h3>
+                    <p className="mt-0.5 text-sm text-muted-foreground">Auto-summarize</p>
+                  </Card>
+                </AnimatedCard>
+              </Link>
+            </FadeUp>
           </div>
 
           {/* Focus session */}
-          <Card className="relative overflow-hidden md:col-span-4">
-            <div className="bg-forge-glow pointer-events-none absolute inset-0" />
-            <CardContent className="relative flex flex-col items-center p-6">
-              <div className="mb-6 flex w-full items-center justify-between">
-                <Badge variant="ember" className="gap-1.5 rounded-md px-2.5 py-1">
-                  <Timer className="h-3 w-3" /> Focus session
-                </Badge>
-              </div>
-              <TemperGauge value={75} size={176} strokeWidth={8} className="mb-8">
-                <span className="font-mono text-4xl font-semibold tracking-tight text-foreground">18:42</span>
-                <span className="mt-1 text-xs text-muted-foreground">25/5 sprint</span>
-              </TemperGauge>
-              <div className="flex items-center gap-4">
-                <Button size="icon" className="h-12 w-12 rounded-full">
-                  <Pause className="h-5 w-5" />
-                </Button>
-                <Button variant="secondary" size="icon" className="h-12 w-12 rounded-full">
-                  <SkipForward className="h-5 w-5" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          <FadeUp className="md:col-span-4 h-full">
+            <Card className="relative overflow-hidden h-full">
+              <div className="bg-forge-glow pointer-events-none absolute inset-0" />
+              <CardContent className="relative flex flex-col items-center p-6 h-full justify-center">
+                <div className="mb-6 flex w-full items-center justify-between">
+                  <Badge variant="ember" className="gap-1.5 rounded-md px-2.5 py-1">
+                    <Timer className="h-3 w-3" /> Focus session
+                  </Badge>
+                </div>
+                <TemperGauge value={75} size={176} strokeWidth={8} className="mb-8">
+                  <span className="font-mono text-4xl font-semibold tracking-tight text-foreground">18:42</span>
+                  <span className="mt-1 text-xs text-muted-foreground">25/5 sprint</span>
+                </TemperGauge>
+                <div className="flex items-center gap-4">
+                  <AnimatedButton size="icon" className="h-12 w-12 rounded-full">
+                    <Pause className="h-5 w-5" />
+                  </AnimatedButton>
+                  <AnimatedButton variant="secondary" size="icon" className="h-12 w-12 rounded-full">
+                    <SkipForward className="h-5 w-5" />
+                  </AnimatedButton>
+                </div>
+              </CardContent>
+            </Card>
+          </FadeUp>
+        </StaggerContainer>
 
         {/* Progress snapshot */}
-        <Card className="mt-6">
+        <FadeUp className="mt-6">
           <CardHeader>
             <CardTitle>Progress snapshot</CardTitle>
           </CardHeader>
@@ -247,7 +261,7 @@ export function Dashboard() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </FadeUp>
       </div>
     </Layout>
   );
