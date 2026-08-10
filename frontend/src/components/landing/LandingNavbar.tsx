@@ -29,24 +29,24 @@ export const LandingNavbar: React.FC = () => {
     >
       <nav className="container flex h-16 items-center justify-between">
         <Link to="/" className="group flex items-center gap-2 font-display text-xl font-semibold tracking-tight">
-          <Flame className="h-6 w-6 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
-          <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent transition-all duration-500 group-hover:from-secondary group-hover:to-primary">
+          <Flame className="h-6 w-6 text-ember transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
+          <span className="bg-gradient-to-r from-ember to-secondary bg-clip-text text-transparent transition-all duration-500 group-hover:from-secondary group-hover:to-ember">
             StudyForge
           </span>
         </Link>
 
-        <div className="hidden items-center gap-8 text-sm font-medium text-muted-foreground md:flex">
+        <div className="hidden items-center gap-8 text-sm font-medium text-secondary md:flex">
           <a href="#features" className="group relative transition-colors hover:text-foreground">
             Features
-            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-ember transition-all duration-300 group-hover:w-full"></span>
           </a>
           <a href="#how-it-works" className="group relative transition-colors hover:text-foreground">
             How it works
-            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-ember transition-all duration-300 group-hover:w-full"></span>
           </a>
           <a href="#ai-coach" className="group relative transition-colors hover:text-foreground">
             AI Coach
-            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
+            <span className="absolute -bottom-1 left-0 h-0.5 w-0 bg-ember transition-all duration-300 group-hover:w-full"></span>
           </a>
         </div>
 

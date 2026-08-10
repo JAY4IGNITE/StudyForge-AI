@@ -79,7 +79,7 @@ export const InterviewSetup: React.FC = () => {
       <div className="mx-auto max-w-2xl space-y-8">
         <div>
           <h1 className="font-display text-2xl font-medium text-foreground">Setup interview</h1>
-          <p className="text-sm text-muted-foreground">Configure your AI mock interview session</p>
+          <p className="text-sm text-secondary">Configure your AI mock interview session</p>
         </div>
 
         {error && (
@@ -103,8 +103,8 @@ export const InterviewSetup: React.FC = () => {
                   className={cn(
                     'rounded-xl border p-3 text-left transition-all',
                     isActive
-                      ? 'border-primary/40 bg-primary/10 text-primary'
-                      : 'border-border bg-card text-muted-foreground hover:border-primary/20'
+                      ? 'border-ember/40 bg-ember/10 text-ember'
+                      : 'border-border bg-card text-secondary hover:border-ember/20'
                   )}
                 >
                   <Icon className="mb-1.5 h-4 w-4" />
@@ -144,12 +144,12 @@ export const InterviewSetup: React.FC = () => {
         {mode === 'resume' && (
           <div>
             <Label className="mb-2 block text-sm font-semibold text-foreground">Upload resume</Label>
-            <div className="rounded-xl border border-dashed border-border bg-surface/20 p-4">
+            <div className="rounded-xl border border-dashed border-border bg-secondary/20 p-4">
               <input
                 type="file"
                 accept=".pdf,.txt,.docx"
                 onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
-                className="text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-surface file:px-3 file:py-1.5 file:text-foreground"
+                className="text-sm text-secondary file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-foreground"
               />
               {resumeFile && !resumeId && (
                 <Button

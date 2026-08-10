@@ -57,7 +57,7 @@ export const Profile: React.FC = () => {
           <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
             Profile &amp; goals
           </h1>
-          <p className="mt-1 text-muted-foreground">Manage target roles, goals, and practice preferences</p>
+          <p className="mt-1 text-secondary">Manage target roles, goals, and practice preferences</p>
         </div>
 
         <Card className="flex items-center gap-4 p-6">
@@ -66,7 +66,7 @@ export const Profile: React.FC = () => {
           </Avatar>
           <div>
             <p className="font-display text-lg font-medium text-foreground">{user?.display_name}</p>
-            <p className="text-sm text-muted-foreground">{user?.email}</p>
+            <p className="text-sm text-secondary">{user?.email}</p>
           </div>
         </Card>
 

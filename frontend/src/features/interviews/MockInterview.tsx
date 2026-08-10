@@ -140,7 +140,7 @@ export const MockInterview: React.FC = () => {
               <Bot className="h-10 w-10 text-steel" />
             </div>
             <h2 className="font-display text-2xl font-medium text-foreground">Setup mock interview</h2>
-            <p className="mt-1 text-xs text-muted-foreground">Legacy quick-start flow</p>
+            <p className="mt-1 text-xs text-secondary">Legacy quick-start flow</p>
           </div>
 
           <div className="space-y-4">
@@ -184,8 +184,8 @@ export const MockInterview: React.FC = () => {
       <div className="flex flex-1 overflow-hidden">
         <div className="relative flex w-1/2 flex-col border-r border-border bg-background">
           <div className="absolute left-6 top-6 rounded-xl border border-border bg-card p-4">
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Confidence</p>
-            <div className="h-1 w-24 overflow-hidden rounded-full bg-surface">
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-secondary">Confidence</p>
+            <div className="h-1 w-24 overflow-hidden rounded-full bg-secondary">
               <div className="h-full w-3/4 rounded-full bg-steel" />
             </div>
           </div>
@@ -209,22 +209,22 @@ export const MockInterview: React.FC = () => {
 
           <div className="flex h-24 shrink-0 items-center justify-center gap-8 border-t border-border bg-card">
             <button className="flex flex-col items-center gap-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface transition-colors hover:bg-surface/70">
-                <VideoOff className="h-5 w-5 text-muted-foreground" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary transition-colors hover:bg-secondary/70">
+                <VideoOff className="h-5 w-5 text-secondary" />
               </div>
-              <span className="text-[10px] font-semibold text-muted-foreground">Stop video</span>
+              <span className="text-[10px] font-semibold text-secondary">Stop video</span>
             </button>
 
             <button onClick={toggleListening} className="flex flex-col items-center gap-2">
               <div
                 className={cn(
                   'flex h-14 w-14 items-center justify-center rounded-full border-2 transition-colors',
-                  isListening ? 'border-steel bg-steel/20' : 'border-transparent bg-surface hover:bg-surface/70'
+                  isListening ? 'border-steel bg-steel/20' : 'border-transparent bg-secondary hover:bg-secondary/70'
                 )}
               >
-                {isListening ? <Mic className="h-6 w-6 text-steel" /> : <MicOff className="h-6 w-6 text-muted-foreground" />}
+                {isListening ? <Mic className="h-6 w-6 text-steel" /> : <MicOff className="h-6 w-6 text-secondary" />}
               </div>
-              <span className="text-[10px] font-semibold text-muted-foreground">
+              <span className="text-[10px] font-semibold text-secondary">
                 {isListening ? 'Mute mic' : 'Unmute mic'}
               </span>
             </button>
@@ -233,7 +233,7 @@ export const MockInterview: React.FC = () => {
               <div className="flex h-12 w-12 items-center justify-center rounded-full border border-destructive/30 bg-destructive/10 transition-colors hover:bg-destructive/20">
                 <PhoneOff className="h-5 w-5 text-destructive" />
               </div>
-              <span className="text-[10px] font-semibold text-muted-foreground">End interview</span>
+              <span className="text-[10px] font-semibold text-secondary">End interview</span>
             </button>
           </div>
         </div>
@@ -241,7 +241,7 @@ export const MockInterview: React.FC = () => {
         <div className="relative flex w-1/2 flex-col bg-card">
           <div className="flex shrink-0 items-center justify-between border-b border-border p-6">
             <h2 className="font-display text-xl font-medium text-foreground">Live transcript</h2>
-            <div className="rounded-md bg-surface px-3 py-1 font-mono text-xs text-muted-foreground">
+            <div className="rounded-md bg-secondary px-3 py-1 font-mono text-xs text-secondary">
               {formatTime(timer)}
             </div>
           </div>
@@ -250,13 +250,13 @@ export const MockInterview: React.FC = () => {
             {interview.turns?.map((t: any, idx: number) => (
               <div key={idx} className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
                     <Bot className="h-5 w-5 text-steel" />
                   </div>
-                  <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-surface/40 p-5">
+                  <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-secondary/40 p-5">
                     <div className="mb-2 flex items-center gap-2">
                       <span className="text-xs font-bold text-steel">Interviewer AI</span>
-                      <span className="text-[10px] text-muted-foreground">
+                      <span className="text-[10px] text-secondary">
                         {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
@@ -266,12 +266,12 @@ export const MockInterview: React.FC = () => {
 
                 {t.answer && (
                   <div className="flex flex-row-reverse gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface">
-                      <User className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
+                      <User className="h-5 w-5 text-secondary" />
                     </div>
                     <div className="flex-1 rounded-2xl rounded-tr-sm border border-border bg-background p-5">
                       <div className="mb-2 flex items-center justify-end gap-2">
-                        <span className="text-[10px] text-muted-foreground">
+                        <span className="text-[10px] text-secondary">
                           {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                         <span className="text-xs font-bold text-foreground">You</span>
@@ -285,9 +285,9 @@ export const MockInterview: React.FC = () => {
 
             {interview.status !== 'completed' && (
               <div className="mt-6 flex flex-row-reverse gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary">
                   <div className="relative">
-                    <User className="h-5 w-5 text-muted-foreground" />
+                    <User className="h-5 w-5 text-secondary" />
                     {isListening && (
                       <div className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full bg-destructive" />
                     )}
@@ -295,12 +295,12 @@ export const MockInterview: React.FC = () => {
                 </div>
                 <div className="relative flex-1 rounded-2xl border border-dashed border-border bg-background/50 p-5">
                   <div className="mb-2 flex items-center justify-end gap-2">
-                    <span className="text-xs font-bold text-muted-foreground">Now • You</span>
+                    <span className="text-xs font-bold text-secondary">Now • You</span>
                   </div>
 
                   {isListening ? (
                     <p className="text-right text-sm leading-relaxed text-foreground/85">
-                      {userAnswer || <span className="animate-pulse text-muted-foreground">Listening...</span>}
+                      {userAnswer || <span className="animate-pulse text-secondary">Listening...</span>}
                     </p>
                   ) : (
                     <div className="flex flex-col gap-3">
@@ -338,7 +338,7 @@ export const MockInterview: React.FC = () => {
               <div className="mt-8 rounded-2xl border border-steel/25 bg-steel/10 p-6 text-center">
                 <CheckCircle2 className="mx-auto mb-3 h-8 w-8 text-steel" />
                 <h3 className="mb-2 font-display text-lg font-medium text-steel">Interview completed</h3>
-                <p className="mb-4 text-sm text-muted-foreground">
+                <p className="mb-4 text-sm text-secondary">
                   Great job! The AI has finished its evaluation. Check the feedback dashboard for a comprehensive
                   review.
                 </p>

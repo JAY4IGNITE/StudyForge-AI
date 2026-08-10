@@ -95,8 +95,8 @@ export const ResetPassword: React.FC = () => {
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-muted-foreground">
-        <Link to="/login" className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+      <p className="mt-6 text-center text-sm text-secondary">
+        <Link to="/login" className="inline-flex items-center gap-1 font-medium text-ember hover:underline">
           <ArrowLeft className="h-4 w-4" /> Back to login
         </Link>
       </p>

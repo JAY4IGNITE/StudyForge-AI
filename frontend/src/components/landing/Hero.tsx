@@ -29,13 +29,13 @@ export const Hero: React.FC = () => {
             {"Your personal".split(" ").map((word, i) => (
               <motion.span key={i} variants={motionConfig.fadeUp}>{word}</motion.span>
             ))}
-            <motion.span variants={motionConfig.fadeUp} className="text-primary">AI study coach.</motion.span>
+            <motion.span variants={motionConfig.fadeUp} className="text-ember">AI study coach.</motion.span>
           </h1>
 
           <motion.p 
             variants={motionConfig.fadeUp}
             transition={{ delay: 0.3, duration: 0.4 }}
-            className="mt-6 max-w-md text-balance text-lg text-muted-foreground"
+            className="mt-6 max-w-md text-balance text-lg text-secondary"
           >
             StudyForge turns your goals into personalized learning paths, practice
             sessions, mock interviews, and actionable AI feedback.
@@ -65,16 +65,16 @@ export const Hero: React.FC = () => {
 
             <div className="mt-4">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">React Hooks</span>
-                <span className="font-mono text-primary">78%</span>
+                <span className="text-secondary">React Hooks</span>
+                <span className="font-mono text-ember">78%</span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-surface">
-                <div className="h-full w-[78%] rounded-full bg-primary-gradient" />
+              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-secondary">
+                <div className="h-full w-[78%] rounded-full bg-ember-gradient" />
               </div>
             </div>
 
-            <div className="mt-5 rounded-md border border-primary/20 bg-primary/5 p-3">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-primary">
+            <div className="mt-5 rounded-md border border-ember/20 bg-ember/5 p-3">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-ember">
                 <Sparkles className="h-3 w-3" /> AI Recommendation
               </div>
               <p className="mt-1 text-sm text-foreground/90">
@@ -83,7 +83,7 @@ export const Hero: React.FC = () => {
             </div>
 
             <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs">
-              <span className="text-muted-foreground">Weekly progress</span>
+              <span className="text-secondary">Weekly progress</span>
               <span className="font-mono text-gold">+14%</span>
             </div>
           </div>
@@ -97,7 +97,7 @@ export const Hero: React.FC = () => {
         viewport={{ once: true }}
         className="container relative z-10 mt-24 border-t border-border pt-10"
       >
-        <p className="text-center text-sm font-medium text-muted-foreground">POWERING OVER 10,000+ INTERVIEW PREPS</p>
+        <p className="text-center text-sm font-medium text-secondary">POWERING OVER 10,000+ INTERVIEW PREPS</p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-12 opacity-50 grayscale transition-all hover:grayscale-0">
           <div className="font-display text-xl font-bold">Google</div>
           <div className="font-display text-xl font-bold">Meta</div>

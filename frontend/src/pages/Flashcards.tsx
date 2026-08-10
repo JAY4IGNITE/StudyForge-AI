@@ -43,12 +43,12 @@ export function Flashcards() {
             <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
               Cellular Biology Review
             </h1>
-            <p className="mt-1 text-muted-foreground">Mastering mitochondria and cellular respiration.</p>
+            <p className="mt-1 text-secondary">Mastering mitochondria and cellular respiration.</p>
 
             <Card className="mt-6 w-max px-5 py-4">
               <div className="flex items-center gap-4">
                 <TemperBar value={progressPct} showValue={false} className="w-48" />
-                <span className="whitespace-nowrap font-mono text-sm font-medium text-muted-foreground">
+                <span className="whitespace-nowrap font-mono text-sm font-medium text-secondary">
                   {mockCards.length - currentIndex - 1} cards remaining
                 </span>
               </div>
@@ -58,7 +58,7 @@ export function Flashcards() {
           <Card>
             <CardContent className="p-6">
               <CardTitle className="mb-4 flex items-center gap-2 text-lg">
-                <Sparkles className="h-4 w-4 text-primary" />
+                <Sparkles className="h-4 w-4 text-ember" />
                 Quick generate
               </CardTitle>
               <div className="space-y-3">
@@ -87,11 +87,11 @@ export function Flashcards() {
                 className="bg-forge-glow absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-border bg-card p-8 text-center md:p-12"
                 style={{ backfaceVisibility: 'hidden' }}
               >
-                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-secondary">
                   Question
                 </div>
                 <button
-                  className="absolute right-6 top-6 text-muted-foreground transition-colors hover:text-primary"
+                  className="absolute right-6 top-6 text-secondary transition-colors hover:text-ember"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <Volume2 className="h-5 w-5" />
@@ -99,7 +99,7 @@ export function Flashcards() {
                 <h2 className="max-w-xl font-display text-2xl font-medium leading-snug text-foreground text-balance md:text-3xl">
                   {currentCard.q}
                 </h2>
-                <div className="absolute bottom-6 flex items-center gap-2 text-muted-foreground opacity-70">
+                <div className="absolute bottom-6 flex items-center gap-2 text-secondary opacity-70">
                   <PointerIcon className="h-3.5 w-3.5" />
                   <span className="text-xs">Click to flip</span>
                 </div>
@@ -107,13 +107,13 @@ export function Flashcards() {
 
               {/* Back — answer */}
               <div
-                className="absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-primary/25 bg-card p-8 text-center md:p-12"
+                className="absolute inset-0 flex h-full w-full flex-col items-center justify-center rounded-2xl border border-ember/25 bg-card p-8 text-center md:p-12"
                 style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
               >
-                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-primary">
+                <div className="absolute left-6 top-6 font-mono text-xs uppercase tracking-wider text-ember">
                   Answer
                 </div>
-                <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">{currentCard.a}</p>
+                <p className="max-w-lg text-lg leading-relaxed text-secondary">{currentCard.a}</p>
               </div>
             </div>
           </div>
@@ -127,10 +127,10 @@ export function Flashcards() {
               <History className="h-4 w-4" />
               Review later
             </Button>
-            <div className="hidden items-center gap-2 font-mono text-xs text-muted-foreground md:flex">
-              <kbd className="rounded border border-border bg-surface px-2 py-1">←</kbd>
+            <div className="hidden items-center gap-2 font-mono text-xs text-secondary md:flex">
+              <kbd className="rounded border border-border bg-secondary px-2 py-1">←</kbd>
               <span>/</span>
-              <kbd className="rounded border border-border bg-surface px-2 py-1">→</kbd>
+              <kbd className="rounded border border-border bg-secondary px-2 py-1">→</kbd>
             </div>
             <Button onClick={handleNext} className="gap-2">
               Got it

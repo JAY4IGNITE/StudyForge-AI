@@ -49,14 +49,14 @@ function initials(name?: string) {
 
 const Logo: React.FC = () => (
   <Link to="/dashboard" className="group flex items-center gap-3">
-    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-primary-gradient shadow-[0_0_0_1px_hsl(var(--primary)/0.4),0_8px_20px_-6px_hsl(var(--primary)/0.6)] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-6">
+    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--primary)/0.4),0_8px_20px_-6px_hsl(var(--primary)/0.6)] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-6">
       <Flame className="h-5 w-5 text-white" strokeWidth={2.25} />
     </div>
     <div className="leading-tight">
       <div className="font-display text-lg font-medium tracking-tight text-foreground">
-        StudyForge<span className="text-primary">.</span>
+        StudyForge<span className="text-ember">.</span>
       </div>
-      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-secondary">
         Interview Foundry
       </div>
     </div>
@@ -73,23 +73,23 @@ const NavList: React.FC<{ pathname: string; onNavigate?: () => void }> = ({ path
           key={item.path}
           to={item.path}
           onClick={onNavigate}
-          className="relative flex items-center gap-3 rounded-md px-3.5 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          className="relative flex items-center gap-3 rounded-md px-3.5 py-2.5 text-sm font-medium text-secondary transition-colors hover:text-foreground"
         >
           {isActive && (
             <motion.span
               layoutId="nav-active-indicator"
               transition={springTransitions.layoutIndicator}
-              className="absolute inset-0 rounded-md bg-primary/10"
+              className="absolute inset-0 rounded-md bg-ember/10"
             />
           )}
           {isActive && (
             <motion.span
               layoutId="nav-active-bar"
               transition={springTransitions.layoutIndicator}
-              className="absolute left-0 top-1/2 h-6 w-[4px] -translate-y-1/2 rounded-r-full bg-primary shadow-glow-primary"
+              className="absolute left-0 top-1/2 h-6 w-[4px] -translate-y-1/2 rounded-r-full bg-ember shadow-glow-primary"
             />
           )}
-          <Icon className={`relative z-10 h-4 w-4 shrink-0 transition-colors ${isActive ? 'text-primary' : ''}`} />
+          <Icon className={`relative z-10 h-4 w-4 shrink-0 transition-colors ${isActive ? 'text-ember' : ''}`} />
           <span className={`relative z-10 transition-colors ${isActive ? 'text-foreground font-semibold' : ''}`}>{item.label}</span>
         </Link>
       );
@@ -123,13 +123,13 @@ const SidebarFooter: React.FC<{ onFeedback: () => void }> = ({ onFeedback }) => 
       {user && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex w-full items-center gap-3 rounded-md px-1.5 py-1.5 text-left transition-colors hover:bg-surface">
+            <button className="flex w-full items-center gap-3 rounded-md px-1.5 py-1.5 text-left transition-colors hover:bg-secondary">
               <Avatar className="h-9 w-9">
                 <AvatarFallback>{initials(user.display_name)}</AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-foreground">{user.display_name}</p>
-                <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                <p className="truncate text-xs text-secondary">{user.email}</p>
               </div>
             </button>
           </DropdownMenuTrigger>

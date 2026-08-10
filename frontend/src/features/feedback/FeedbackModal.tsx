@@ -54,22 +54,22 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
               <CheckCircle2 className="h-8 w-8" />
             </div>
             <h3 className="font-display text-xl font-medium text-foreground">Thank you!</h3>
-            <p className="text-sm text-muted-foreground">Your feedback helps us make StudyForge AI even better.</p>
+            <p className="text-sm text-secondary">Your feedback helps us make StudyForge AI even better.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="rounded-xl bg-primary/15 p-2.5 text-primary">
+              <div className="rounded-xl bg-ember/15 p-2.5 text-ember">
                 <MessageSquare className="h-5 w-5" />
               </div>
               <div>
                 <h3 className="font-display text-lg font-medium text-foreground">Share feedback</h3>
-                <p className="text-xs text-muted-foreground">Tell us how we can improve your learning experience</p>
+                <p className="text-xs text-secondary">Tell us how we can improve your learning experience</p>
               </div>
             </div>
 
             <div>
-              <Label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <Label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-secondary">
                 Category
               </Label>
               <Select value={category} onValueChange={setCategory}>
@@ -86,7 +86,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
             </div>
 
             <div>
-              <Label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <Label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-secondary">
                 Rating
               </Label>
               <div className="flex items-center gap-2">
@@ -97,7 +97,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
                     onClick={() => setRating(star)}
                     className={cn(
                       'rounded-lg p-2 transition-all',
-                      star <= rating ? 'bg-gold/10 text-gold' : 'text-muted-foreground hover:text-foreground'
+                      star <= rating ? 'bg-gold/10 text-gold' : 'text-secondary hover:text-foreground'
                     )}
                   >
                     <Star className="h-6 w-6 fill-current" />
@@ -107,7 +107,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({ isOpen, onClose })
             </div>
 
             <div>
-              <Label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <Label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-secondary">
                 Comments
               </Label>
               <Textarea

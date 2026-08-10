@@ -83,14 +83,14 @@ export function TemperGauge({
           <>
             <span className="font-mono text-2xl font-semibold tabular-nums leading-none">
               {Math.round(clamped)}
-              <span className="text-sm text-muted-foreground">%</span>
+              <span className="text-sm text-secondary">%</span>
             </span>
-            {label && <span className="mt-1 text-[11px] font-medium text-muted-foreground">{label}</span>}
+            {label && <span className="mt-1 text-[11px] font-medium text-secondary">{label}</span>}
           </>
         )}
       </div>
       {sublabel && (
-        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-muted-foreground">
+        <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-secondary">
           {sublabel}
         </span>
       )}
@@ -114,14 +114,14 @@ export function TemperBar({
   const clamped = Math.max(0, Math.min(100, value));
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface">
+      <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
         <div
-          className="h-full rounded-full bg-primary-gradient transition-[width] duration-700 ease-out"
+          className="h-full rounded-full bg-ember-gradient transition-[width] duration-700 ease-out"
           style={{ width: `${clamped}%` }}
         />
       </div>
       {showValue && (
-        <span className="w-9 shrink-0 text-right font-mono text-xs tabular-nums text-muted-foreground">
+        <span className="w-9 shrink-0 text-right font-mono text-xs tabular-nums text-secondary">
           {Math.round(clamped)}%
         </span>
       )}

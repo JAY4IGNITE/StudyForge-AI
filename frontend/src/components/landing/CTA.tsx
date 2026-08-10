@@ -11,7 +11,7 @@ export const CTA: React.FC = () => {
         <h2 className="text-balance font-display text-3xl font-semibold tracking-tight md:text-4xl">
           Start forging your next role.
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-muted-foreground">
+        <p className="mx-auto mt-4 max-w-md text-secondary">
           Free to start. Build a personalized path in under two minutes.
         </p>
         <Button asChild size="lg" className="mt-8">

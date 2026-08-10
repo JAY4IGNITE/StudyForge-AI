@@ -260,8 +260,8 @@ export const CodingInterviewRoom: React.FC = () => {
 
   if (!session) {
     return (
-      <div className="flex h-screen items-center justify-center bg-background text-muted-foreground">
-        <Sparkles className="mr-2 h-5 w-5 animate-pulse text-primary" /> Loading coding interview...
+      <div className="flex h-screen items-center justify-center bg-background text-secondary">
+        <Sparkles className="mr-2 h-5 w-5 animate-pulse text-ember" /> Loading coding interview...
       </div>
     );
   }
@@ -291,13 +291,13 @@ export const CodingInterviewRoom: React.FC = () => {
           <Badge variant="gold" className="rounded-full font-mono">
             Easy • 125 pt
           </Badge>
-          <span className="border-l border-border pl-3 text-xs text-muted-foreground">
-            Role: <span className="font-semibold text-primary">{session.target_role}</span>
+          <span className="border-l border-border pl-3 text-xs text-secondary">
+            Role: <span className="font-semibold text-ember">{session.target_role}</span>
           </span>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 font-mono text-xs text-secondary">
             <Clock className="h-3.5 w-3.5" />
             {formatTime(timer)}
           </div>
@@ -323,8 +323,8 @@ export const CodingInterviewRoom: React.FC = () => {
                 className={cn(
                   'flex items-center gap-1.5 rounded-t-xl border-b-2 px-3 py-2 text-xs font-semibold transition-colors',
                   leftTab === tab.id
-                    ? 'border-primary bg-surface/40 text-primary'
-                    : 'border-transparent text-muted-foreground hover:text-foreground'
+                    ? 'border-ember bg-secondary/40 text-ember'
+                    : 'border-transparent text-secondary hover:text-foreground'
                 )}
               >
                 <tab.icon className="h-3.5 w-3.5" />
@@ -338,59 +338,59 @@ export const CodingInterviewRoom: React.FC = () => {
               <div className="space-y-6">
                 <div>
                   <h2 className="mb-2 font-display text-lg font-medium text-foreground">Valid Palindrome</h2>
-                  <p className="text-xs leading-relaxed text-muted-foreground">
+                  <p className="text-xs leading-relaxed text-secondary">
                     A phrase is a <strong className="text-foreground">palindrome</strong> if, after converting all
                     uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads
                     the same forward and backward. Alphanumeric characters include letters and numbers.
                   </p>
-                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                    Given a string <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-gold">s</code>,
-                    return <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-gold">true</code> if it
-                    is a palindrome, or <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-gold">false</code>{' '}
+                  <p className="mt-2 text-xs leading-relaxed text-secondary">
+                    Given a string <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">s</code>,
+                    return <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">true</code> if it
+                    is a palindrome, or <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-gold">false</code>{' '}
                     otherwise.
                   </p>
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-secondary">
                     Example test cases
                   </h3>
 
                   <div className="space-y-1.5 rounded-xl border border-border bg-background p-3.5 font-mono text-xs">
-                    <div className="text-muted-foreground">
-                      <span className="font-bold text-primary">Input:</span> s = "A man, a plan, a canal: Panama"
+                    <div className="text-secondary">
+                      <span className="font-bold text-ember">Input:</span> s = "A man, a plan, a canal: Panama"
                     </div>
-                    <div className="text-muted-foreground">
+                    <div className="text-secondary">
                       <span className="font-bold text-gold">Output:</span> true
                     </div>
-                    <div className="pt-1 font-sans text-[11px] text-muted-foreground/80">
-                      <span className="font-bold text-muted-foreground">Explanation:</span> "amanaplanacanalpanama"
+                    <div className="pt-1 font-sans text-[11px] text-secondary/80">
+                      <span className="font-bold text-secondary">Explanation:</span> "amanaplanacanalpanama"
                       is a palindrome.
                     </div>
                   </div>
 
                   <div className="space-y-1.5 rounded-xl border border-border bg-background p-3.5 font-mono text-xs">
-                    <div className="text-muted-foreground">
-                      <span className="font-bold text-primary">Input:</span> s = "race a car"
+                    <div className="text-secondary">
+                      <span className="font-bold text-ember">Input:</span> s = "race a car"
                     </div>
-                    <div className="text-muted-foreground">
+                    <div className="text-secondary">
                       <span className="font-bold text-destructive">Output:</span> false
                     </div>
-                    <div className="pt-1 font-sans text-[11px] text-muted-foreground/80">
-                      <span className="font-bold text-muted-foreground">Explanation:</span> "raceacar" is not a
+                    <div className="pt-1 font-sans text-[11px] text-secondary/80">
+                      <span className="font-bold text-secondary">Explanation:</span> "raceacar" is not a
                       palindrome.
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-secondary">
                     Constraints &amp; complexity targets
                   </h3>
-                  <ul className="list-inside list-disc space-y-1 rounded-xl border border-border bg-background p-3 font-mono text-xs text-muted-foreground">
+                  <ul className="list-inside list-disc space-y-1 rounded-xl border border-border bg-background p-3 font-mono text-xs text-secondary">
                     <li>1 &le; s.length &le; 2 &times; 10<sup>5</sup></li>
                     <li>s consists only of printable ASCII characters.</li>
-                    <li><span className="text-primary">Target time complexity:</span> O(N)</li>
+                    <li><span className="text-ember">Target time complexity:</span> O(N)</li>
                     <li><span className="text-steel">Target space complexity:</span> O(1) auxiliary space</li>
                   </ul>
                 </div>
@@ -399,11 +399,11 @@ export const CodingInterviewRoom: React.FC = () => {
 
             {leftTab === 'rubric' && (
               <div className="space-y-4">
-                <div className="rounded-2xl border border-primary/25 bg-primary/10 p-4">
-                  <h3 className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
+                <div className="rounded-2xl border border-ember/25 bg-ember/10 p-4">
+                  <h3 className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ember">
                     <ShieldCheck className="h-4 w-4" /> Evaluation rubric standard
                   </h3>
-                  <p className="text-xs leading-relaxed text-muted-foreground">
+                  <p className="text-xs leading-relaxed text-secondary">
                     Your code and explanation will be scored across 5 dimensions upon submission.
                   </p>
                 </div>
@@ -418,9 +418,9 @@ export const CodingInterviewRoom: React.FC = () => {
                   <div key={i} className="flex items-start justify-between rounded-xl border border-border bg-background p-3.5">
                     <div>
                       <h4 className="mb-0.5 text-xs font-bold text-foreground">{r.name}</h4>
-                      <p className="text-[11px] text-muted-foreground">{r.desc}</p>
+                      <p className="text-[11px] text-secondary">{r.desc}</p>
                     </div>
-                    <Badge variant="default" className="shrink-0 rounded font-mono">
+                    <Badge variant="ember" className="shrink-0 rounded font-mono">
                       {r.weight}
                     </Badge>
                   </div>
@@ -434,15 +434,15 @@ export const CodingInterviewRoom: React.FC = () => {
                   <span className="block text-[10px] font-bold uppercase tracking-wider text-gold">
                     Hint 1: Pre-processing
                   </span>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-secondary">
                     Convert the entire string to lowercase and filter out all non-alphanumeric characters first.
                   </p>
                 </div>
                 <div className="space-y-2 rounded-xl border border-border bg-background p-4">
-                  <span className="block text-[10px] font-bold uppercase tracking-wider text-primary">
+                  <span className="block text-[10px] font-bold uppercase tracking-wider text-ember">
                     Hint 2: Two pointers
                   </span>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-secondary">
                     You can test palindrome validity in O(1) space by placing two pointers at start and end,
                     advancing toward center.
                   </p>
@@ -457,14 +457,14 @@ export const CodingInterviewRoom: React.FC = () => {
                     <div key={idx} className="space-y-2">
                       {t.user_answer && (
                         <div className="rounded-xl border border-border bg-background p-3">
-                          <span className="mb-1 block text-[10px] font-bold text-primary">Your explanation</span>
-                          <p className="text-xs text-muted-foreground">{t.user_answer}</p>
+                          <span className="mb-1 block text-[10px] font-bold text-ember">Your explanation</span>
+                          <p className="text-xs text-secondary">{t.user_answer}</p>
                         </div>
                       )}
                       {t.feedback && (
                         <div className="rounded-xl border border-gold/30 bg-gold/10 p-3">
                           <span className="mb-1 block text-[10px] font-bold text-gold">AI evaluator</span>
-                          <p className="text-xs text-muted-foreground">{t.feedback}</p>
+                          <p className="text-xs text-secondary">{t.feedback}</p>
                         </div>
                       )}
                     </div>
@@ -517,7 +517,7 @@ export const CodingInterviewRoom: React.FC = () => {
                   ))}
                 </SelectContent>
               </Select>
-              <span className="font-mono text-[10px] text-muted-foreground">VS Code Dark Theme</span>
+              <span className="font-mono text-[10px] text-secondary">VS Code Dark Theme</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -571,8 +571,8 @@ export const CodingInterviewRoom: React.FC = () => {
                     className={cn(
                       'flex items-center gap-1.5 rounded-t-lg border-b-2 px-3 py-1.5 text-xs font-semibold transition-colors',
                       bottomTab === tab.id
-                        ? 'border-primary bg-surface/40 text-primary'
-                        : 'border-transparent text-muted-foreground hover:text-foreground'
+                        ? 'border-ember bg-secondary/40 text-ember'
+                        : 'border-transparent text-secondary hover:text-foreground'
                     )}
                   >
                     <tab.icon className="h-3.5 w-3.5" />
@@ -583,7 +583,7 @@ export const CodingInterviewRoom: React.FC = () => {
 
               {aiReview && (
                 <div className="flex items-center gap-3 font-mono text-[10px]">
-                  <span className="font-bold text-primary">Time: {aiReview.time_complexity}</span>
+                  <span className="font-bold text-ember">Time: {aiReview.time_complexity}</span>
                   <span className="font-bold text-steel">Space: {aiReview.space_complexity}</span>
                   <span className="font-bold text-gold">Rubric score: {aiReview.rubric_score}/100</span>
                 </div>
@@ -608,20 +608,20 @@ export const CodingInterviewRoom: React.FC = () => {
                             )}
                             <div>
                               <span className="block font-bold text-foreground">{tc.name}</span>
-                              <span className="text-[11px] text-muted-foreground">Input: {tc.input}</span>
+                              <span className="text-[11px] text-secondary">Input: {tc.input}</span>
                             </div>
                           </div>
                           <div className="text-right">
                             <span className={cn('block text-xs font-bold', tc.status === 'PASSED' ? 'text-gold' : 'text-destructive')}>
                               {tc.status}
                             </span>
-                            <span className="text-[10px] text-muted-foreground">{tc.duration_ms}ms</span>
+                            <span className="text-[10px] text-secondary">{tc.duration_ms}ms</span>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex h-full flex-col items-center justify-center space-y-1 text-xs text-muted-foreground">
+                    <div className="flex h-full flex-col items-center justify-center space-y-1 text-xs text-secondary">
                       <Terminal className="mb-1 h-5 w-5 opacity-40" />
                       <p>Run code to evaluate public test cases</p>
                     </div>
@@ -650,13 +650,13 @@ export const CodingInterviewRoom: React.FC = () => {
                 <div className="space-y-3">
                   {aiReview ? (
                     <div className="space-y-2 rounded-xl border border-border bg-background p-3.5 text-xs">
-                      <div className="flex items-center gap-2 font-bold text-primary">
+                      <div className="flex items-center gap-2 font-bold text-ember">
                         <Sparkles className="h-4 w-4" /> AI complexity &amp; optimization feedback
                       </div>
-                      <p className="whitespace-pre-wrap leading-relaxed text-muted-foreground">{aiReview.feedback}</p>
+                      <p className="whitespace-pre-wrap leading-relaxed text-secondary">{aiReview.feedback}</p>
                     </div>
                   ) : (
-                    <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
+                    <div className="flex h-full items-center justify-center text-xs text-secondary">
                       Run solution to generate AI time &amp; space complexity feedback.
                     </div>
                   )}

@@ -368,8 +368,8 @@ export const LiveInterviewRoom: React.FC = () => {
   if (!session) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div className="flex items-center gap-3 text-muted-foreground">
-          <Sparkles className="h-5 w-5 animate-pulse text-primary" />
+        <div className="flex items-center gap-3 text-secondary">
+          <Sparkles className="h-5 w-5 animate-pulse text-ember" />
           Loading interview session...
         </div>
       </div>
@@ -425,7 +425,7 @@ export const LiveInterviewRoom: React.FC = () => {
                connectionState === 'connecting' ? 'Connecting...' : 'Disconnected'}
             </span>
           </div>
-          <span className="rounded bg-surface px-2 py-0.5 font-mono text-xs text-muted-foreground ml-2">
+          <span className="rounded bg-secondary px-2 py-0.5 font-mono text-xs text-secondary ml-2">
             {formatTime(timer)}
           </span>
         </div>
@@ -438,12 +438,12 @@ export const LiveInterviewRoom: React.FC = () => {
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
-              <AlertTriangle className="h-3.5 w-3.5 text-primary" />
-              <span className="text-[10px] font-bold text-primary">Degraded mode (no fake metrics)</span>
+              <AlertTriangle className="h-3.5 w-3.5 text-ember" />
+              <span className="text-[10px] font-bold text-ember">Degraded mode (no fake metrics)</span>
             </div>
           )}
-          <span className="border-l border-border pl-3 text-xs text-muted-foreground">
-            <span className="font-medium uppercase text-primary">{session.mode}</span> • {session.target_role}
+          <span className="border-l border-border pl-3 text-xs text-secondary">
+            <span className="font-medium uppercase text-ember">{session.mode}</span> • {session.target_role}
           </span>
           <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="h-8 w-8">
             <Maximize className="h-4 w-4" />
@@ -457,7 +457,7 @@ export const LiveInterviewRoom: React.FC = () => {
           {visionMetrics.status === 'active' ? (
             <div className="absolute left-4 top-4 z-20 max-w-[260px] space-y-2">
               {[
-                { label: 'Posture score', value: visionMetrics.posture_score, icon: Activity, color: 'text-primary' },
+                { label: 'Posture score', value: visionMetrics.posture_score, icon: Activity, color: 'text-ember' },
                 { label: 'Eye contact', value: visionMetrics.eye_contact_percentage, icon: Eye, color: 'text-steel' },
                 { label: 'Alignment', value: visionMetrics.shoulder_alignment_score, icon: ShieldCheck, color: 'text-gold' },
                 { label: 'Attention focus', value: visionMetrics.attention_score, icon: Brain, color: 'text-steel' },
@@ -467,12 +467,12 @@ export const LiveInterviewRoom: React.FC = () => {
                   className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-background/80 px-3 py-1.5 shadow-lg backdrop-blur-md"
                 >
                   <m.icon className={cn('h-3.5 w-3.5', m.color)} />
-                  <span className="w-24 truncate text-[10px] font-medium text-muted-foreground">{m.label}</span>
-                  <div className="h-1.5 w-16 shrink-0 overflow-hidden rounded-full bg-surface">
+                  <span className="w-24 truncate text-[10px] font-medium text-secondary">{m.label}</span>
+                  <div className="h-1.5 w-16 shrink-0 overflow-hidden rounded-full bg-secondary">
                     <div
                       className={cn(
                         'h-full rounded-full transition-all duration-300',
-                        m.value && m.value > 80 ? 'bg-gold' : m.value && m.value > 60 ? 'bg-primary' : 'bg-destructive'
+                        m.value && m.value > 80 ? 'bg-gold' : m.value && m.value > 60 ? 'bg-ember' : 'bg-destructive'
                       )}
                       style={{ width: `${m.value || 0}%` }}
                     />
@@ -484,19 +484,19 @@ export const LiveInterviewRoom: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-3 py-2 text-xs font-semibold text-primary backdrop-blur-md">
+            <div className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-ember/30 bg-ember/10 px-3 py-2 text-xs font-semibold text-ember backdrop-blur-md">
               <AlertTriangle className="h-4 w-4" />
               Camera sensor off — zero fabricated data policy active
             </div>
           )}
 
           {isMicOn && (
-            <div className="absolute right-4 top-4 z-20 flex items-center gap-1 rounded-xl border border-primary/30 bg-primary/10 p-2.5 shadow-xl backdrop-blur-md">
-              <Volume2 className="mr-1 h-4 w-4 animate-pulse text-primary" />
+            <div className="absolute right-4 top-4 z-20 flex items-center gap-1 rounded-xl border border-ember/30 bg-ember/10 p-2.5 shadow-xl backdrop-blur-md">
+              <Volume2 className="mr-1 h-4 w-4 animate-pulse text-ember" />
               {audioLevels.map((lvl, i) => (
                 <div
                   key={i}
-                  className="w-1 rounded-full bg-primary transition-all duration-75"
+                  className="w-1 rounded-full bg-ember transition-all duration-75"
                   style={{ height: `${Math.max(4, (lvl / 100) * 24)}px` }}
                 />
               ))}
@@ -510,27 +510,27 @@ export const LiveInterviewRoom: React.FC = () => {
                 <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-10 h-full w-full scale-x-[-1]" />
               </>
             ) : (
-              <div className="z-10 flex flex-col items-center justify-center space-y-3 p-6 text-center text-muted-foreground">
-                <div className="rounded-full border border-border bg-surface p-4">
-                  <VideoOff className="h-8 w-8 text-muted-foreground" />
+              <div className="z-10 flex flex-col items-center justify-center space-y-3 p-6 text-center text-secondary">
+                <div className="rounded-full border border-border bg-secondary p-4">
+                  <VideoOff className="h-8 w-8 text-secondary" />
                 </div>
                 <p className="text-xs font-semibold text-foreground">Camera disabled for this turn</p>
-                <p className="max-w-xs text-[10px] leading-relaxed text-muted-foreground">
+                <p className="max-w-xs text-[10px] leading-relaxed text-secondary">
                   Evaluation fallback policy active. Scoring will rely strictly on spoken transcript &amp; response
                   structure.
                 </p>
               </div>
             )}
 
-            <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 rounded-2xl border border-primary/30 bg-card/90 p-3 shadow-2xl backdrop-blur-xl">
+            <div className="absolute bottom-6 left-6 z-20 flex items-center gap-3 rounded-2xl border border-ember/30 bg-card/90 p-3 shadow-2xl backdrop-blur-xl">
               <div className="relative">
                 <div
                   className={cn(
-                    'flex h-10 w-10 items-center justify-center rounded-full bg-primary-gradient',
-                    isMicOn && 'animate-pulse ring-2 ring-primary'
+                    'flex h-10 w-10 items-center justify-center rounded-full bg-ember-gradient',
+                    isMicOn && 'animate-pulse ring-2 ring-ember'
                   )}
                 >
-                  <Bot className="h-5 w-5 text-primary-foreground" />
+                  <Bot className="h-5 w-5 text-ember-foreground" />
                 </div>
                 {isMicOn && (
                   <div className="absolute -right-1 -top-1 h-3 w-3 animate-ping rounded-full border-2 border-card bg-gold" />
@@ -541,7 +541,7 @@ export const LiveInterviewRoom: React.FC = () => {
                   AI Mock Examiner
                   <span className="h-2 w-2 animate-pulse rounded-full bg-gold" />
                 </h4>
-                <p className="text-[10px] font-medium text-primary">
+                <p className="text-[10px] font-medium text-ember">
                   {isMicOn
                     ? 'Listening to candidate response...'
                     : session.status === 'completed'
@@ -559,13 +559,13 @@ export const LiveInterviewRoom: React.FC = () => {
                 className={cn(
                   'flex h-12 w-12 items-center justify-center rounded-2xl transition-all',
                   isCameraOn
-                    ? 'bg-surface text-foreground hover:bg-surface/70'
+                    ? 'bg-secondary text-foreground hover:bg-secondary/70'
                     : 'border border-destructive/40 bg-destructive/15 text-destructive'
                 )}
               >
                 {isCameraOn ? <Video className="h-5 w-5" /> : <VideoOff className="h-5 w-5" />}
               </div>
-              <span className="text-[9px] font-medium text-muted-foreground">
+              <span className="text-[9px] font-medium text-secondary">
                 {isCameraOn ? 'Camera on' : 'Camera off'}
               </span>
             </button>
@@ -575,13 +575,13 @@ export const LiveInterviewRoom: React.FC = () => {
                 className={cn(
                   'flex h-14 w-14 items-center justify-center rounded-2xl border transition-all',
                   isMicOn
-                    ? 'border-primary bg-primary/20 text-primary shadow-lg shadow-ember/10'
-                    : 'border-transparent bg-surface text-foreground hover:bg-surface/70'
+                    ? 'border-ember bg-ember/20 text-ember shadow-lg shadow-ember/10'
+                    : 'border-transparent bg-secondary text-foreground hover:bg-secondary/70'
                 )}
               >
                 {isMicOn ? <Mic className="h-6 w-6 animate-pulse" /> : <MicOff className="h-6 w-6" />}
               </div>
-              <span className="text-[9px] font-semibold text-muted-foreground">
+              <span className="text-[9px] font-semibold text-secondary">
                 {isMicOn ? 'Stop mic' : 'Start mic'}
               </span>
             </button>
@@ -590,7 +590,7 @@ export const LiveInterviewRoom: React.FC = () => {
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-destructive/30 bg-destructive/10 text-destructive transition-colors hover:bg-destructive/20">
                 <PhoneOff className="h-5 w-5" />
               </div>
-              <span className="text-[9px] font-medium text-muted-foreground">End test</span>
+              <span className="text-[9px] font-medium text-secondary">End test</span>
             </button>
           </div>
         </div>
@@ -606,8 +606,8 @@ export const LiveInterviewRoom: React.FC = () => {
                   className={cn(
                     'flex items-center gap-2 rounded-t-xl border-b-2 px-3 py-2.5 text-xs font-semibold transition-colors',
                     activeTab === tab.id
-                      ? 'border-primary bg-surface/40 text-primary'
-                      : 'border-transparent text-muted-foreground hover:text-foreground'
+                      ? 'border-ember bg-secondary/40 text-ember'
+                      : 'border-transparent text-secondary hover:text-foreground'
                   )}
                 >
                   <tab.icon className="h-3.5 w-3.5" />
@@ -616,7 +616,7 @@ export const LiveInterviewRoom: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex items-center gap-2 pb-2 font-mono text-xs text-muted-foreground">
+            <div className="flex items-center gap-2 pb-2 font-mono text-xs text-secondary">
               <Clock className="h-3.5 w-3.5" />
               {formatTime(timer)}
             </div>
@@ -628,11 +628,11 @@ export const LiveInterviewRoom: React.FC = () => {
                 {session.turns?.map((t: any, idx: number) => (
                   <div key={idx} className="space-y-4">
                     <div className="flex gap-3">
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/15">
-                        <Bot className="h-4 w-4 text-primary" />
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ember/30 bg-ember/15">
+                        <Bot className="h-4 w-4 text-ember" />
                       </div>
-                      <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-surface/30 p-4">
-                        <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-primary">
+                      <div className="flex-1 rounded-2xl rounded-tl-sm border border-border bg-secondary/30 p-4">
+                        <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-ember">
                           AI Examiner
                         </span>
                         <p className="text-sm leading-relaxed text-foreground">{t.question}</p>
@@ -645,7 +645,7 @@ export const LiveInterviewRoom: React.FC = () => {
                           <User className="h-4 w-4 text-steel" />
                         </div>
                         <div className="flex-1 rounded-2xl rounded-tr-sm border border-border bg-background p-4">
-                          <span className="mb-1 block text-right text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          <span className="mb-1 block text-right text-[10px] font-bold uppercase tracking-wider text-secondary">
                             Candidate
                           </span>
                           <p className="text-right text-sm leading-relaxed text-foreground/85">{t.user_answer}</p>
@@ -666,16 +666,16 @@ export const LiveInterviewRoom: React.FC = () => {
 
                 {isStreaming && (
                   <div className="flex gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/15">
-                      <Bot className="h-4 w-4 animate-pulse text-primary" />
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ember/30 bg-ember/15">
+                      <Bot className="h-4 w-4 animate-pulse text-ember" />
                     </div>
-                    <div className="flex-1 rounded-2xl rounded-tl-sm border border-primary bg-surface/30 p-4 shadow-[0_0_15px_rgba(255,117,66,0.1)]">
-                      <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-primary">
+                    <div className="flex-1 rounded-2xl rounded-tl-sm border border-ember bg-secondary/30 p-4 shadow-[0_0_15px_rgba(255,117,66,0.1)]">
+                      <span className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-ember">
                         AI Examiner
                       </span>
                       <p className="text-sm leading-relaxed text-foreground">
                         {streamingText}
-                        <span className="ml-1 inline-block h-3 w-1.5 animate-pulse bg-primary"></span>
+                        <span className="ml-1 inline-block h-3 w-1.5 animate-pulse bg-ember"></span>
                       </p>
                     </div>
                   </div>
@@ -693,7 +693,7 @@ export const LiveInterviewRoom: React.FC = () => {
                       {isMicOn ? (
                         <p className="min-h-[48px] text-right text-sm text-foreground/85">
                           {userAnswer || (
-                            <span className="animate-pulse text-muted-foreground">
+                            <span className="animate-pulse text-secondary">
                               Listening... speak your response...
                             </span>
                           )}
@@ -732,32 +732,32 @@ export const LiveInterviewRoom: React.FC = () => {
                 <div className="space-y-4 rounded-2xl border border-border bg-background p-4">
                   <h3 className="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-foreground">
                     <span className="flex items-center gap-2">
-                      <Activity className="h-4 w-4 text-primary" /> Non-verbal telemetry
+                      <Activity className="h-4 w-4 text-ember" /> Non-verbal telemetry
                     </span>
                     <span className="font-mono text-[10px] text-gold">Source: {visionMetrics.detection_source}</span>
                   </h3>
 
                   {visionMetrics.status === 'active' ? (
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="rounded-xl border border-border bg-surface/20 p-3">
-                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Posture score</span>
-                        <span className="text-xl font-bold text-primary">{visionMetrics.posture_score}%</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-secondary">Posture score</span>
+                        <span className="text-xl font-bold text-ember">{visionMetrics.posture_score}%</span>
                       </div>
-                      <div className="rounded-xl border border-border bg-surface/20 p-3">
-                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Eye contact</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-secondary">Eye contact</span>
                         <span className="text-xl font-bold text-steel">{visionMetrics.eye_contact_percentage}%</span>
                       </div>
-                      <div className="rounded-xl border border-border bg-surface/20 p-3">
-                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Head pose stability</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-secondary">Head pose stability</span>
                         <span className="text-xl font-bold text-gold">{visionMetrics.head_pose_stability}%</span>
                       </div>
-                      <div className="rounded-xl border border-border bg-surface/20 p-3">
-                        <span className="mb-1 block text-[10px] font-medium text-muted-foreground">Attention level</span>
+                      <div className="rounded-xl border border-border bg-secondary/20 p-3">
+                        <span className="mb-1 block text-[10px] font-medium text-secondary">Attention level</span>
                         <span className="text-xl font-bold text-steel">{visionMetrics.attention_score}%</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="rounded-xl border border-primary/30 bg-primary/10 p-4 text-xs text-primary">
+                    <div className="rounded-xl border border-ember/30 bg-ember/10 p-4 text-xs text-ember">
                       Camera sensor disabled. Non-verbal telemetry is suspended. Evaluation will focus on transcript
                       structure.
                     </div>
@@ -768,11 +768,11 @@ export const LiveInterviewRoom: React.FC = () => {
 
             {activeTab === 'star' && (
               <div className="space-y-4">
-                <div className="rounded-2xl border border-primary/25 bg-primary/10 p-4">
-                  <h3 className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary">
+                <div className="rounded-2xl border border-ember/25 bg-ember/10 p-4">
+                  <h3 className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ember">
                     <HelpCircle className="h-4 w-4" /> STAR framework structuring
                   </h3>
-                  <p className="text-xs leading-relaxed text-muted-foreground">
+                  <p className="text-xs leading-relaxed text-secondary">
                     Use the STAR framework to structure behavioral and technical experience answers clearly.
                   </p>
                 </div>
@@ -780,11 +780,11 @@ export const LiveInterviewRoom: React.FC = () => {
                   { title: 'S — Situation', desc: 'Set the context. Describe the specific event or challenge you faced.', border: 'border-steel/30', bg: 'bg-steel/5' },
                   { title: 'T — Task', desc: 'Explain your responsibility in that situation. What goal were you trying to achieve?', border: 'border-steel/30', bg: 'bg-steel/5' },
                   { title: 'A — Action', desc: 'Describe the specific steps YOU took to address the challenge.', border: 'border-gold/30', bg: 'bg-gold/5' },
-                  { title: 'R — Result', desc: 'Share the outcomes, metrics, lessons, or achievements resulting from your actions.', border: 'border-primary/30', bg: 'bg-primary/5' },
+                  { title: 'R — Result', desc: 'Share the outcomes, metrics, lessons, or achievements resulting from your actions.', border: 'border-ember/30', bg: 'bg-ember/5' },
                 ].map((item, idx) => (
                   <div key={idx} className={cn('rounded-xl border p-4', item.border, item.bg)}>
                     <h4 className="mb-1 text-xs font-bold text-foreground">{item.title}</h4>
-                    <p className="text-xs leading-relaxed text-muted-foreground">{item.desc}</p>
+                    <p className="text-xs leading-relaxed text-secondary">{item.desc}</p>
                   </div>
                 ))}
               </div>

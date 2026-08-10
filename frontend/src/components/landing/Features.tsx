@@ -45,7 +45,7 @@ export const Features: React.FC = () => {
           <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl">
             Built for smarter learning
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4 text-secondary">
             Every capability in StudyForge exists to close one gap: what you know
             versus what the interview actually asks.
           </p>
@@ -64,7 +64,7 @@ export const Features: React.FC = () => {
                 className="group h-full border-border bg-card/60 p-1"
               >
                 <CardHeader>
-                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-primary/20 to-secondary/20 text-primary transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110 group-hover:shadow-glow-primary">
+                  <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-md bg-gradient-to-br from-ember/20 to-secondary/20 text-ember transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110 group-hover:shadow-glow-primary">
                     <Icon className="h-5 w-5" />
                   </div>
                   <CardTitle className="transition-opacity duration-500 opacity-80 group-hover:opacity-100">{title}</CardTitle>

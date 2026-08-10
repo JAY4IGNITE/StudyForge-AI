@@ -56,7 +56,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
     problem.difficulty === 'Easy'
       ? 'bg-gold/15 text-gold border-gold/25'
       : problem.difficulty === 'Medium'
-        ? 'bg-primary/15 text-primary border-primary/25'
+        ? 'bg-ember/15 text-ember border-ember/25'
         : 'bg-destructive/15 text-destructive border-destructive/25';
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
@@ -75,8 +75,8 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-t-lg transition-all ${
               activeTab === tab.key
-                ? 'bg-surface/80 text-foreground border border-border border-b-transparent -mb-px'
-                : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-secondary/80 text-foreground border border-border border-b-transparent -mb-px'
+                : 'text-secondary hover:text-foreground'
             }`}
           >
             {tab.icon}
@@ -85,10 +85,10 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
         ))}
         <div className="flex-1" />
         <div className="flex items-center gap-1 pb-1">
-          <button className="p-1.5 text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-surface" title="Bookmark">
+          <button className="p-1.5 text-secondary hover:text-ember transition-colors rounded-md hover:bg-secondary" title="Bookmark">
             <Bookmark className="w-3.5 h-3.5" />
           </button>
-          <button className="p-1.5 text-muted-foreground hover:text-primary transition-colors rounded-md hover:bg-surface" title="Share">
+          <button className="p-1.5 text-secondary hover:text-ember transition-colors rounded-md hover:bg-secondary" title="Share">
             <Share2 className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -110,13 +110,13 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                 {problem.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-[10px] px-2 py-0.5 rounded-md bg-surface text-muted-foreground border border-border/50 font-medium"
+                    className="text-[10px] px-2 py-0.5 rounded-md bg-secondary text-secondary border border-border/50 font-medium"
                   >
                     {tag}
                   </span>
                 ))}
               </div>
-              <div className="flex items-center gap-4 text-[10px] text-muted-foreground font-medium">
+              <div className="flex items-center gap-4 text-[10px] text-secondary font-medium">
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   {problem.timeLimitMs}ms
@@ -136,7 +136,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
             {/* Input / Output Spec */}
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-background/60 border border-border/60 rounded-xl p-4 space-y-1.5">
-                <h4 className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                <h4 className="text-[10px] font-bold text-ember uppercase tracking-wider">
                   Input
                 </h4>
                 <p className="text-xs text-foreground/85 font-mono">{problem.inputSpecification}</p>
@@ -152,13 +152,13 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
             {/* Constraints */}
             <div className="space-y-2">
               <h3 className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-primary" />
+                <AlertTriangle className="w-3.5 h-3.5 text-ember" />
                 Constraints
               </h3>
               <ul className="space-y-1">
                 {problem.constraints.map((c, i) => (
-                  <li key={i} className="text-xs text-muted-foreground pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-muted-foreground/50">
-                    <code className="text-[11px] text-foreground/85 font-mono bg-surface/50 px-1 py-0.5 rounded">
+                  <li key={i} className="text-xs text-secondary pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-secondary/50">
+                    <code className="text-[11px] text-foreground/85 font-mono bg-secondary/50 px-1 py-0.5 rounded">
                       {c}
                     </code>
                   </li>
@@ -178,21 +178,21 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                   >
                     <button
                       onClick={() => setExpandedCase(isExpanded ? null : tc.id)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-surface/30 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-2.5 text-left hover:bg-secondary/30 transition-colors"
                     >
                       <span className="text-xs font-semibold text-foreground/85">
                         Example {idx + 1}
                       </span>
                       {isExpanded ? (
-                        <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" />
+                        <ChevronUp className="w-3.5 h-3.5 text-secondary" />
                       ) : (
-                        <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+                        <ChevronDown className="w-3.5 h-3.5 text-secondary" />
                       )}
                     </button>
                     {isExpanded && (
                       <div className="px-4 pb-4 space-y-2 border-t border-border/40">
                         <div className="pt-3">
-                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
+                          <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">
                             Input
                           </p>
                           <pre className="text-xs text-steel bg-background rounded-lg p-2.5 font-mono overflow-x-auto">
@@ -200,7 +200,7 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                           </pre>
                         </div>
                         <div>
-                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
+                          <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">
                             Output
                           </p>
                           <pre className="text-xs text-gold bg-background rounded-lg p-2.5 font-mono overflow-x-auto">
@@ -209,10 +209,10 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                         </div>
                         {tc.explanation && (
                           <div>
-                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-1">
+                            <p className="text-[10px] font-bold text-secondary uppercase tracking-wider mb-1">
                               Explanation
                             </p>
-                            <p className="text-xs text-muted-foreground italic">{tc.explanation}</p>
+                            <p className="text-xs text-secondary italic">{tc.explanation}</p>
                           </div>
                         )}
                       </div>
@@ -226,11 +226,11 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
 
         {activeTab === 'solutions' && (
           <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-            <Lightbulb className="w-10 h-10 text-muted-foreground/40 mb-3" />
-            <h3 className="text-sm font-bold text-muted-foreground mb-1">
+            <Lightbulb className="w-10 h-10 text-secondary/40 mb-3" />
+            <h3 className="text-sm font-bold text-secondary mb-1">
               Solutions Locked
             </h3>
-            <p className="text-xs text-muted-foreground max-w-xs">
+            <p className="text-xs text-secondary max-w-xs">
               Submit an accepted solution to unlock community solutions and editorial explanations.
             </p>
           </div>
@@ -239,11 +239,11 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
         {activeTab === 'submissions' && (
           submissions.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-              <History className="w-10 h-10 text-muted-foreground/40 mb-3" />
-              <h3 className="text-sm font-bold text-muted-foreground mb-1">
+              <History className="w-10 h-10 text-secondary/40 mb-3" />
+              <h3 className="text-sm font-bold text-secondary mb-1">
                 No Submissions Yet
               </h3>
-              <p className="text-xs text-muted-foreground max-w-xs">
+              <p className="text-xs text-secondary max-w-xs">
                 Write your solution in the editor and click Submit to see your results here.
               </p>
             </div>
@@ -255,19 +255,19 @@ export const ProblemDetail: React.FC<ProblemDetailProps> = ({ problem }) => {
                     ? 'text-gold'
                     : sub.status === 'Runtime Error'
                       ? 'text-destructive'
-                      : 'text-primary';
+                      : 'text-ember';
                 const StatusIcon = sub.status === 'Accepted' ? CheckCircle2 : XCircle;
                 const timeAgo = formatTimeAgo(sub.submittedAt);
                 return (
-                  <div key={idx} className="flex items-center gap-3 px-5 py-3 hover:bg-surface/20 transition-colors">
+                  <div key={idx} className="flex items-center gap-3 px-5 py-3 hover:bg-secondary/20 transition-colors">
                     <StatusIcon className={`w-4 h-4 shrink-0 ${statusColor}`} />
                     <div className="flex-1 min-w-0">
                       <p className={`text-xs font-bold ${statusColor}`}>{sub.status}</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                      <p className="text-[10px] text-secondary mt-0.5">
                         {sub.passedCount}/{sub.totalCount} passed · {timeAgo}
                       </p>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-surface text-muted-foreground border border-border/50 font-mono flex items-center gap-1">
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-secondary text-secondary border border-border/50 font-mono flex items-center gap-1">
                       <Code2 className="w-2.5 h-2.5" />
                       {sub.language}
                     </span>

@@ -5,17 +5,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill text-sm font-medium transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background relative overflow-hidden",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill text-sm font-medium transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ember focus-visible:ring-offset-2 focus-visible:ring-offset-background relative overflow-hidden",
   {
     variants: {
       variant: {
-        default: 'bg-primary-gradient text-white shadow-glow-primary hover:shadow-[0_0_32px_rgba(108,99,255,0.6)] active:brightness-95',
+        default: 'bg-ember-gradient text-white shadow-glow-primary hover:shadow-[0_0_32px_rgba(108,99,255,0.6)] active:brightness-95',
         destructive: 'bg-gradient-to-r from-destructive to-destructive/80 text-white shadow-glow-accent hover:brightness-110',
-        outline: 'border border-border bg-transparent hover:bg-primary hover:text-white',
-        secondary: 'bg-surface text-muted-foreground-foreground hover:bg-surface/70',
-        ghost: 'hover:bg-surface hover:text-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
-        steel: 'bg-surface text-foreground border border-border hover:bg-primary/20',
+        outline: 'border border-border bg-transparent hover:bg-ember hover:text-white',
+        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/70',
+        ghost: 'hover:bg-secondary hover:text-foreground',
+        link: 'text-ember underline-offset-4 hover:underline',
+        steel: 'bg-secondary text-foreground border border-border hover:bg-ember/20',
       },
       size: {
         default: 'h-10 px-4 py-2',

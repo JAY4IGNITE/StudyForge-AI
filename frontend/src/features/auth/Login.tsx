@@ -38,13 +38,13 @@ export const Login: React.FC = () => {
     <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
       <Card className="w-full max-w-md p-10 shadow-2xl">
         <div className="mb-10 flex flex-col items-center text-center">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
-            <Flame className="h-6 w-6 text-primary-foreground" strokeWidth={2.25} />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
+            <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
           </div>
           <h1 className="font-display text-2xl font-medium tracking-tight text-foreground">
-            StudyForge<span className="text-primary">.</span>
+            StudyForge<span className="text-ember">.</span>
           </h1>
-          <p className="mt-2 max-w-[250px] text-sm text-muted-foreground">
+          <p className="mt-2 max-w-[250px] text-sm text-secondary">
             Access your AI-powered learning workspace.
           </p>
         </div>
@@ -57,11 +57,11 @@ export const Login: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <Label htmlFor="email" className="mb-2 block text-[11px] uppercase tracking-wider text-muted-foreground">
+            <Label htmlFor="email" className="mb-2 block text-[11px] uppercase tracking-wider text-secondary">
               Email address
             </Label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary" />
               <Input
                 id="email"
                 type="email"
@@ -76,15 +76,15 @@ export const Login: React.FC = () => {
 
           <div>
             <div className="mb-2 flex items-center justify-between">
-              <Label htmlFor="password" className="text-[11px] uppercase tracking-wider text-muted-foreground">
+              <Label htmlFor="password" className="text-[11px] uppercase tracking-wider text-secondary">
                 Password
               </Label>
-              <Link to="/forgot-password" className="text-[11px] font-medium text-primary hover:text-primary/80">
+              <Link to="/forgot-password" className="text-[11px] font-medium text-ember hover:text-ember/80">
                 Forgot?
               </Link>
             </div>
             <div className="relative">
-              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground z-10" />
+              <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-secondary z-10" />
               <PasswordInput
                 id="password"
                 required
@@ -104,7 +104,7 @@ export const Login: React.FC = () => {
 
         <div className="relative my-8 flex items-center justify-center">
           <Separator className="absolute inset-x-0" />
-          <span className="relative bg-card px-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+          <span className="relative bg-card px-4 font-mono text-[10px] uppercase tracking-widest text-secondary">
             Or authenticate via
           </span>
         </div>
@@ -133,9 +133,9 @@ export const Login: React.FC = () => {
           </Button>
         </div>
 
-        <p className="mt-8 text-center text-xs text-muted-foreground">
+        <p className="mt-8 text-center text-xs text-secondary">
           New researcher?{' '}
-          <Link to="/register" className="font-medium text-primary hover:text-primary/80 hover:underline">
+          <Link to="/register" className="font-medium text-ember hover:text-ember/80 hover:underline">
             Sign up
           </Link>
         </p>

@@ -131,34 +131,34 @@ export const CodingPracticePage: React.FC = () => {
         <div className="flex items-center gap-3">
           <a
             href="/dashboard"
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 text-xs text-secondary hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Dashboard
           </a>
-          <div className="w-px h-4 bg-surface" />
+          <div className="w-px h-4 bg-secondary" />
           <div className="flex items-center gap-2">
-            <Code2 className="w-4 h-4 text-primary" />
+            <Code2 className="w-4 h-4 text-ember" />
             <h1 className="text-sm font-bold text-foreground tracking-tight">
               Coding Practice
             </h1>
           </div>
-          <div className="w-px h-4 bg-surface" />
-          <span className="text-xs text-muted-foreground font-medium">
+          <div className="w-px h-4 bg-secondary" />
+          <span className="text-xs text-secondary font-medium">
             {selectedProblem.title}
           </span>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Session Timer */}
-          <div className="flex items-center gap-1.5 bg-surface/80 border border-border/60 rounded-lg px-2.5 py-1">
-            <Timer className="w-3.5 h-3.5 text-primary" />
+          <div className="flex items-center gap-1.5 bg-secondary/80 border border-border/60 rounded-lg px-2.5 py-1">
+            <Timer className="w-3.5 h-3.5 text-ember" />
             <span className="text-xs font-mono font-bold text-foreground tabular-nums">
               {formatTime(elapsedSeconds)}
             </span>
             <button
               onClick={resetTimer}
-              className="p-0.5 text-muted-foreground hover:text-gold transition-colors rounded"
+              className="p-0.5 text-secondary hover:text-gold transition-colors rounded"
               title="Reset timer"
             >
               <RotateCcw className="w-3 h-3" />
@@ -166,7 +166,7 @@ export const CodingPracticePage: React.FC = () => {
           </div>
           <button
             onClick={() => setShowSidebar(!showSidebar)}
-            className="p-1.5 text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-surface"
+            className="p-1.5 text-secondary hover:text-foreground transition-colors rounded-md hover:bg-secondary"
             title="Toggle sidebar"
           >
             {showSidebar ? (
@@ -175,7 +175,7 @@ export const CodingPracticePage: React.FC = () => {
               <PanelLeftOpen className="w-4 h-4" />
             )}
           </button>
-          <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+          <div className="flex items-center gap-1 text-[10px] text-secondary">
             <Wifi className="w-3 h-3 text-gold" />
             <span className="text-gold font-medium">In-Browser</span>
           </div>
@@ -197,8 +197,8 @@ export const CodingPracticePage: React.FC = () => {
                   onClick={() => setSidebarView('list')}
                   className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-center transition-colors ${
                     sidebarView === 'list'
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-muted-foreground hover:text-foreground'
+                      ? 'text-ember border-b-2 border-ember'
+                      : 'text-secondary hover:text-foreground'
                   }`}
                 >
                   Problems
@@ -207,8 +207,8 @@ export const CodingPracticePage: React.FC = () => {
                   onClick={() => setSidebarView('detail')}
                   className={`flex-1 py-2 text-[10px] font-bold uppercase tracking-wider text-center transition-colors ${
                     sidebarView === 'detail'
-                      ? 'text-primary border-b-2 border-primary'
-                      : 'text-muted-foreground hover:text-foreground'
+                      ? 'text-ember border-b-2 border-ember'
+                      : 'text-secondary hover:text-foreground'
                   }`}
                 >
                   Description
@@ -231,7 +231,7 @@ export const CodingPracticePage: React.FC = () => {
             {/* Left resize handle */}
             <div
               onMouseDown={startDragLeft}
-              className="w-1 cursor-col-resize bg-surface hover:bg-primary/50 transition-colors shrink-0 z-10"
+              className="w-1 cursor-col-resize bg-secondary hover:bg-ember/50 transition-colors shrink-0 z-10"
             />
           </>
         )}
@@ -251,7 +251,7 @@ export const CodingPracticePage: React.FC = () => {
         {/* Right resize handle */}
         <div
           onMouseDown={startDragRight}
-          className="w-1 cursor-col-resize bg-surface hover:bg-primary/50 transition-colors shrink-0 z-10"
+          className="w-1 cursor-col-resize bg-secondary hover:bg-ember/50 transition-colors shrink-0 z-10"
         />
 
         {/* Right Pane: Test Results */}
@@ -264,7 +264,7 @@ export const CodingPracticePage: React.FC = () => {
       </div>
 
       {/* Bottom Status Bar */}
-      <footer className="flex items-center justify-between px-4 py-1 border-t border-border bg-card/60 text-[10px] text-muted-foreground shrink-0">
+      <footer className="flex items-center justify-between px-4 py-1 border-t border-border bg-card/60 text-[10px] text-secondary shrink-0">
         <div className="flex items-center gap-3">
           <span>StudyForge AI</span>
           <span>|</span>
