@@ -1,10 +1,10 @@
 export const motionConstants = {
   timing: {
-    instant: 0.12,
-    fast: 0.18,
-    normal: 0.25,
-    medium: 0.35,
-    slow: 0.5,
+    instant: 0.1,
+    fast: 0.1,
+    normal: 0.15,
+    medium: 0.2,
+    slow: 0.35,
   },
   distances: {
     sm: 4,
