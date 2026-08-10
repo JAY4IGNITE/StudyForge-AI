@@ -86,11 +86,7 @@ export const pageTransitionVariants: Variants = {
   visible: { 
     opacity: 1, 
     transition: tweenTransitions.fast
-  },
-  exit: { 
-    opacity: 0, 
-    transition: tweenTransitions.instant
-  },
+  }
 };
 
 export const cardInteractionVariants: Variants = {
