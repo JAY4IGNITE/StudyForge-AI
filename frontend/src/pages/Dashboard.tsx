@@ -76,6 +76,10 @@ export function Dashboard() {
     loadDashboardData();
   }, []);
 
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+  const emoji = hour < 12 ? '☀️' : hour < 18 ? '🌤️' : '🌙';
+
   return (
     <Layout>
       <div className="mx-auto max-w-7xl">
@@ -83,7 +87,7 @@ export function Dashboard() {
         <div className="mb-8 flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
             <h1 className="font-display text-3xl font-medium tracking-tight text-foreground text-balance">
-              Welcome back, {user?.display_name?.split(' ')[0] || 'Student'}
+              {greeting}, {user?.display_name?.split(' ')[0] || 'Jay'} {emoji}
             </h1>
             <p className="mt-1 text-muted-foreground">Ready to crush your goals today?</p>
           </div>
