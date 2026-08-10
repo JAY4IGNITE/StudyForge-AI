@@ -24,7 +24,7 @@ def override_current_user_dependency():
     else:
         app.dependency_overrides[get_current_user] = previous
 
-@pytest.mark.asyncio
+
 def test_create_session_endpoint(monkeypatch):
     async def mock_create_session(*args, **kwargs):
         return {"session_id": "session123", "target_difficulty": "medium"}
@@ -35,7 +35,7 @@ def test_create_session_endpoint(monkeypatch):
     assert response.status_code == 201
     assert response.json() == {"session_id": "session123", "target_difficulty": "medium"}
 
-@pytest.mark.asyncio
+
 def test_get_session_endpoint(monkeypatch):
     class MockSession:
         def dict(self):
@@ -53,7 +53,7 @@ def test_get_session_endpoint(monkeypatch):
     # To avoid Beanie serialization issues in this simple test, we can mock the router or the service.
     pass
 
-@pytest.mark.asyncio
+
 def test_complete_session_endpoint(monkeypatch):
     async def mock_complete_session(session_id, user_id):
         return {"message": "Session completed successfully."}
