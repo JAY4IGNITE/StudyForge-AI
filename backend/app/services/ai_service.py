@@ -14,9 +14,10 @@ DEFAULT_MODEL = "meta/llama-3.1-70b-instruct"
 class AIService:
     @staticmethod
     @retry(
-        wait=wait_exponential(multiplier=1, min=4, max=10),
-        stop=stop_after_attempt(3),
-        retry=retry_if_exception_type((httpx.RequestError, RateLimitError))
+        wait=wait_exponential(multiplier=1, min=1, max=4),
+        stop=stop_after_attempt(2),
+        retry=retry_if_exception_type((httpx.RequestError, RateLimitError)),
+        reraise=True,
     )
     async def chat_with_mentor(message: str, user_name: Optional[str] = None, history: Optional[List[Dict[str, str]]] = None) -> str:
         """
@@ -53,7 +54,7 @@ class AIService:
         }
 
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=15.0) as client:
                 res = await client.post(NVIDIA_NIM_URL, headers=headers, json=payload)
                 if res.status_code == 200:
                     data = res.json()
@@ -108,7 +109,7 @@ Respond ONLY with a valid JSON array of objects with the following format (no ma
         }
 
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=15.0) as client:
                 res = await client.post(NVIDIA_NIM_URL, headers=headers, json=payload)
                 if res.status_code == 200:
                     content = res.json()["choices"][0]["message"]["content"].strip()

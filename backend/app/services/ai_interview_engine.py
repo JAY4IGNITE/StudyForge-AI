@@ -26,7 +26,7 @@ class AIInterviewEngine:
         }
 
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=15.0) as client:
                 res = await client.post(NVIDIA_NIM_URL, headers=headers, json=payload)
                 if res.status_code == 200:
                     return res.json()["choices"][0]["message"]["content"]

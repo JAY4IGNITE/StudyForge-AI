@@ -2,7 +2,7 @@ import httpx
 import json
 import os
 from typing import Optional
-from tenacity import retry, stop_after_attempt, wait_exponential
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from app.core.config import settings
 from app.core.logging import logger
 from app.core.errors import StudyForgeException
@@ -11,6 +11,14 @@ from app.ai.contracts import (
     AnswerEvaluationRequest, AnswerEvaluation,
     InterviewTurnRequest, InterviewTurnResponse
 )
+
+
+class RetryableAIError(Exception):
+    """Network/timeout/5xx errors — worth retrying."""
+
+
+class NonRetryableAIError(Exception):
+    """Auth failures, bad requests, malformed responses — retrying wastes time."""
 
 class OmniRouteAIGateway:
     def __init__(self):
@@ -114,20 +122,35 @@ class OmniRouteAIGateway:
             overall_summary=None
         )
 
-    @retry(stop=stop_after_attempt(settings.AI_MAX_RETRIES), wait=wait_exponential(multiplier=1, min=2, max=10))
+    @retry(
+        stop=stop_after_attempt(settings.AI_MAX_RETRIES),
+        wait=wait_exponential(multiplier=1, min=1, max=4),
+        retry=retry_if_exception_type(RetryableAIError),
+        reraise=True,
+    )
     async def _call_ai(self, prompt: str) -> str:
-        async with httpx.AsyncClient(timeout=settings.AI_REQUEST_TIMEOUT_SECONDS) as client:
-            headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
-            payload = {
-                "model": self.default_model,
-                "messages": [{"role": "user", "content": prompt}],
-                "temperature": 0.2
-            }
-            resp = await client.post(f"{self.base_url}/chat/completions", headers=headers, json=payload)
-            if resp.status_code != 200:
-                raise Exception(f"AI API request failed: {resp.status_code} - {resp.text}")
-            data = resp.json()
-            return data["choices"][0]["message"]["content"]
+        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        payload = {
+            "model": self.default_model,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.2
+        }
+        try:
+            async with httpx.AsyncClient(timeout=settings.AI_REQUEST_TIMEOUT_SECONDS) as client:
+                resp = await client.post(f"{self.base_url}/chat/completions", headers=headers, json=payload)
+        except (httpx.TimeoutException, httpx.ConnectError, httpx.ReadError) as e:
+            # Transient network issue — worth a retry.
+            raise RetryableAIError(str(e)) from e
+
+        if resp.status_code == 429 or resp.status_code >= 500:
+            # Rate limited or upstream failure — worth a retry.
+            raise RetryableAIError(f"AI API request failed: {resp.status_code} - {resp.text}")
+        if resp.status_code != 200:
+            # Bad request, auth failure, etc — retrying won't help, fail fast.
+            raise NonRetryableAIError(f"AI API request failed: {resp.status_code} - {resp.text}")
+
+        data = resp.json()
+        return data["choices"][0]["message"]["content"]
 
 ai_gateway = OmniRouteAIGateway()
 
