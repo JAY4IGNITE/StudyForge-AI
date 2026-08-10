@@ -104,6 +104,40 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
                     # Stream the next question chunks
                     await stream_text_chunks(next_question, websocket)
                     
+                # Determine the question that was asked (or use a default first question)
+                asked_question = session.pending_question or "Tell me about yourself."
+                
+                # Validate telemetry safely
+                try:
+                    vision_telem = VisionTelemetry.model_validate(vision_metrics) if vision_metrics else None
+                except Exception:
+                    vision_telem = None
+                    
+                # Persist turn to MongoDB
+                turn = TurnTurnData(
+                    turn_index=len(session.turns),
+                    question=asked_question,
+                    user_answer=user_answer,
+                    feedback=feedback,
+                    ideal_answer=eval_res.get("ideal_answer"),
+                    better_answer=eval_res.get("better_answer"),
+                    vision_metrics=vision_telem
+                )
+                session.turns.append(turn)
+                session.pending_question = next_question
+                if is_completed:
+                    session.status = "completed"
+                
+                try:
+                    await session.save()
+                except Exception as e:
+                    logger.error(f"Failed to save session {session_id}: {e}")
+                    await manager.send_personal_message(
+                        WebSocketMessage(type="connection.error", payload={"code": "SERVER_ERROR", "message": "Failed to save session turn"}),
+                        websocket
+                    )
+                    continue
+
                 # Signal stream completion and send full turn evaluation
                 await manager.send_personal_message(
                     WebSocketMessage(
@@ -117,21 +151,6 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
                     ),
                     websocket
                 )
-                
-                # Persist turn to MongoDB
-                turn = TurnTurnData(
-                    turn_index=len(session.turns),
-                    question=next_question or "Interview Completed",
-                    user_answer=user_answer,
-                    feedback=feedback,
-                    ideal_answer=eval_res.get("ideal_answer"),
-                    better_answer=eval_res.get("better_answer"),
-                    vision_metrics=VisionTelemetry(**vision_metrics) if vision_metrics else None
-                )
-                session.turns.append(turn)
-                if is_completed:
-                    session.status = "completed"
-                await session.save()
 
     except WebSocketDisconnect:
         logger.info(f"WebSocket disconnected for session: {session_id}")

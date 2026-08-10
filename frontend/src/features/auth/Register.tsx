@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
-import { UserPlus, Flame, Eye, EyeOff } from 'lucide-react';
+import { UserPlus, Flame } from 'lucide-react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import { PasswordInput } from '../../components/ui/PasswordInput';
 
 export const Register: React.FC = () => {
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -86,24 +87,14 @@ export const Register: React.FC = () => {
             <Label htmlFor="password" className="mb-1.5 block text-sm font-medium text-foreground">
               Password
             </Label>
-            <div className="relative">
-              <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className={`h-12 pr-10 ${showPassword ? '' : 'tracking-[0.2em]'}`}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none"
-              >
-                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
-            </div>
+            <PasswordInput
+              id="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="h-12"
+            />
           </div>
 
           <Button type="submit" disabled={loading} className="h-12 w-full gap-2">

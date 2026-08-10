@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     JWT_REFRESH_TTL_DAYS: int = 30
 
     FRONTEND_URL: str = "http://localhost:5173"
+    BACKEND_URL: str = "http://localhost:8000"
 
     GOOGLE_CLIENT_ID: Optional[str] = None
     GOOGLE_CLIENT_SECRET: Optional[str] = None

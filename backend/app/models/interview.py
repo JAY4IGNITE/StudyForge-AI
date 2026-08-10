@@ -46,6 +46,7 @@ class InterviewSession(Document):
     livekit_room_name: Optional[str] = None
     livekit_token: Optional[str] = None
     recording_url: Optional[str] = None
+    pending_question: Optional[str] = None
     turns: List[TurnTurnData] = Field(default_factory=list)
     status: str = "active" # active, completed, canceled
     started_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

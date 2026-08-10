@@ -13,14 +13,26 @@ export const OAuthCallback: React.FC = () => {
   useEffect(() => {
     if (isProcessing.current) return;
     
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
-    const errorParam = searchParams.get('error');
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
+    const refreshToken = searchParams.get('refresh_token') || hashParams.get('refresh_token');
+    const errorParam = searchParams.get('error') || hashParams.get('error');
+
+    let timeoutId: ReturnType<typeof setTimeout>;
 
     if (errorParam) {
-      setError(`OAuth Login Failed: ${errorParam}`);
-      setTimeout(() => navigate('/login'), 3000);
-      return;
+      let errorMsg = `OAuth Login Failed: ${errorParam}`;
+      if (errorParam === 'oauth_failed') {
+        errorMsg = 'Authentication provider failed to complete the request.';
+      } else if (errorParam === 'no_email') {
+        errorMsg = 'Could not access your email address from the provider.';
+      } else if (errorParam === 'unverified_email') {
+        errorMsg = 'Your email address must be verified with the provider first.';
+      }
+      
+      setError(errorMsg);
+      timeoutId = setTimeout(() => navigate('/login'), 3000);
+      return () => clearTimeout(timeoutId);
     }
 
     if (accessToken && refreshToken) {
@@ -31,12 +43,16 @@ export const OAuthCallback: React.FC = () => {
         })
         .catch(() => {
           setError('Failed to configure local session after OAuth.');
-          setTimeout(() => navigate('/login'), 3000);
+          timeoutId = setTimeout(() => navigate('/login'), 3000);
         });
     } else {
       setError('Invalid OAuth callback payload. Missing tokens.');
-      setTimeout(() => navigate('/login'), 3000);
+      timeoutId = setTimeout(() => navigate('/login'), 3000);
     }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [searchParams, navigate, login]);
 
   return (

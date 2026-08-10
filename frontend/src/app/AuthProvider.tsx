@@ -17,6 +17,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   loading: boolean;
   login: (tokens: { access_token: string; refresh_token: string }) => Promise<void>;
   logout: () => void;
@@ -27,12 +28,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('access_token'));
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchUser = async () => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
+    const currentToken = localStorage.getItem('access_token');
+    if (!currentToken) {
       setUser(null);
+      setToken(null);
       setLoading(false);
       return;
     }
@@ -53,17 +56,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (tokens: { access_token: string; refresh_token: string }) => {
     localStorage.setItem('access_token', tokens.access_token);
     localStorage.setItem('refresh_token', tokens.refresh_token);
+    setToken(tokens.access_token);
     await fetchUser();
   };
 
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    setToken(null);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser: fetchUser }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,7 +3,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from beanie import init_beanie
 from app.core.config import settings
 from app.core.logging import logger
-from app.models.user import User, RefreshToken, EmailOTP
+from app.models.user import User, RefreshToken, EmailOTP, OAuthState
 from app.models.practice import Topic, Question, PracticeSession, Attempt, MasteryProfile, LearningResource
 from app.models.interview import InterviewSession, InterviewReport, ResumeAnalysis
 from app.models.feedback import Feedback, UserRoadmap
@@ -31,6 +31,7 @@ async def init_db():
                 User,
                 RefreshToken,
                 EmailOTP,
+                OAuthState,
                 Topic,
                 Question,
                 PracticeSession,

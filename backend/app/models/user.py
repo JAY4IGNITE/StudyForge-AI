@@ -12,7 +12,7 @@ class User(Document):
     email: Indexed(str, unique=True) # type: ignore
     password_hash: Optional[str] = None
     auth_provider: str = "local" # local, google, github
-    oauth_id: Optional[Indexed(str)] = None # type: ignore
+    oauth_id: Optional[str] = None
     display_name: str
     role: str = "learner"
     email_verified_at: Optional[datetime] = None
@@ -24,6 +24,17 @@ class User(Document):
 
     class Settings:
         name = "users"
+        indexes = [
+            [("auth_provider", 1), ("oauth_id", 1)]
+        ]
+
+class OAuthState(Document):
+    state: Indexed(str, unique=True) # type: ignore
+    provider: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    class Settings:
+        name = "oauth_states"
 
 class RefreshToken(Document):
     user_id: str
