@@ -36,8 +36,8 @@ export const Login: React.FC = () => {
 
   return (
     <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
-      <Card className="w-full max-w-md p-10 shadow-2xl">
-        <div className="mb-10 flex flex-col items-center text-center">
+      <Card className="w-full max-w-lg p-8 shadow-2xl">
+        <div className="mb-6 flex flex-col items-center text-center">
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
             <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
           </div>
@@ -50,12 +50,12 @@ export const Login: React.FC = () => {
         </div>
 
         {error && (
-          <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-center text-sm text-destructive">
+          <div className="mb-4 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-center text-sm text-destructive">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="email" className="mb-2 block text-[11px] uppercase tracking-wider text-secondary">
               Email address
@@ -102,7 +102,7 @@ export const Login: React.FC = () => {
           </Button>
         </form>
 
-        <div className="relative my-8 flex items-center justify-center">
+        <div className="relative my-6 flex items-center justify-center">
           <Separator className="absolute inset-x-0" />
           <span className="relative bg-card px-4 font-mono text-[10px] uppercase tracking-widest text-secondary">
             Or authenticate via
@@ -133,7 +133,7 @@ export const Login: React.FC = () => {
           </Button>
         </div>
 
-        <p className="mt-8 text-center text-xs text-secondary">
+        <p className="mt-6 text-center text-xs text-secondary">
           New researcher?{' '}
           <Link to="/register" className="font-medium text-ember hover:text-ember/80 hover:underline">
             Sign up
