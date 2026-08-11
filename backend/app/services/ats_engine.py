@@ -8,13 +8,28 @@ from app.schemas.ats import JobDescriptionSchema, AtsAnalysisResponse, AtsScoreB
 from app.services.ai_interview_engine import ai_interview_engine
 from app.core.logging import logger
 
-try:
-    from sentence_transformers import SentenceTransformer
-    # We load a small model for fast CPU inference
-    embedder = SentenceTransformer("all-MiniLM-L6-v2")
-except ImportError:
-    embedder = None
-    logger.warning("SentenceTransformer not installed. Semantic matching will fallback to basic exact matching.")
+embedder = None
+embedder_loaded = False
+
+def get_embedder():
+    global embedder, embedder_loaded
+    if embedder_loaded:
+        return embedder
+        
+    try:
+        from sentence_transformers import SentenceTransformer
+        logger.info("Initializing SentenceTransformer model (this may take a moment to download)...")
+        embedder = SentenceTransformer("all-MiniLM-L6-v2")
+    except ImportError:
+        embedder = None
+        logger.warning("SentenceTransformer not installed. Semantic matching will fallback to basic exact matching.")
+    except Exception as e:
+        embedder = None
+        logger.error(f"Failed to load SentenceTransformer: {e}")
+        
+    embedder_loaded = True
+    return embedder
+
 
 class AtsEngineService:
     def __init__(self):
@@ -109,7 +124,8 @@ class AtsEngineService:
         return float(np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2)))
 
     def calculate_semantic_score(self, resume: ParsedResume, jd: JobDescriptionSchema) -> float:
-        if not embedder:
+        current_embedder = get_embedder()
+        if not current_embedder:
             return 0.0
             
         jd_responsibilities_text = " ".join(jd.responsibilities)
@@ -126,23 +142,23 @@ class AtsEngineService:
         # Section level comparisons
         scores = []
         if jd_responsibilities_text.strip():
-            jd_resp_emb = embedder.encode(jd_responsibilities_text)
+            jd_resp_emb = current_embedder.encode(jd_responsibilities_text)
             if resume_exp_text.strip():
-                exp_emb = embedder.encode(resume_exp_text)
+                exp_emb = current_embedder.encode(resume_exp_text)
                 scores.append(self._cosine_similarity(jd_resp_emb, exp_emb))
             if resume_proj_text.strip():
-                proj_emb = embedder.encode(resume_proj_text)
+                proj_emb = current_embedder.encode(resume_proj_text)
                 scores.append(self._cosine_similarity(jd_resp_emb, proj_emb))
                 
         if jd_reqs_text.strip():
-            jd_req_emb = embedder.encode(jd_reqs_text)
+            jd_req_emb = current_embedder.encode(jd_reqs_text)
             if resume_skills_text.strip():
-                skills_emb = embedder.encode(resume_skills_text)
+                skills_emb = current_embedder.encode(resume_skills_text)
                 scores.append(self._cosine_similarity(jd_req_emb, skills_emb))
                 
         if jd.title.strip() and resume_summary_text.strip():
-            jd_title_emb = embedder.encode(jd.title)
-            summary_emb = embedder.encode(resume_summary_text)
+            jd_title_emb = current_embedder.encode(jd.title)
+            summary_emb = current_embedder.encode(resume_summary_text)
             scores.append(self._cosine_similarity(jd_title_emb, summary_emb))
             
         if not scores:
