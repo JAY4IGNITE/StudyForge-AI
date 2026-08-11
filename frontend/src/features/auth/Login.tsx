@@ -51,7 +51,42 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6"
+    >
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: -10 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="flex flex-col items-center gap-4 rounded-3xl bg-card p-10 shadow-2xl border border-border/50"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                className="flex items-center justify-center rounded-xl bg-ember/10 p-4"
+              >
+                <Loader2 className="h-10 w-10 text-ember" />
+              </motion.div>
+              <div className="text-center">
+                <h2 className="text-lg font-semibold tracking-tight text-foreground">Authenticating</h2>
+                <p className="text-sm text-secondary mt-1">Please wait a moment...</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <Card className="w-full max-w-lg p-8 shadow-2xl overflow-hidden">
         <motion.div
           variants={containerVariants}
@@ -199,6 +234,6 @@ export const Login: React.FC = () => {
         </motion.p>
         </motion.div>
       </Card>
-    </div>
+    </motion.div>
   );
 };
