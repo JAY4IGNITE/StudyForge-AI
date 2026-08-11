@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.routes import auth, users, topics, practice, interview, resources, analytics, feedback, roadmap, adaptive, ai, leetcode, resumes, ats, oauth
+from app.api.routes import auth, users, topics, practice, interview, resources, analytics, feedback, roadmap, adaptive, ai, leetcode, resumes, ats, oauth, jobs
 
 api_router = APIRouter(prefix="/v1")
 
@@ -18,3 +18,4 @@ api_router.include_router(leetcode.router)
 api_router.include_router(ai.router, prefix="/ai", tags=["AI"])
 api_router.include_router(resumes.router, prefix="/resumes", tags=["Resumes"])
 api_router.include_router(ats.router, prefix="/ats", tags=["ATS"])
+api_router.include_router(jobs.router)
