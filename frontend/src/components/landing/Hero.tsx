@@ -1,21 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowRight, BookOpenCheck, CheckCircle2, Code2, GraduationCap, Sparkles, Target } from 'lucide-react';
+import { ArrowRight, BookOpenCheck, Code2, GraduationCap, Sparkles, Target } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AnimatedButton, Spotlight, RetroGrid, BorderBeam } from '../motion';
 import { motionConfig } from '../../lib/motion/motion-config';
 
-const STATS = [
-  { value: '10k+', label: 'interview prep sessions' },
-  { value: '4.8x', label: 'faster weak-spot discovery' },
-  { value: '24/7', label: 'adaptive AI coaching' },
+const PLAN_TAGS = ['React patterns', 'Daily DSA', 'Mock rounds', 'Resume ATS'];
+
+const PLAN_STEPS = [
+  { icon: Target, label: 'Diagnose gaps', detail: 'AI scans your latest practice' },
+  { icon: Code2, label: 'Train daily', detail: 'Focused drills that adapt' },
+  { icon: GraduationCap, label: 'Interview ready', detail: 'Mock rounds with feedback' },
 ];
 
-const FOCUS_ITEMS = [
-  { icon: Target, label: 'React Hooks', detail: 'Dependency arrays and effects', progress: 78 },
-  { icon: Code2, label: 'DP Patterns', detail: 'Knapsack review queue', progress: 54 },
-  { icon: GraduationCap, label: 'Mock Interview', detail: 'System design warmup', progress: 86 },
+const ROADMAP_PREVIEW = [
+  { icon: Target, label: 'Skill map', detail: 'Gaps grouped by priority' },
+  { icon: Code2, label: 'Practice path', detail: 'Daily drills and checkpoints' },
+  { icon: GraduationCap, label: 'Mock loop', detail: 'Interview replay and feedback' },
 ];
 
 export const Hero: React.FC = () => {
@@ -69,14 +71,45 @@ export const Hero: React.FC = () => {
 
           <motion.div
             variants={motionConfig.fadeUp}
-            className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-3"
+            className="mt-10 max-w-2xl overflow-hidden rounded-lg border border-border/70 bg-background/60 p-4 shadow-[0_24px_70px_-42px_hsl(var(--ember)/0.65)] backdrop-blur-xl"
           >
-            {STATS.map((stat) => (
-              <div key={stat.label} className="rounded-lg border border-border/70 bg-background/50 px-4 py-3 backdrop-blur-xl">
-                <div className="font-display text-xl font-semibold text-foreground">{stat.value}</div>
-                <div className="mt-1 text-xs leading-5 text-secondary">{stat.label}</div>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-ember/10 text-ember">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase text-secondary">AI plan builder</p>
+                  <p className="mt-1 text-sm font-medium text-foreground">
+                    Prep me for frontend interviews in 6 weeks
+                  </p>
+                </div>
               </div>
-            ))}
+              <Badge variant="steel" className="border-steel/25 bg-steel/10 text-steel">
+                Roadmap ready
+              </Badge>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {PLAN_TAGS.map((tag) => (
+                <span key={tag} className="rounded-md border border-border/60 bg-card/60 px-3 py-1.5 text-xs font-medium text-secondary">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div className="relative mt-5 grid gap-3 sm:grid-cols-3">
+              <div className="absolute left-4 right-4 top-5 hidden h-px bg-gradient-to-r from-ember/50 via-gold/50 to-steel/50 sm:block" />
+              {PLAN_STEPS.map(({ icon: Icon, label, detail }) => (
+                <div key={label} className="relative rounded-md border border-border/60 bg-background/60 p-3">
+                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-md border border-ember/20 bg-background text-ember">
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <div className="text-sm font-medium text-foreground">{label}</div>
+                  <div className="mt-1 text-xs leading-5 text-secondary">{detail}</div>
+                </div>
+              ))}
+            </div>
           </motion.div>
         </div>
 
@@ -85,56 +118,63 @@ export const Hero: React.FC = () => {
           className="relative animate-floating"
         >
           <div className="absolute -inset-3 rounded-xl border border-ember/10 bg-background/20 blur-2xl" />
-          <div className="relative overflow-hidden rounded-lg border border-border/80 bg-card/70 p-4 shadow-2xl backdrop-blur-2xl sm:p-5">
+          <div className="relative overflow-hidden rounded-lg border border-border/80 bg-card/70 p-5 shadow-2xl backdrop-blur-2xl">
             <BorderBeam size={250} duration={12} delay={9} />
-            <div className="flex items-center justify-between gap-4 border-b border-border/70 pb-4">
-              <div>
-                <span className="font-display text-sm font-semibold">Today's Focus</span>
-                <p className="mt-1 text-xs text-secondary">Built from your latest practice signals</p>
+            <div className="absolute inset-x-8 top-8 h-28 rounded-full bg-gradient-to-r from-ember/25 via-gold/20 to-steel/25 blur-3xl" />
+
+            <div className="relative z-10 flex items-start justify-between gap-4">
+              <div className="max-w-xs">
+                <Badge variant="ember" className="gap-1.5 border-ember/20 bg-ember/10 text-ember">
+                  <Sparkles className="h-3 w-3" />
+                  AI roadmap preview
+                </Badge>
+                <h3 className="mt-4 font-display text-2xl font-semibold tracking-tight">
+                  Your learning path, generated visually.
+                </h3>
+                <p className="mt-2 text-sm leading-6 text-secondary">
+                  Turn one goal into a clear route with practice, feedback, and
+                  interview checkpoints.
+                </p>
               </div>
-              <Badge variant="steel" className="border-steel/30 bg-steel/10 text-steel">Live</Badge>
+              <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-md border border-steel/20 bg-steel/10 text-steel sm:flex">
+                <BookOpenCheck className="h-5 w-5" />
+              </div>
             </div>
 
-            <div className="mt-5 space-y-3">
-              {FOCUS_ITEMS.map(({ icon: Icon, label, detail, progress }) => (
-                <div key={label} className="rounded-lg border border-border/60 bg-background/50 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex min-w-0 items-start gap-3">
+            <div className="relative z-10 mt-8 grid items-center gap-6 sm:grid-cols-[0.86fr_1.14fr]">
+              <div className="mx-auto flex aspect-square w-44 items-center justify-center rounded-full p-1 shadow-[0_24px_70px_-34px_hsl(var(--ember)/0.75)]" style={{ background: 'conic-gradient(from 140deg, hsl(var(--ember)), hsl(var(--gold)), hsl(var(--steel)), hsl(var(--ember)))' }}>
+                <div className="flex h-full w-full flex-col items-center justify-center rounded-full border border-border/70 bg-background/90 text-center backdrop-blur-xl">
+                  <span className="text-xs font-semibold uppercase text-secondary">6-week path</span>
+                  <span className="mt-2 font-display text-2xl font-semibold">Ready</span>
+                  <span className="mt-1 max-w-24 text-xs leading-5 text-secondary">built from your goal</span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {ROADMAP_PREVIEW.map(({ icon: Icon, label, detail }) => (
+                  <div key={label} className="rounded-lg border border-border/60 bg-background/60 p-3">
+                    <div className="flex items-start gap-3">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-ember/10 text-ember">
                         <Icon className="h-4 w-4" />
                       </div>
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-medium text-foreground">{label}</div>
+                      <div>
+                        <div className="text-sm font-medium text-foreground">{label}</div>
                         <div className="mt-0.5 text-xs leading-5 text-secondary">{detail}</div>
                       </div>
                     </div>
-                    <span className="font-mono text-xs text-primary">{progress}%</span>
                   </div>
-                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-secondary/50">
-                    <div className="h-full rounded-full bg-ember-gradient" style={{ width: `${progress}%` }} />
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
 
-            <div className="mt-4 rounded-lg border border-ember/25 bg-ember/10 p-4">
+            <div className="relative z-10 mt-5 rounded-lg border border-ember/25 bg-ember/10 p-4">
               <div className="flex items-center gap-1.5 text-xs font-medium text-ember">
-                <Sparkles className="h-3 w-3" /> AI Recommendation
+                <Sparkles className="h-3 w-3" /> Next best move
               </div>
               <p className="mt-1 text-sm text-foreground/90">
-                Review effect cleanup, then run a 12-minute adaptive drill.
+                Start with a diagnostic sprint, then StudyForge reshapes the
+                roadmap around your results.
               </p>
-            </div>
-
-            <div className="mt-4 grid gap-3 border-t border-border/70 pt-4 text-xs sm:grid-cols-2">
-              <div className="flex items-center gap-2 text-secondary">
-                <CheckCircle2 className="h-4 w-4 text-success" />
-                6 weak spots closed
-              </div>
-              <div className="flex items-center gap-2 text-secondary sm:justify-end">
-                <BookOpenCheck className="h-4 w-4 text-gold" />
-                <span className="font-mono text-success">+14%</span> weekly progress
-              </div>
             </div>
           </div>
         </motion.div>
