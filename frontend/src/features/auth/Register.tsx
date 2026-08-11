@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { apiClient } from '../../lib/axios';
-import { UserPlus, Flame } from 'lucide-react';
+import { apiClient, API_BASE_URL } from '../../lib/axios';
+import { UserPlus, Flame, Github } from 'lucide-react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { PasswordInput } from '../../components/ui/PasswordInput';
+import { Separator } from '../../components/ui/separator';
 
 export const Register: React.FC = () => {
   const [displayName, setDisplayName] = useState('');
@@ -102,6 +103,37 @@ export const Register: React.FC = () => {
             {loading ? 'Registering...' : 'Register'}
           </Button>
         </form>
+
+        <div className="relative my-6 flex items-center justify-center">
+          <Separator className="absolute inset-x-0" />
+          <span className="relative bg-card px-4 font-mono text-[10px] uppercase tracking-widest text-secondary">
+            Or authenticate via
+          </span>
+        </div>
+
+        <div className="space-y-3">
+          <Button
+            variant="secondary"
+            className="h-12 w-full gap-3"
+            onClick={() => window.location.href = `${API_BASE_URL}/oauth/google/login`}
+          >
+            <svg className="h-5 w-5" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"
+              />
+            </svg>
+            Continue with Google
+          </Button>
+          <Button
+            variant="secondary"
+            className="h-12 w-full gap-3"
+            onClick={() => window.location.href = `${API_BASE_URL}/oauth/github/login`}
+          >
+            <Github className="h-5 w-5" />
+            Continue with GitHub
+          </Button>
+        </div>
 
         <p className="mt-6 text-center text-sm text-secondary">
           Already have an account?{' '}
