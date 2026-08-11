@@ -32,4 +32,4 @@ EXPOSE 8000
 ENV PYTHONUNBUFFERED=1
 
 # Run the application with uvicorn and uvloop
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop", "--workers", "4"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--loop", "uvloop"]
