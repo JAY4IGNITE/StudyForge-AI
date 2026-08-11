@@ -46,7 +46,7 @@ const FEATURES = [
 
 export const Features: React.FC = () => {
   return (
-    <section id="features" className="border-t border-border bg-background py-24 relative overflow-hidden">
+    <section id="features" className="border-t border-border bg-background/20 backdrop-blur-md py-24 relative overflow-hidden">
       <div className="container relative z-10">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-3xl font-semibold tracking-tight md:text-4xl bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent">
@@ -68,7 +68,7 @@ export const Features: React.FC = () => {
           {FEATURES.map(({ icon: Icon, title, desc, hasMeteors }) => (
             <motion.div key={title} variants={motionConfig.fadeUp}>
               <Card
-                className="group h-full border-border bg-card/40 p-1 relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_24px_rgba(108,99,255,0.15)] hover:border-primary/50 backdrop-blur-md"
+                className="group h-full border-border bg-card/45 p-1 relative overflow-hidden transition-all duration-300 hover:shadow-[0_0_24px_rgba(108,99,255,0.15)] hover:border-primary/50 backdrop-blur-md"
               >
                 {hasMeteors && <Meteors number={15} />}
                 <CardHeader className="relative z-10">

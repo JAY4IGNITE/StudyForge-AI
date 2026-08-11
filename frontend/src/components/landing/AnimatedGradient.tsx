@@ -1,11 +1,10 @@
 import React from 'react';
 
 /**
- * Procedural animated gradient — hero-only visual identity for "The Foundry".
+ * Procedural animated gradient — landing page visual identity reminiscent of Apple ID.
  * Pure CSS (no JS raf loop). Blobs drift on independent transform keyframes.
- * Palette pulled from design tokens (ember/gold/steel) so it stays on-brand,
- * with a violet undertone for depth instead of the reference image's literal
- * magenta/coral/cream mix.
+ * Palette pulled from design tokens (ember/gold/steel/violet) to stay perfectly
+ * integrated with the updated premium palette.
  */
 export const AnimatedGradient: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
@@ -14,7 +13,7 @@ export const AnimatedGradient: React.FC<{ className?: string }> = ({ className =
       className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}
     >
       {/* base graphite layer already comes from bg-background on parent */}
-      <div className="absolute inset-0 [filter:blur(60px)] opacity-80">
+      <div className="absolute inset-0 [filter:blur(120px)] opacity-85">
         <span className="blob blob-ember" />
         <span className="blob blob-gold" />
         <span className="blob blob-steel" />
@@ -22,7 +21,7 @@ export const AnimatedGradient: React.FC<{ className?: string }> = ({ className =
       </div>
 
       {/* grain */}
-      <svg className="absolute inset-0 h-full w-full opacity-[0.05] mix-blend-overlay">
+      <svg className="absolute inset-0 h-full w-full opacity-[0.03] mix-blend-overlay">
         <filter id="grain">
           <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
         </filter>
@@ -39,44 +38,48 @@ export const AnimatedGradient: React.FC<{ className?: string }> = ({ className =
           will-change: transform;
         }
         .blob-ember {
-          top: 8%; left: 12%;
-          width: 42vw; height: 42vw; max-width: 560px; max-height: 560px;
-          background: radial-gradient(circle, hsl(var(--ember) / 0.55), transparent 70%);
-          animation: drift-a 26s ease-in-out infinite;
+          top: -10%; left: -10%;
+          width: 75vw; height: 75vw; max-width: 900px; max-height: 900px;
+          background: radial-gradient(circle, hsl(var(--ember) / 0.6), transparent 70%);
+          animation: drift-a 35s ease-in-out infinite;
         }
         .blob-gold {
-          top: 4%; right: 8%;
-          width: 30vw; height: 30vw; max-width: 420px; max-height: 420px;
-          background: radial-gradient(circle, hsl(var(--gold) / 0.5), transparent 70%);
-          animation: drift-b 22s ease-in-out infinite;
+          top: -5%; right: -10%;
+          width: 65vw; height: 65vw; max-width: 800px; max-height: 800px;
+          background: radial-gradient(circle, hsl(var(--gold) / 0.55), transparent 70%);
+          animation: drift-b 28s ease-in-out infinite;
         }
         .blob-steel {
-          bottom: 6%; left: 30%;
-          width: 34vw; height: 34vw; max-width: 460px; max-height: 460px;
-          background: radial-gradient(circle, hsl(var(--steel) / 0.4), transparent 70%);
-          animation: drift-c 30s ease-in-out infinite;
+          bottom: -10%; left: 10%;
+          width: 70vw; height: 70vw; max-width: 850px; max-height: 850px;
+          background: radial-gradient(circle, hsl(var(--steel) / 0.5), transparent 70%);
+          animation: drift-c 40s ease-in-out infinite;
         }
         .blob-violet {
-          bottom: -4%; right: 18%;
-          width: 26vw; height: 26vw; max-width: 380px; max-height: 380px;
-          background: radial-gradient(circle, hsl(262 70% 58% / 0.35), transparent 70%);
-          animation: drift-d 34s ease-in-out infinite;
+          bottom: -15%; right: 5%;
+          width: 60vw; height: 60vw; max-width: 750px; max-height: 750px;
+          background: radial-gradient(circle, hsl(262 85% 60% / 0.45), transparent 70%);
+          animation: drift-d 45s ease-in-out infinite;
         }
         @keyframes drift-a {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(4%, 6%) scale(1.08); }
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+          33% { transform: translate(8%, 10%) scale(1.15) rotate(45deg); }
+          66% { transform: translate(-4%, 12%) scale(0.95) rotate(-45deg); }
         }
         @keyframes drift-b {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(-6%, 4%) scale(0.94); }
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+          33% { transform: translate(-10%, 8%) scale(0.9) rotate(-30deg); }
+          66% { transform: translate(-6%, -10%) scale(1.1) rotate(30deg); }
         }
         @keyframes drift-c {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(3%, -5%) scale(1.05); }
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+          33% { transform: translate(6%, -8%) scale(1.1) rotate(60deg); }
+          66% { transform: translate(-8%, -4%) scale(0.9) rotate(-60deg); }
         }
         @keyframes drift-d {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          50% { transform: translate(-3%, -4%) scale(1.1); }
+          0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+          33% { transform: translate(-5%, -10%) scale(1.15) rotate(-45deg); }
+          66% { transform: translate(8%, 5%) scale(0.95) rotate(45deg); }
         }
         @media (prefers-reduced-motion: reduce) {
           .blob { animation: none !important; }
