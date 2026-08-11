@@ -29,6 +29,7 @@ services:
   - type: web
     name: studyforge-backend
     env: docker
+    plan: free
     dockerfilePath: backend/Dockerfile
     # Alternatively, you can deploy using native Python instead of Docker:
     # env: python
