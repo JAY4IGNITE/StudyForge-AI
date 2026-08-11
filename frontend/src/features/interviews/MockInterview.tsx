@@ -260,7 +260,7 @@ export const MockInterview: React.FC = () => {
                         {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     </div>
-                    <p className="text-sm leading-relaxed text-foreground/85">{t.question}</p>
+                    <p className="text-sm leading-relaxed text-foreground">{t.question}</p>
                   </div>
                 </div>
 
@@ -276,7 +276,7 @@ export const MockInterview: React.FC = () => {
                         </span>
                         <span className="text-xs font-bold text-foreground">You</span>
                       </div>
-                      <p className="text-right text-sm leading-relaxed text-foreground/85">{t.answer}</p>
+                      <p className="text-right text-sm leading-relaxed text-foreground">{t.answer}</p>
                     </div>
                   </div>
                 )}
@@ -299,7 +299,7 @@ export const MockInterview: React.FC = () => {
                   </div>
 
                   {isListening ? (
-                    <p className="text-right text-sm leading-relaxed text-foreground/85">
+                    <p className="text-right text-sm leading-relaxed text-foreground">
                       {userAnswer || <span className="animate-pulse text-secondary">Listening...</span>}
                     </p>
                   ) : (
