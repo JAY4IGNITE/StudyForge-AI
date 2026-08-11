@@ -13,6 +13,71 @@ router = APIRouter(prefix="/oauth", tags=["OAuth"])
 
 @router.get("/{provider}/login")
 async def oauth_login(provider: str, response: Response):
+    is_google_placeholder = not settings.GOOGLE_CLIENT_ID or settings.GOOGLE_CLIENT_ID.strip() in ("", "your_google_client_id")
+    is_github_placeholder = not settings.GITHUB_CLIENT_ID or settings.GITHUB_CLIENT_ID.strip() in ("", "your_github_client_id")
+
+    if provider == "google" and is_google_placeholder:
+        # Auto-authenticate Google mock user
+        email = "mock.google.user@example.com"
+        name = "Mock Google User"
+        oauth_id = "mock-google-id-12345"
+
+        user = await User.find_one({"auth_provider": "google", "oauth_id": oauth_id})
+        if not user:
+            user = await User.find_one({"email": email})
+            if user:
+                user.auth_provider = "google"
+                user.oauth_id = oauth_id
+                user.email_verified_at = user.email_verified_at or datetime.now(timezone.utc)
+                await user.save()
+            else:
+                user = User(
+                    email=email,
+                    display_name=name,
+                    auth_provider="google",
+                    oauth_id=oauth_id,
+                    password_hash=None,
+                    email_verified_at=datetime.now(timezone.utc)
+                )
+                await user.insert()
+
+        tokens = await auth_service.create_user_tokens(user)
+        redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}&refresh_token={tokens.refresh_token}"
+        res = RedirectResponse(redirect_url)
+        res.delete_cookie("oauth_state")
+        return res
+
+    elif provider == "github" and is_github_placeholder:
+        # Auto-authenticate GitHub mock user
+        email = "mock.github.user@example.com"
+        name = "Mock GitHub User"
+        oauth_id = "mock-github-id-12345"
+
+        user = await User.find_one({"auth_provider": "github", "oauth_id": oauth_id})
+        if not user:
+            user = await User.find_one({"email": email})
+            if user:
+                user.auth_provider = "github"
+                user.oauth_id = oauth_id
+                user.email_verified_at = user.email_verified_at or datetime.now(timezone.utc)
+                await user.save()
+            else:
+                user = User(
+                    email=email,
+                    display_name=name,
+                    auth_provider="github",
+                    oauth_id=oauth_id,
+                    password_hash=None,
+                    email_verified_at=datetime.now(timezone.utc)
+                )
+                await user.insert()
+
+        tokens = await auth_service.create_user_tokens(user)
+        redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}&refresh_token={tokens.refresh_token}"
+        res = RedirectResponse(redirect_url)
+        res.delete_cookie("oauth_state")
+        return res
+
     state = secrets.token_urlsafe(32)
     oauth_state = OAuthState(state=state, provider=provider)
     await oauth_state.insert()
