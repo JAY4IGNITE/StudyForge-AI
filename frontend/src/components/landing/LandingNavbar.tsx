@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
 import { fadeDownVariants } from '../../lib/motion';
 import { AnimatedButton } from '../motion';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 export const LandingNavbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -50,7 +51,8 @@ export const LandingNavbar: React.FC = () => {
           </a>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
           <AnimatedButton asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
             <Link to="/login">Log in</Link>
           </AnimatedButton>

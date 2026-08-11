@@ -7,46 +7,83 @@
 
 @layer base {
   :root {
-    --background: 240 20% 5%;
-    --foreground: 240 100% 97%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 4%;
 
-    --card: 240 17% 8%;
-    --card-foreground: 240 100% 97%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 4%;
 
-    --popover: 240 17% 8%;
-    --popover-foreground: 240 100% 97%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 4%;
     
-    --surface: 240 19% 13%;
+    --surface: 240 5% 96%;
 
-    --primary: 243 100% 69%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 240 6% 10%;
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 173 100% 43%;
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
 
-    --muted: 240 19% 13%;
-    --muted-foreground: 240 17% 60%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 173 100% 43%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 6% 10%;
 
-    --destructive: 349 100% 65%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 240 5% 96%;
     
-    --success: 151 100% 45%;
-    --success-foreground: 0 0% 0%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    --border: 0 0% 100%;
-    --input: 240 19% 13%;
-    --ring: 243 100% 69%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 240 6% 10%;
 
-    --gold: 51 100% 50%;
+    --gold: 45 93% 47%;
 
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
-    --radius-xl: 28px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
     --radius-pill: 9999px;
+  }
+
+  .dark {
+    --background: 240 10% 4%;
+    --foreground: 240 5% 96%;
+
+    --card: 240 10% 6%;
+    --card-foreground: 240 5% 96%;
+
+    --popover: 240 10% 6%;
+    --popover-foreground: 240 5% 96%;
+    
+    --surface: 240 6% 10%;
+
+    --primary: 240 5% 96%;
+    --primary-foreground: 240 10% 4%;
+
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 240 5% 96%;
+
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+
+    --accent: 240 4% 16%;
+    --accent-foreground: 240 5% 96%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 240 5% 96%;
+    
+    --success: 142 71% 45%;
+    --success-foreground: 240 5% 96%;
+
+    --border: 240 4% 16%;
+    --input: 240 4% 16%;
+    --ring: 240 5% 84%;
+
+    --gold: 45 93% 47%;
   }
 }
 

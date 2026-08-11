@@ -2,15 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { AnimatedButton } from '../motion';
+import { AnimatedButton, Spotlight, RetroGrid, ShinyButton, BorderBeam } from '../motion';
 import { motionConfig } from '../../lib/motion/motion-config';
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32">
-
+    <section className="relative overflow-hidden pt-32 pb-24 md:pt-40 md:pb-32 flex flex-col items-center">
+      <Spotlight className="-top-40 left-0 md:left-60 md:-top-20 text-black dark:text-white" />
+      <RetroGrid />
+      
       <motion.div 
         className="container relative z-10 grid items-center gap-14 md:grid-cols-2"
         variants={motionConfig.staggerChildren}
@@ -19,7 +20,7 @@ export const Hero: React.FC = () => {
       >
         <div>
           <motion.div variants={motionConfig.fadeUp}>
-            <Badge variant="secondary" className="gap-1.5 py-1">
+            <Badge variant="secondary" className="gap-1.5 py-1 backdrop-blur-md bg-secondary/20 border-secondary/30">
               <Sparkles className="h-3 w-3" />
               AI-POWERED LEARNING PLATFORM
             </Badge>
@@ -29,7 +30,9 @@ export const Hero: React.FC = () => {
             {"Your personal".split(" ").map((word, i) => (
               <motion.span key={i} variants={motionConfig.fadeUp}>{word}</motion.span>
             ))}
-            <motion.span variants={motionConfig.fadeUp} className="text-ember">AI study coach.</motion.span>
+            <motion.span variants={motionConfig.fadeUp} className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              AI study coach.
+            </motion.span>
           </h1>
 
           <motion.p 
@@ -42,12 +45,12 @@ export const Hero: React.FC = () => {
           </motion.p>
 
           <motion.div variants={motionConfig.fadeUp} className="mt-9 flex flex-wrap items-center gap-4">
-            <AnimatedButton asChild size="lg" className="animate-pulse-ring shimmer">
-              <Link to="/register">
+            <Link to="/register">
+              <ShinyButton>
                 Start Learning <ArrowRight className="h-4 w-4" />
-              </Link>
-            </AnimatedButton>
-            <AnimatedButton asChild size="lg" variant="outline">
+              </ShinyButton>
+            </Link>
+            <AnimatedButton asChild size="lg" variant="outline" className="backdrop-blur-md bg-background/30">
               <a href="#features">Explore Features</a>
             </AnimatedButton>
           </motion.div>
@@ -57,24 +60,25 @@ export const Hero: React.FC = () => {
           variants={motionConfig.fadeUp}
           className="relative animate-floating"
         >
-          <div className="rounded-2xl border border-border bg-card/80 p-5 shadow-[0_0_0_1px_hsl(var(--border)),0_30px_60px_-20px_rgba(108,99,255,0.25)] backdrop-blur-sm">
+          <div className="relative rounded-2xl border border-border bg-card/40 p-5 shadow-2xl backdrop-blur-xl">
+            <BorderBeam size={250} duration={12} delay={9} />
             <div className="flex items-center justify-between border-b border-border pb-3">
               <span className="font-display text-sm font-semibold">Today's Focus</span>
-              <Badge variant="steel">Live</Badge>
+              <Badge variant="steel" className="bg-primary/20 text-primary border-primary/30">Live</Badge>
             </div>
 
             <div className="mt-4">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-secondary">React Hooks</span>
-                <span className="font-mono text-ember">78%</span>
+                <span className="font-mono text-primary">78%</span>
               </div>
-              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-secondary">
-                <div className="h-full w-[78%] rounded-full bg-ember-gradient" />
+              <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-secondary/30">
+                <div className="h-full w-[78%] rounded-full bg-primary-gradient" />
               </div>
             </div>
 
-            <div className="mt-5 rounded-md border border-ember/20 bg-ember/5 p-3">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-ember">
+            <div className="mt-5 rounded-md border border-primary/20 bg-primary/10 p-3">
+              <div className="flex items-center gap-1.5 text-xs font-medium text-primary">
                 <Sparkles className="h-3 w-3" /> AI Recommendation
               </div>
               <p className="mt-1 text-sm text-foreground/90">
@@ -84,7 +88,7 @@ export const Hero: React.FC = () => {
 
             <div className="mt-5 flex items-center justify-between border-t border-border pt-4 text-xs">
               <span className="text-secondary">Weekly progress</span>
-              <span className="font-mono text-gold">+14%</span>
+              <span className="font-mono text-success">+14%</span>
             </div>
           </div>
         </motion.div>

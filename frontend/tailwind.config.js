@@ -118,6 +118,22 @@ export default {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        'meteor-effect': {
+          '0%': { transform: 'rotate(215deg) translateX(0)', opacity: 1 },
+          '70%': { opacity: 1 },
+          '100%': { transform: 'rotate(215deg) translateX(-500px)', opacity: 0 },
+        },
+        'border-beam': {
+          '100%': { 'offset-distance': '100%' },
+        },
+        'spotlight': {
+          '0%': { opacity: 0, transform: 'translate(-72%, -62%) scale(0.5)' },
+          '100%': { opacity: 1, transform: 'translate(-50%,-40%) scale(1)' },
+        },
+        'grid': {
+          '0%': { transform: 'translateY(-50%)' },
+          '100%': { transform: 'translateY(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -126,6 +142,10 @@ export default {
         flicker: 'flicker 2.4s ease-in-out infinite',
         rise: 'rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both',
         shimmer: 'shimmer 2.2s linear infinite',
+        'meteor-effect': 'meteor-effect 5s linear infinite',
+        'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
+        'spotlight': 'spotlight 2s ease .75s 1 forwards',
+        'grid': 'grid 15s linear infinite',
       },
     },
   },
