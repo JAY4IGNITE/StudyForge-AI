@@ -16,6 +16,19 @@ import {
   Code2,
   Menu,
   Settings,
+  LayoutDashboard,
+  BrainCircuit,
+  Server,
+  Database,
+  Cpu,
+  Brain,
+  ClipboardList,
+  Image as ImageIcon,
+  Target,
+  LineChart,
+  FileText,
+  History,
+  BookText
 } from 'lucide-react';
 import { FeedbackModal } from '../../features/feedback/FeedbackModal';
 import { AnimatedButton as Button } from '../motion';
@@ -31,14 +44,65 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
-const navItems = [
-  { label: 'Dashboard', path: '/dashboard', icon: BarChart2 },
-  { label: 'Practice Loop', path: '/practice', icon: BookOpen },
-  { label: 'Mock Interview', path: '/interview', icon: Award },
-  { label: 'Coding Practice', path: '/coding-practice', icon: Code2 },
-  { label: 'Learning Roadmap', path: '/roadmap', icon: Map },
-  { label: 'Resource Library', path: '/resources', icon: Compass },
-  { label: 'Profile', path: '/profile', icon: UserIcon },
+const navGroups = [
+  {
+    title: '',
+    items: [
+      { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    ]
+  },
+  {
+    title: 'PREPARE',
+    items: [
+      { label: 'Coding Practice', path: '/coding-practice', icon: Code2 },
+      { label: 'Aptitude', path: '/aptitude', icon: BrainCircuit },
+      { label: 'CS Fundamentals', path: '/cs-fundamentals', icon: Server },
+      { label: 'SQL', path: '/sql', icon: Database },
+      { label: 'Core Subjects', path: '/core', icon: Cpu },
+    ]
+  },
+  {
+    title: 'AI',
+    items: [
+      { label: 'AI Tutor', path: '/ai-tutor', icon: Brain },
+      { label: 'Question Generator', path: '/ai-generator', icon: ClipboardList },
+      { label: 'Photo Solve', path: '/photo-solve', icon: ImageIcon },
+      { label: 'AI Study Coach', path: '/ai-coach', icon: Target },
+    ]
+  },
+  {
+    title: 'INTERVIEW',
+    items: [
+      { label: 'Mock Interview', path: '/interview', icon: Award },
+      { label: 'Interview Practice', path: '/interview-practice', icon: MessageSquare },
+      { label: 'Interview Analytics', path: '/interview-analytics', icon: LineChart },
+    ]
+  },
+  {
+    title: 'CAREER',
+    items: [
+      { label: 'Resume & ATS', path: '/ats', icon: FileText },
+      { label: 'Coding Profiles', path: '/coding-profiles', icon: UserIcon },
+      { label: 'Placement Readiness', path: '/readiness', icon: BarChart2 },
+    ]
+  },
+  {
+    title: 'LEARN',
+    items: [
+      { label: 'Study Roadmap', path: '/roadmap', icon: Map },
+      { label: 'Flashcards', path: '/flashcards', icon: BookOpen },
+      { label: 'Resources', path: '/resources', icon: Compass },
+      { label: 'Notes', path: '/notes', icon: BookText },
+    ]
+  },
+  {
+    title: 'ANALYTICS',
+    items: [
+      { label: 'Progress', path: '/progress', icon: LineChart },
+      { label: 'Mastery', path: '/mastery', icon: Target },
+      { label: 'History', path: '/history', icon: History },
+    ]
+  }
 ];
 
 function initials(name?: string) {
@@ -64,37 +128,48 @@ const Logo: React.FC = () => (
 );
 
 const NavList: React.FC<{ pathname: string; onNavigate?: () => void }> = ({ pathname, onNavigate }) => (
-  <nav className="space-y-1">
-    {navItems.map((item) => {
-      const Icon = item.icon;
-      const isActive = pathname === item.path;
-      return (
-        <Link
-          key={item.path}
-          to={item.path}
-          onClick={onNavigate}
-          className="relative flex items-center gap-3 rounded-md px-3.5 py-2.5 text-sm font-medium text-secondary transition-colors hover:text-foreground"
-        >
-          {isActive && (
-            <motion.span
-              layoutId="nav-active-indicator"
-              transition={springTransitions.layoutIndicator}
-              className="absolute inset-0 rounded-md bg-ember/10"
-            />
-          )}
-          {isActive && (
-            <motion.span
-              layoutId="nav-active-bar"
-              transition={springTransitions.layoutIndicator}
-              className="absolute left-0 top-1/2 h-6 w-[4px] -translate-y-1/2 rounded-r-full bg-ember shadow-glow-primary"
-            />
-          )}
-          <Icon className={`relative z-10 h-4 w-4 shrink-0 transition-colors ${isActive ? 'text-ember' : ''}`} />
-          <span className={`relative z-10 transition-colors ${isActive ? 'text-foreground font-semibold' : ''}`}>{item.label}</span>
-        </Link>
-      );
-    })}
-  </nav>
+  <div className="space-y-6">
+    {navGroups.map((group, idx) => (
+      <div key={idx}>
+        {group.title && (
+          <h4 className="mb-2 px-3.5 text-[11px] font-bold uppercase tracking-wider text-secondary/60">
+            {group.title}
+          </h4>
+        )}
+        <nav className="space-y-1">
+          {group.items.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={onNavigate}
+                className="relative flex items-center gap-3 rounded-md px-3.5 py-2 text-sm font-medium text-secondary transition-colors hover:text-foreground hover:bg-secondary/10"
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-indicator"
+                    transition={springTransitions.layoutIndicator}
+                    className="absolute inset-0 rounded-md bg-ember/10"
+                  />
+                )}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active-bar"
+                    transition={springTransitions.layoutIndicator}
+                    className="absolute left-0 top-1/2 h-6 w-[4px] -translate-y-1/2 rounded-r-full bg-ember shadow-glow-primary"
+                  />
+                )}
+                <Icon className={`relative z-10 h-4 w-4 shrink-0 transition-colors ${isActive ? 'text-ember' : ''}`} />
+                <span className={`relative z-10 transition-colors ${isActive ? 'text-foreground font-semibold' : ''}`}>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+    ))}
+  </div>
 );
 
 const SidebarFooter: React.FC<{ onFeedback: () => void }> = ({ onFeedback }) => {
@@ -171,15 +246,17 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-        className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col justify-between border-r border-border bg-card/40 p-5 backdrop-blur-[20px] md:flex"
+        className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-border bg-card/40 p-5 backdrop-blur-[20px] md:flex"
       >
-        <div>
-          <div className="mb-8 px-1">
-            <Logo />
-          </div>
+        <div className="mb-6 px-1 shrink-0">
+          <Logo />
+        </div>
+        <div className="flex-1 overflow-y-auto pb-6 -mx-2 px-2" style={{ scrollbarWidth: 'none' }}>
           <NavList pathname={location.pathname} />
         </div>
-        <SidebarFooter onFeedback={() => setIsFeedbackOpen(true)} />
+        <div className="pt-4 shrink-0 mt-auto border-t border-border/50">
+          <SidebarFooter onFeedback={() => setIsFeedbackOpen(true)} />
+        </div>
       </motion.aside>
 
       {/* Mobile top bar + Sheet nav */}
@@ -191,15 +268,17 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="flex w-72 flex-col justify-between">
+          <SheetContent side="left" className="flex w-72 flex-col">
             <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <div>
-              <div className="mb-8 mt-2">
-                <Logo />
-              </div>
+            <div className="mb-6 mt-2 shrink-0">
+              <Logo />
+            </div>
+            <div className="flex-1 overflow-y-auto pb-6 -mx-2 px-2" style={{ scrollbarWidth: 'none' }}>
               <NavList pathname={location.pathname} onNavigate={() => setMobileOpen(false)} />
             </div>
-            <SidebarFooter onFeedback={() => setIsFeedbackOpen(true)} />
+            <div className="pt-4 shrink-0 mt-auto border-t border-border/50">
+              <SidebarFooter onFeedback={() => setIsFeedbackOpen(true)} />
+            </div>
           </SheetContent>
         </Sheet>
       </div>
