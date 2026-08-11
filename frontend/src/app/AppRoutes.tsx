@@ -29,6 +29,8 @@ const AtsDashboard = React.lazy(() => import('../pages/AtsDashboard'));
 const JobSearch = React.lazy(() => import('../pages/JobSearch').then(m => ({ default: m.JobSearch })));
 const JobDetails = React.lazy(() => import('../pages/JobDetails').then(m => ({ default: m.JobDetails })));
 const SavedJobs = React.lazy(() => import('../pages/SavedJobs').then(m => ({ default: m.SavedJobs })));
+const ProfileSetupPage = React.lazy(() => import('../pages/settings/ProfileSetupPage').then(m => ({ default: m.ProfileSetupPage })));
+const PublicProfilePage = React.lazy(() => import('../pages/PublicProfilePage').then(m => ({ default: m.PublicProfilePage })));
 const LandingPage = React.lazy(() => import('../pages/LandingPage').then(m => ({ default: m.LandingPage })));
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -71,6 +73,7 @@ const AnimatedRoutes: React.FC = () => {
         <Route path="/verify-email" element={<AnimatedPage><VerifyEmail /></AnimatedPage>} />
         <Route path="/forgot-password" element={<AnimatedPage><ForgotPassword /></AnimatedPage>} />
         <Route path="/reset-password" element={<AnimatedPage><ResetPassword /></AnimatedPage>} />
+        <Route path="/profile/:slug" element={<AnimatedPage><PublicProfilePage /></AnimatedPage>} />
 
         {/* Protected Application Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><AnimatedPage><Dashboard /></AnimatedPage></ProtectedRoute>} />
@@ -101,6 +104,9 @@ const AnimatedRoutes: React.FC = () => {
         <Route path="/jobs" element={<ProtectedRoute><AnimatedPage><JobSearch /></AnimatedPage></ProtectedRoute>} />
         <Route path="/jobs/saved" element={<ProtectedRoute><AnimatedPage><SavedJobs /></AnimatedPage></ProtectedRoute>} />
         <Route path="/jobs/:jobId" element={<ProtectedRoute><AnimatedPage><JobDetails /></AnimatedPage></ProtectedRoute>} />
+
+        {/* Developer Portfolio */}
+        <Route path="/settings/coding-profile" element={<ProtectedRoute><AnimatedPage><ProfileSetupPage /></AnimatedPage></ProtectedRoute>} />
 
         {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

@@ -30,7 +30,8 @@ import {
   History,
   BookText,
   Briefcase,
-  Bookmark
+  Bookmark,
+  UserCircle
 } from 'lucide-react';
 import { FeedbackModal } from '../../features/feedback/FeedbackModal';
 import { AnimatedButton as Button } from '../motion';
@@ -72,6 +73,7 @@ const navGroups = [
       { label: 'Job Search', path: '/jobs', icon: Briefcase },
       { label: 'Saved Jobs', path: '/jobs/saved', icon: Bookmark },
       { label: 'Resume & ATS', path: '/ats', icon: FileText },
+      { label: 'Developer Portfolio', path: '/settings/coding-profile', icon: UserCircle },
     ]
   }
 ];

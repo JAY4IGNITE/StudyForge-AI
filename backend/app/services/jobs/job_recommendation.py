@@ -1,5 +1,5 @@
 from app.models.user import User
-from app.services.ai.generator import AIGenerator
+from app.services.ai_service import AIService
 from app.services.jobs.jsearch_service import jsearch_service
 from app.services.jobs.job_matcher import job_matcher
 from fastapi import HTTPException
@@ -7,7 +7,7 @@ from typing import Dict, Any
 
 class JobRecommendationService:
     def __init__(self):
-        self.ai = AIGenerator()
+        pass
 
     async def analyze_job(self, job_id: str, current_user: User) -> Dict[str, Any]:
         """
@@ -52,7 +52,7 @@ class JobRecommendationService:
             """
             
             # 5. Call AI (using existing infrastructure)
-            analysis_result = await self.ai.generate_json(prompt)
+            analysis_result = await AIService.generate_json(prompt)
             
             return {
                 "match_score": match_data["overall_match_percentage"],

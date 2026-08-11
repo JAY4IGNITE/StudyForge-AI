@@ -9,6 +9,7 @@ from app.models.interview import InterviewSession, InterviewReport, ResumeAnalys
 from app.models.feedback import Feedback, UserRoadmap
 from app.models.resume import Resume
 from app.models.ats_report import AtsReport
+from app.models.coding_profile import CodingProfile
 
 # Monkeypatch for Beanie 2.1.0 + PyMongo 4.x compatibility
 if not hasattr(AsyncIOMotorClient, "append_metadata"):
@@ -45,6 +46,7 @@ async def init_db():
                 Feedback,
                 UserRoadmap,
                 AtsReport,
+                CodingProfile,
             ],
         )
         logger.info("Beanie initialized successfully with all document models.")

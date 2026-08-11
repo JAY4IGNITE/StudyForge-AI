@@ -129,4 +129,46 @@ Respond ONLY with a valid JSON array of objects with the following format (no ma
             logger.error(f"Exception generating questions via NVIDIA NIM: {e}")
             return []
 
+    @staticmethod
+    async def generate_json(prompt: str) -> Dict[str, Any]:
+        """
+        Uses NVIDIA NIM to generate JSON based on a prompt.
+        """
+        if not settings.NVIDIA_NIM_API_KEY:
+            logger.warning("NVIDIA_NIM_API_KEY missing during json generation")
+            return {}
+
+        headers = {
+            "Authorization": f"Bearer {settings.NVIDIA_NIM_API_KEY}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "model": DEFAULT_MODEL,
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.5,
+            "max_tokens": 2048,
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=15.0) as client:
+                res = await client.post(NVIDIA_NIM_URL, headers=headers, json=payload)
+                if res.status_code == 200:
+                    content = res.json()["choices"][0]["message"]["content"].strip()
+                    if content.startswith("```json"):
+                        content = content[7:]
+                    if content.startswith("```"):
+                        content = content[3:]
+                    if content.endswith("```"):
+                        content = content[:-3]
+                    content = content.strip()
+                    return json.loads(content)
+                else:
+                    logger.error(f"NVIDIA NIM json generation error {res.status_code}: {res.text}")
+                    return {}
+        except Exception as e:
+            logger.error(f"Exception generating json via NVIDIA NIM: {e}")
+            return {}
+
+
 ai_service = AIService()
