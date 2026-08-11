@@ -72,6 +72,11 @@ async def health_check():
 async def ready_check():
     return {"status": "ready", "database": "connected"}
 
+@app.get("/", include_in_schema=False)
+async def root():
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/docs")
+
 # Serve frontend static files
 frontend_dist = os.path.join(os.path.dirname(__file__), "../../frontend/dist")
 if os.path.isdir(frontend_dist):
