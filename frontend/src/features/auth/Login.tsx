@@ -2,13 +2,29 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient, API_BASE_URL } from '../../lib/axios';
 import { useAuth } from '../../app/AuthProvider';
-import { Flame, Mail, Lock, ArrowRight, Github } from 'lucide-react';
+import { Flame, Mail, Lock, ArrowRight, Github, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { PasswordInput } from '../../components/ui/PasswordInput';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
+};
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -36,26 +52,40 @@ export const Login: React.FC = () => {
 
   return (
     <div className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6">
-      <Card className="w-full max-w-lg p-8 shadow-2xl">
-        <div className="mb-6 flex flex-col items-center text-center">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
-            <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
-          </div>
-          <h1 className="font-display text-2xl font-medium tracking-tight text-foreground">
-            StudyForge<span className="text-ember">.</span>
-          </h1>
-          <p className="mt-2 max-w-[250px] text-sm text-secondary">
-            Access your AI-powered learning workspace.
-          </p>
-        </div>
+      <Card className="w-full max-w-lg p-8 shadow-2xl overflow-hidden">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div variants={itemVariants} className="mb-6 flex flex-col items-center text-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
+              <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
+            </div>
+            <h1 className="font-display text-2xl font-medium tracking-tight text-foreground">
+              StudyForge<span className="text-ember">.</span>
+            </h1>
+            <p className="mt-2 max-w-[250px] text-sm text-secondary">
+              Access your AI-powered learning workspace.
+            </p>
+          </motion.div>
 
-        {error && (
-          <div className="mb-4 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-center text-sm text-destructive">
-            {error}
-          </div>
-        )}
+          <AnimatePresence>
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-center text-sm text-destructive">
+                  {error}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+          <motion.form variants={itemVariants} onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="email" className="mb-2 block text-[11px] uppercase tracking-wider text-secondary">
               Email address
@@ -96,20 +126,48 @@ export const Login: React.FC = () => {
             </div>
           </div>
 
-          <Button type="submit" disabled={loading} className="mt-2 h-12 w-full gap-2 text-xs font-bold uppercase tracking-wide">
-            {loading ? 'Authenticating...' : 'Continue to workspace'}
-            {!loading && <ArrowRight className="h-4 w-4" />}
+          <Button type="submit" disabled={loading} className="mt-2 h-12 w-full gap-2 text-xs font-bold uppercase tracking-wide overflow-hidden">
+            <AnimatePresence mode="wait">
+              {loading ? (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex items-center gap-2"
+                >
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                  >
+                    <Loader2 className="h-4 w-4" />
+                  </motion.div>
+                  Authenticating...
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="idle"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex items-center gap-2"
+                >
+                  Continue to workspace
+                  <ArrowRight className="h-4 w-4" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Button>
-        </form>
+        </motion.form>
 
-        <div className="relative my-6 flex items-center justify-center">
+        <motion.div variants={itemVariants} className="relative my-6 flex items-center justify-center">
           <Separator className="absolute inset-x-0" />
           <span className="relative bg-card px-4 font-mono text-[10px] uppercase tracking-widest text-secondary">
             Or authenticate via
           </span>
-        </div>
+        </motion.div>
 
-        <div className="space-y-3">
+        <motion.div variants={itemVariants} className="space-y-3">
           <Button 
             variant="secondary" 
             className="h-12 w-full gap-3"
@@ -131,14 +189,15 @@ export const Login: React.FC = () => {
             <Github className="h-5 w-5" />
             Continue with GitHub
           </Button>
-        </div>
+        </motion.div>
 
-        <p className="mt-6 text-center text-xs text-secondary">
+        <motion.p variants={itemVariants} className="mt-6 text-center text-xs text-secondary">
           New researcher?{' '}
           <Link to="/register" className="font-medium text-ember hover:text-ember/80 hover:underline">
             Sign up
           </Link>
-        </p>
+        </motion.p>
+        </motion.div>
       </Card>
     </div>
   );
