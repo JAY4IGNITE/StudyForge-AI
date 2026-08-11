@@ -59,13 +59,6 @@ const navGroups = [
     ]
   },
   {
-    title: 'AI',
-    items: [
-      { label: 'AI Tutor', path: '/ai-tutor', icon: Brain },
-      { label: 'Photo Solve', path: '/photo-solve', icon: ImageIcon },
-    ]
-  },
-  {
     title: 'INTERVIEW',
     items: [
       { label: 'Mock Interview', path: '/interview', icon: Award },
@@ -75,14 +68,6 @@ const navGroups = [
     title: 'CAREER',
     items: [
       { label: 'Resume & ATS', path: '/ats', icon: FileText },
-    ]
-  },
-  {
-    title: 'LEARN',
-    items: [
-      { label: 'Study Roadmap', path: '/roadmap', icon: Map },
-      { label: 'Flashcards', path: '/flashcards', icon: BookOpen },
-      { label: 'Resources', path: '/resources', icon: Compass },
     ]
   }
 ];

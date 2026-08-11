@@ -64,6 +64,8 @@ class Settings(BaseSettings):
     AI_REQUEST_TIMEOUT_SECONDS: int = 12
     AI_MAX_DAILY_REQUESTS_PER_USER: int = 100
 
+    JSEARCH_API_KEY: Optional[str] = None
+
     model_config = SettingsConfigDict(env_file=["../.env", ".env"], env_file_encoding="utf-8", extra="ignore")
 
 settings = Settings()
