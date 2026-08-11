@@ -28,7 +28,7 @@ export default {
         '4xl': '64px',
       },
       colors: {
-        border: 'rgba(255,255,255,0.06)',
+        border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
@@ -69,6 +69,17 @@ export default {
         gold: {
           DEFAULT: 'hsl(var(--gold))',
         },
+        ember: {
+          DEFAULT: 'hsl(var(--ember))',
+          foreground: 'hsl(var(--ember-foreground))',
+        },
+        steel: {
+          DEFAULT: 'hsl(var(--steel))',
+          foreground: 'hsl(var(--steel-foreground))',
+        },
+      },
+      textColor: {
+        secondary: 'hsl(var(--muted-foreground))',
       },
       borderRadius: {
         sm: 'var(--radius-sm)',

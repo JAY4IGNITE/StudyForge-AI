@@ -29,9 +29,9 @@ export const LandingNavbar: React.FC = () => {
       )}
     >
       <nav className="container flex h-16 items-center justify-between">
-        <Link to="/" className="group flex items-center gap-2 font-display text-xl font-semibold tracking-tight">
+        <Link to="/" className="group flex items-center gap-2 font-display text-xl font-semibold tracking-tight font-bold">
           <Flame className="h-6 w-6 text-ember transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
-          <span className="bg-gradient-to-r from-ember to-secondary bg-clip-text text-transparent transition-all duration-500 group-hover:from-secondary group-hover:to-ember">
+          <span className="bg-gradient-to-r from-ember to-gold bg-clip-text text-transparent transition-all duration-500 group-hover:from-gold group-hover:to-ember">
             StudyForge
           </span>
         </Link>
