@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 
 export const AIShowcase: React.FC = () => {
   return (
-    <section id="ai-coach" className="border-t border-border bg-background py-24">
+    <section id="ai-coach" className="border-t border-border bg-background/20 backdrop-blur-md py-24">
       <div className="container grid items-center gap-14 md:grid-cols-2">
         <div>
           <Badge variant="steel" className="gap-1.5 py-1">
@@ -21,7 +21,7 @@ export const AIShowcase: React.FC = () => {
           </p>
         </div>
 
-        <div className="rounded-lg border border-border bg-card/80 p-5 shadow-[0_20px_50px_-20px_hsl(var(--steel)/0.25)]">
+        <div className="rounded-lg border border-border bg-card/45 backdrop-blur-md p-5 shadow-[0_20px_50px_-20px_hsl(var(--steel)/0.25)]">
           <div className="flex items-center gap-2 border-b border-border pb-3 text-sm font-medium">
             <MessageCircle className="h-4 w-4 text-steel" />
             AI Coach Session
