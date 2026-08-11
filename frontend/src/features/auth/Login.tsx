@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { apiClient } from '../../lib/axios';
+import { apiClient, API_BASE_URL } from '../../lib/axios';
 import { useAuth } from '../../app/AuthProvider';
 import { Flame, Mail, Lock, ArrowRight, Github } from 'lucide-react';
 import { Card } from '../../components/ui/card';
@@ -113,7 +113,7 @@ export const Login: React.FC = () => {
           <Button 
             variant="secondary" 
             className="h-12 w-full gap-3"
-            onClick={() => window.location.href = 'http://localhost:8000/api/v1/oauth/google/login'}
+            onClick={() => window.location.href = `${API_BASE_URL}/oauth/google/login`}
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -126,7 +126,7 @@ export const Login: React.FC = () => {
           <Button 
             variant="secondary" 
             className="h-12 w-full gap-3"
-            onClick={() => window.location.href = 'http://localhost:8000/api/v1/oauth/github/login'}
+            onClick={() => window.location.href = `${API_BASE_URL}/oauth/github/login`}
           >
             <Github className="h-5 w-5" />
             Continue with GitHub

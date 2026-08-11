@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { WebSocketClient } from '../services/websocket/WebSocketClient';
 import { useAuth } from './useAuth';
 
+import { API_BASE_URL } from '../lib/axios';
+
 export type ConnectionState = 'connecting' | 'connected' | 'reconnecting' | 'disconnected' | 'error';
 
 export function useWebSocket(sessionId?: string) {
@@ -17,8 +19,9 @@ export function useWebSocket(sessionId?: string) {
     // Build WebSocket URL
     // Handle both local development (http://localhost:8000 -> ws://localhost:8000)
     // and production (https://... -> wss://...)
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
-    const wsUrl = apiUrl.replace('http', 'ws').replace('/api/v1', '') + `/ws/interviews/${sessionId}`;
+    // If API_BASE_URL starts with '/', we prepend window.location.origin
+    const base = API_BASE_URL.startsWith('/') ? window.location.origin + API_BASE_URL : API_BASE_URL;
+    const wsUrl = base.replace('http', 'ws').replace('/api/v1', '') + `/api/v1/ws/interviews/${sessionId}`;
     
     wsRef.current = new WebSocketClient(wsUrl);
     const client = wsRef.current;

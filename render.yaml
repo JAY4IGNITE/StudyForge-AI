@@ -1,0 +1,77 @@
+previewsEnabled: true
+services:
+  # -------------------------------------------------------------
+  # Frontend (Static Site)
+  # -------------------------------------------------------------
+  - type: web
+    name: studyforge-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    # Optional fallback for React Router SPA (if not automatically handled)
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Explicitly set production environment variable so Vite uses '/api/v1' instead of localhost
+      - key: VITE_API_BASE_URL
+        fromService:
+          type: web
+          name: studyforge-backend
+          envVarKey: RENDER_EXTERNAL_URL
+          property: url
+      # We need to append /api/v1 in Vite or handle it in axios.ts
+      # Using a dynamic value here ensures the frontend hits the actual backend URL
+
+  # -------------------------------------------------------------
+  # Backend (Python / FastAPI)
+  # -------------------------------------------------------------
+  - type: web
+    name: studyforge-backend
+    env: docker
+    dockerfilePath: backend/Dockerfile
+    # Alternatively, you can deploy using native Python instead of Docker:
+    # env: python
+    # buildCommand: cd backend && pip install -r requirements.txt
+    # startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PORT
+        value: 8000
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: studyforge-frontend
+          envVarKey: RENDER_EXTERNAL_URL
+          property: url
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: studyforge-backend
+          envVarKey: RENDER_EXTERNAL_URL
+          property: url
+      - key: CORS_ORIGINS
+        fromService:
+          type: web
+          name: studyforge-frontend
+          envVarKey: RENDER_EXTERNAL_URL
+          property: url
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DATABASE
+        value: studyforge
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: studyforge-redis
+          envVarKey: REDIS_URL
+
+  # -------------------------------------------------------------
+  # Managed Redis Cache
+  # -------------------------------------------------------------
+  - type: redis
+    name: studyforge-redis
+    ipAllowList: [] # empty means all services in this Render account can connect
+    plan: free # or starter
