@@ -55,35 +55,26 @@ const navGroups = [
     title: 'PREPARE',
     items: [
       { label: 'Coding Practice', path: '/coding-practice', icon: Code2 },
-      { label: 'Aptitude', path: '/aptitude', icon: BrainCircuit },
-      { label: 'CS Fundamentals', path: '/cs-fundamentals', icon: Server },
-      { label: 'SQL', path: '/sql', icon: Database },
-      { label: 'Core Subjects', path: '/core', icon: Cpu },
+      { label: 'Practice Loop', path: '/practice', icon: BrainCircuit },
     ]
   },
   {
     title: 'AI',
     items: [
       { label: 'AI Tutor', path: '/ai-tutor', icon: Brain },
-      { label: 'Question Generator', path: '/ai-generator', icon: ClipboardList },
       { label: 'Photo Solve', path: '/photo-solve', icon: ImageIcon },
-      { label: 'AI Study Coach', path: '/ai-coach', icon: Target },
     ]
   },
   {
     title: 'INTERVIEW',
     items: [
       { label: 'Mock Interview', path: '/interview', icon: Award },
-      { label: 'Interview Practice', path: '/interview-practice', icon: MessageSquare },
-      { label: 'Interview Analytics', path: '/interview-analytics', icon: LineChart },
     ]
   },
   {
     title: 'CAREER',
     items: [
       { label: 'Resume & ATS', path: '/ats', icon: FileText },
-      { label: 'Coding Profiles', path: '/coding-profiles', icon: UserIcon },
-      { label: 'Placement Readiness', path: '/readiness', icon: BarChart2 },
     ]
   },
   {
@@ -92,15 +83,6 @@ const navGroups = [
       { label: 'Study Roadmap', path: '/roadmap', icon: Map },
       { label: 'Flashcards', path: '/flashcards', icon: BookOpen },
       { label: 'Resources', path: '/resources', icon: Compass },
-      { label: 'Notes', path: '/notes', icon: BookText },
-    ]
-  },
-  {
-    title: 'ANALYTICS',
-    items: [
-      { label: 'Progress', path: '/progress', icon: LineChart },
-      { label: 'Mastery', path: '/mastery', icon: Target },
-      { label: 'History', path: '/history', icon: History },
     ]
   }
 ];
