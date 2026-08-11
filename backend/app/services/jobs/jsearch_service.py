@@ -6,15 +6,12 @@ from app.core.config import settings
 from app.core.logging import logger
 
 class JSearchService:
-    BASE_URL = "https://jsearch.p.rapidapi.com"
+    BASE_URL = "https://api.openwebninja.com/jsearch"
 
     def __init__(self):
-        self.api_key = settings.JSEARCH_API_KEY
-        if not self.api_key:
-            logger.warning("JSEARCH_API_KEY is not set. Job search will use mock data or fail.")
+        self.api_key = settings.JSEARCH_API_KEY or "ak_vtwjdgusa9bfoeaerph11opdpbql6uow889t7zzr7yw3n7o"
         self.headers = {
-            "X-RapidAPI-Key": self.api_key or "",
-            "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
+            "X-API-Key": self.api_key
         }
     
     async def search_jobs(
@@ -27,10 +24,7 @@ class JSearchService:
         date_posted: str = "all"
     ) -> Dict[str, Any]:
         """Search jobs using JSearch API."""
-        if not self.api_key:
-            return self._get_mock_search_response(query)
-
-        endpoint = f"{self.BASE_URL}/search"
+        endpoint = f"{self.BASE_URL}/search-v2"
         
         # JSearch combines many filters into the query string sometimes, but also has explicit params
         params: Dict[str, Any] = {
@@ -80,9 +74,6 @@ class JSearchService:
 
     async def get_job_details(self, job_id: str) -> Dict[str, Any]:
         """Get details for a specific job."""
-        if not self.api_key:
-            return self._get_mock_job_details(job_id)
-
         endpoint = f"{self.BASE_URL}/job-details"
         params = {"job_id": job_id}
 
@@ -105,67 +96,6 @@ class JSearchService:
             logger.error(f"Error fetching job details for {job_id}: {str(e)}")
             raise HTTPException(status_code=502, detail="Failed to fetch job details.")
 
-    def _get_mock_search_response(self, query: str) -> Dict[str, Any]:
-        """Return a mock response for development when API key is not set."""
-        return {
-            "status": "OK",
-            "request_id": "mock-req-123",
-            "parameters": {"query": query},
-            "data": [
-                {
-                    "job_id": "mock-job-1",
-                    "employer_name": "Tech Innovators Inc",
-                    "employer_logo": "https://ui-avatars.com/api/?name=TI&background=random",
-                    "employer_website": "https://example.com",
-                    "job_publisher": "LinkedIn",
-                    "job_employment_type": "INTERN",
-                    "job_title": f"{query.title()} Intern",
-                    "job_apply_link": "https://example.com/apply",
-                    "job_description": f"We are looking for a highly motivated {query} intern to join our team. You will work on cutting-edge technologies like Python, React, and AWS.",
-                    "job_is_remote": True,
-                    "job_city": "San Francisco",
-                    "job_state": "CA",
-                    "job_country": "US",
-                    "job_posted_at_datetime_utc": "2026-08-10T10:00:00.000Z",
-                    "job_min_salary": 3000,
-                    "job_max_salary": 5000,
-                    "job_salary_currency": "USD",
-                    "job_salary_period": "MONTH",
-                    "job_required_skills": ["Python", "React", "Git", "REST APIs", "AWS"],
-                    "job_required_experience": {"required_experience_in_months": 0}
-                },
-                {
-                    "job_id": "mock-job-2",
-                    "employer_name": "Global Systems Solutions",
-                    "employer_logo": "https://ui-avatars.com/api/?name=GS&background=random",
-                    "employer_website": "https://example.com",
-                    "job_publisher": "Indeed",
-                    "job_employment_type": "FULLTIME",
-                    "job_title": f"Junior {query.title()}",
-                    "job_apply_link": "https://example.com/apply2",
-                    "job_description": "Join our backend team. Requirements include Python, FastAPI, MongoDB, and Docker.",
-                    "job_is_remote": False,
-                    "job_city": "Bengaluru",
-                    "job_state": "KA",
-                    "job_country": "IN",
-                    "job_posted_at_datetime_utc": "2026-08-09T14:30:00.000Z",
-                    "job_min_salary": None,
-                    "job_max_salary": None,
-                    "job_required_skills": ["Python", "FastAPI", "MongoDB", "Docker"],
-                    "job_required_experience": {"required_experience_in_months": 12}
-                }
-            ]
-        }
-        
-    def _get_mock_job_details(self, job_id: str) -> Dict[str, Any]:
-        """Return a mock job detail response."""
-        mock_data = self._get_mock_search_response("Software Engineer")["data"]
-        job = next((j for j in mock_data if j["job_id"] == job_id), mock_data[0])
-        return {
-            "status": "OK",
-            "request_id": "mock-req-456",
-            "parameters": {"job_id": job_id},
-            "data": [job]
-        }
+
 
 jsearch_service = JSearchService()
