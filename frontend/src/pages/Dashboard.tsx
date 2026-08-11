@@ -8,6 +8,7 @@ import { DashboardHeader } from '../components/dashboard/DashboardHeader';
 import { ReadinessScore } from '../components/dashboard/ReadinessScore';
 import { NextBestAction } from '../components/dashboard/NextBestAction';
 import { TodayPlan } from '../components/dashboard/TodayPlan';
+import { JobOpportunitiesWidget } from '../components/dashboard/JobOpportunitiesWidget';
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -58,22 +59,7 @@ export function Dashboard() {
           {/* Tier 2: Progress & Mastery (Legacy integration for now) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             <FadeUp>
-              <div className="bg-card/40 border border-border rounded-xl p-6 backdrop-blur-md">
-                <h3 className="font-display text-lg font-medium tracking-tight text-foreground mb-4">Weekly Study Time</h3>
-                {loading ? (
-                  <div className="h-40 flex items-center justify-center text-secondary">Loading...</div>
-                ) : (
-                  <div>
-                    <div className="text-sm text-secondary mb-4">
-                      {overview?.completed_sessions ?? 0} sessions completed this week.
-                    </div>
-                    {/* Placeholder for actual chart to be added in Phase 2 */}
-                    <div className="h-32 bg-secondary/10 rounded-lg flex items-center justify-center border border-border/50">
-                      <span className="text-xs text-secondary font-mono">Chart Data Placeholder</span>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <JobOpportunitiesWidget />
             </FadeUp>
 
             <FadeUp>

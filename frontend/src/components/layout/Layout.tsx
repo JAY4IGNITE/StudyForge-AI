@@ -28,7 +28,9 @@ import {
   LineChart,
   FileText,
   History,
-  BookText
+  BookText,
+  Briefcase,
+  Bookmark
 } from 'lucide-react';
 import { FeedbackModal } from '../../features/feedback/FeedbackModal';
 import { AnimatedButton as Button } from '../motion';
@@ -67,6 +69,8 @@ const navGroups = [
   {
     title: 'CAREER',
     items: [
+      { label: 'Job Search', path: '/jobs', icon: Briefcase },
+      { label: 'Saved Jobs', path: '/jobs/saved', icon: Bookmark },
       { label: 'Resume & ATS', path: '/ats', icon: FileText },
     ]
   }

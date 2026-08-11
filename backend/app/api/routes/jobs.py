@@ -5,6 +5,8 @@ from app.models.user import User
 from app.models.job import JobApplication
 from app.schemas.job import JobSearchRequest, JobSearchResponse, JobApplicationCreate, JobApplicationResponse, JobApplicationUpdate
 from app.services.jobs.jsearch_service import jsearch_service
+from app.services.jobs.job_recommendation import job_recommendation_service
+from app.services.jobs.job_matcher import job_matcher
 
 router = APIRouter(prefix="/jobs", tags=["Jobs"])
 
@@ -147,4 +149,54 @@ async def get_job_details(job_id: str, current_user: User = Depends(get_current_
     """
     Get job details from JSearch.
     """
-    return await jsearch_service.get_job_details(job_id)
+    details = await jsearch_service.get_job_details(job_id)
+    if details and "data" in details and len(details["data"]) > 0:
+        job = details["data"][0]
+        match = job_matcher.calculate_match(
+            job_requirements=job.get("job_required_skills", []),
+            user_skills=current_user.preferences.preferred_subjects,
+            user_preferences=current_user.preferences.dict()
+        )
+        return {"job": details, "match": match}
+    return {"job": details, "match": None}
+
+@router.post("/{job_id}/analyze")
+async def analyze_job(job_id: str, current_user: User = Depends(get_current_user)):
+    """
+    Analyze a job using AI to provide insights.
+    """
+    return await job_recommendation_service.analyze_job(job_id, current_user)
+
+@router.post("/{job_id}/roadmap")
+async def generate_job_roadmap(job_id: str, current_user: User = Depends(get_current_user)):
+    """
+    Generate a study roadmap based on skill gaps for a job.
+    """
+    # Simply analyze first to get missing skills, then we'd normally call the Roadmap service.
+    # We will reuse the analysis for this mock roadmap generator.
+    analysis = await job_recommendation_service.analyze_job(job_id, current_user)
+    
+    # In a full implementation, we would insert a new Roadmap document into the DB here
+    # For now, return a mock roadmap structure based on the missing skills
+    
+    return {
+        "title": f"Interview Prep Roadmap",
+        "description": "Personalized 7-day plan based on your skill gaps for this role.",
+        "days": [
+            {
+                "day": 1,
+                "focus": "Core Fundamentals",
+                "tasks": analysis["analysis"].get("preparation_recommendations", [])[:2]
+            },
+            {
+                "day": 2,
+                "focus": "Advanced Concepts",
+                "tasks": ["Practice coding problems related to key technologies"]
+            },
+            {
+                "day": 3,
+                "focus": "Mock Interview",
+                "tasks": ["Run a StudyForge AI Mock Interview for this role"]
+            }
+        ]
+    }

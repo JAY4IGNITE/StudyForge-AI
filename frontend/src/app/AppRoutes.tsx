@@ -26,6 +26,9 @@ const Flashcards = React.lazy(() => import('../pages/Flashcards').then(m => ({ d
 const AITutor = React.lazy(() => import('../pages/AITutor').then(m => ({ default: m.AITutor })));
 const PhotoSolve = React.lazy(() => import('../pages/PhotoSolve').then(m => ({ default: m.PhotoSolve })));
 const AtsDashboard = React.lazy(() => import('../pages/AtsDashboard'));
+const JobSearch = React.lazy(() => import('../pages/JobSearch').then(m => ({ default: m.JobSearch })));
+const JobDetails = React.lazy(() => import('../pages/JobDetails').then(m => ({ default: m.JobDetails })));
+const SavedJobs = React.lazy(() => import('../pages/SavedJobs').then(m => ({ default: m.SavedJobs })));
 const LandingPage = React.lazy(() => import('../pages/LandingPage').then(m => ({ default: m.LandingPage })));
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -93,6 +96,11 @@ const AnimatedRoutes: React.FC = () => {
 
         {/* ATS Scanner */}
         <Route path="/ats" element={<ProtectedRoute><AnimatedPage><AtsDashboard /></AnimatedPage></ProtectedRoute>} />
+
+        {/* Job Search */}
+        <Route path="/jobs" element={<ProtectedRoute><AnimatedPage><JobSearch /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/jobs/saved" element={<ProtectedRoute><AnimatedPage><SavedJobs /></AnimatedPage></ProtectedRoute>} />
+        <Route path="/jobs/:jobId" element={<ProtectedRoute><AnimatedPage><JobDetails /></AnimatedPage></ProtectedRoute>} />
 
         {/* Catch-all redirect */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
