@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { apiClient, API_BASE_URL } from '../../lib/axios';
 import { useAuth } from '../../app/AuthProvider';
 import { Flame, Mail, Lock, ArrowRight, Github, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -11,7 +11,7 @@ import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { PasswordInput } from '../../components/ui/PasswordInput';
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -21,7 +21,7 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 10 },
   visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } },
 };
@@ -69,7 +69,7 @@ export const Login: React.FC = () => {
               initial={{ scale: 0.8, opacity: 0, y: 10 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.8, opacity: 0, y: -10 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              transition={{ type: 'spring' as const, stiffness: 300, damping: 25 }}
               className="flex flex-col items-center gap-4 rounded-3xl bg-card p-10 shadow-2xl border border-border/50"
             >
               <motion.div
