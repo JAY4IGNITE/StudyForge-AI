@@ -19,7 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge';
 import { Skeleton } from '../components/ui/skeleton';
 import { TemperBar, TemperGauge } from '../components/ui/temper-gauge';
-import { StaggerContainer, FadeUp, AnimatedCard, AnimatedButton } from '../components/motion';
+import { StaggerContainer, FadeUp, AnimatedCard, AnimatedButton, BorderBeam } from '../components/motion';
 
 interface QuickAction {
   to: string;
@@ -91,11 +91,12 @@ export function Dashboard() {
             </h1>
             <p className="mt-1 text-secondary">Ready to crush your goals today?</p>
           </div>
-          <Card className="flex items-center gap-4 border-ember/20 bg-ember/5 px-5 py-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4)]">
+          <Card className="relative overflow-hidden flex items-center gap-4 border-ember/20 bg-ember/5 px-5 py-3 shadow-[0_0_20px_rgba(235,94,40,0.1)]">
+            <BorderBeam size={100} duration={8} delay={0} colorFrom="hsl(var(--ember))" colorTo="hsl(var(--gold))" />
+            <div className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4)]">
               <Flame className="h-5 w-5 text-ember-foreground" />
             </div>
-            <div>
+            <div className="relative z-10">
               <div className="font-mono text-xl font-semibold leading-none text-ember">7 Days</div>
               <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-secondary">
                 Current streak
@@ -162,7 +163,8 @@ export function Dashboard() {
 
           {/* Focus session */}
           <FadeUp className="md:col-span-4 h-full">
-            <Card className="relative overflow-hidden h-full">
+            <Card className="relative overflow-hidden h-full border-border bg-card/40 backdrop-blur-md">
+              <BorderBeam size={180} duration={12} delay={3} colorFrom="hsl(var(--ember))" colorTo="hsl(var(--gold))" />
               <div className="bg-forge-glow pointer-events-none absolute inset-0" />
               <CardContent className="relative flex flex-col items-center p-6 h-full justify-center">
                 <div className="mb-6 flex w-full items-center justify-between">

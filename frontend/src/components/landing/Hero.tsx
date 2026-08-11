@@ -30,7 +30,7 @@ export const Hero: React.FC = () => {
             {"Your personal".split(" ").map((word, i) => (
               <motion.span key={i} variants={motionConfig.fadeUp}>{word}</motion.span>
             ))}
-            <motion.span variants={motionConfig.fadeUp} className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <motion.span variants={motionConfig.fadeUp} className="bg-gradient-to-r from-ember to-gold bg-clip-text text-transparent">
               AI study coach.
             </motion.span>
           </h1>

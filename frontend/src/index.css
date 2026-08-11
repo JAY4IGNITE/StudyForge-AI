@@ -41,6 +41,10 @@
     --ring: 240 6% 10%;
 
     --gold: 45 93% 47%;
+    --ember: 18 90% 48%;
+    --ember-foreground: 0 0% 100%;
+    --steel: 215 15% 35%;
+    --steel-foreground: 0 0% 100%;
 
     --radius-sm: 6px;
     --radius-md: 8px;
@@ -84,6 +88,10 @@
     --ring: 240 5% 84%;
 
     --gold: 45 93% 47%;
+    --ember: 18 100% 58%;
+    --ember-foreground: 240 10% 4%;
+    --steel: 215 20% 65%;
+    --steel-foreground: 240 10% 4%;
   }
 }
 
