@@ -32,6 +32,8 @@ export const Login: React.FC = () => {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -48,6 +50,16 @@ export const Login: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    setGoogleLoading(true);
+    window.location.href = `${API_BASE_URL}/oauth/google/login`;
+  };
+
+  const handleGithubLogin = () => {
+    setGithubLoading(true);
+    window.location.href = `${API_BASE_URL}/oauth/github/login`;
   };
 
   return (
@@ -205,24 +217,76 @@ export const Login: React.FC = () => {
         <motion.div variants={itemVariants} className="space-y-3">
           <Button 
             variant="secondary" 
-            className="h-12 w-full gap-3"
-            onClick={() => window.location.href = `${API_BASE_URL}/oauth/google/login`}
+            className="h-12 w-full gap-3 overflow-hidden relative"
+            onClick={handleGoogleLogin}
+            disabled={loading || googleLoading || githubLoading}
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24">
-              <path
-                fill="currentColor"
-                d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"
-              />
-            </svg>
-            Continue with Google
+            <AnimatePresence mode="wait">
+              {googleLoading ? (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex items-center gap-2"
+                >
+                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+                    <Loader2 className="h-4 w-4" />
+                  </motion.div>
+                  Redirecting...
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="idle"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex items-center gap-3"
+                >
+                  <svg className="h-5 w-5" viewBox="0 0 24 24">
+                    <path
+                      fill="currentColor"
+                      d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.36,19.27 5,16.25 5,12C5,7.9 8.2,4.73 12.2,4.73C15.29,4.73 17.1,6.7 17.1,6.7L19,4.72C19,4.72 16.56,2 12.1,2C6.42,2 2.03,6.8 2.03,12C2.03,17.05 6.16,22 12.25,22C17.6,22 21.5,18.33 21.5,12.91C21.5,11.76 21.35,11.1 21.35,11.1V11.1Z"
+                    />
+                  </svg>
+                  Continue with Google
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Button>
           <Button 
             variant="secondary" 
-            className="h-12 w-full gap-3"
-            onClick={() => window.location.href = `${API_BASE_URL}/oauth/github/login`}
+            className="h-12 w-full gap-3 overflow-hidden relative"
+            onClick={handleGithubLogin}
+            disabled={loading || googleLoading || githubLoading}
           >
-            <Github className="h-5 w-5" />
-            Continue with GitHub
+            <AnimatePresence mode="wait">
+              {githubLoading ? (
+                <motion.div
+                  key="loading"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex items-center gap-2"
+                >
+                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
+                    <Loader2 className="h-4 w-4" />
+                  </motion.div>
+                  Redirecting...
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="idle"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex items-center gap-3"
+                >
+                  <Github className="h-5 w-5" />
+                  Continue with GitHub
+                </motion.div>
+              )}
+            </AnimatePresence>
           </Button>
         </motion.div>
 
