@@ -20,7 +20,6 @@ services:
           type: web
           name: studyforge-backend
           envVarKey: RENDER_EXTERNAL_URL
-          property: url
       # We need to append /api/v1 in Vite or handle it in axios.ts
       # Using a dynamic value here ensures the frontend hits the actual backend URL
 
@@ -45,19 +44,16 @@ services:
           type: web
           name: studyforge-frontend
           envVarKey: RENDER_EXTERNAL_URL
-          property: url
       - key: BACKEND_URL
         fromService:
           type: web
           name: studyforge-backend
           envVarKey: RENDER_EXTERNAL_URL
-          property: url
       - key: CORS_ORIGINS
         fromService:
           type: web
           name: studyforge-frontend
           envVarKey: RENDER_EXTERNAL_URL
-          property: url
       - key: MONGODB_URI
         sync: false
       - key: MONGODB_DATABASE
@@ -66,7 +62,7 @@ services:
         fromService:
           type: redis
           name: studyforge-redis
-          envVarKey: REDIS_URL
+          property: connectionString
 
   # -------------------------------------------------------------
   # Managed Redis Cache
