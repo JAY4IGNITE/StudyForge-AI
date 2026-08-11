@@ -50,7 +50,7 @@ async def init_db():
         logger.info("Beanie initialized successfully with all document models.")
     except Exception as e:
         logger.error(f"MongoDB initialization failed: {e}. Check MONGODB_URI configuration.")
-        raise e
+        logger.warning("FastAPI starting with degraded database capabilities (MongoDB is not available).")
 
 async def close_db():
     if db_client:
