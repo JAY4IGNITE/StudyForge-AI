@@ -4,58 +4,26 @@ import { useAuth } from '../../app/AuthProvider';
 import { Flame, Loader2 } from 'lucide-react';
 
 export const OAuthCallback: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
-  const isProcessing = useRef(false);
 
   useEffect(() => {
-    if (isProcessing.current) return;
-    
-    const hashParams = new URLSearchParams(window.location.hash.slice(1));
-    const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
-    // The refresh token is no longer passed through the URL -- the backend
-    // sets it as an httpOnly cookie on this same redirect response, so the
-    // browser already has it before this component even mounts.
-    const errorParam = searchParams.get('error') || hashParams.get('error');
-
-    let timeoutId: ReturnType<typeof setTimeout>;
-
-    if (errorParam) {
-      let errorMsg = `OAuth Login Failed: ${errorParam}`;
-      if (errorParam === 'oauth_failed') {
-        errorMsg = 'Authentication provider failed to complete the request.';
-      } else if (errorParam === 'no_email') {
-        errorMsg = 'Could not access your email address from the provider.';
-      } else if (errorParam === 'unverified_email') {
-        errorMsg = 'Your email address must be verified with the provider first.';
+    if (!loading) {
+      if (user) {
+        navigate('/dashboard');
+      } else {
+        const hashParams = new URLSearchParams(window.location.hash.slice(1));
+        const errorParam = hashParams.get('error_description') || hashParams.get('error');
+        if (errorParam) {
+          setError(errorParam);
+          setTimeout(() => navigate('/login'), 3000);
+        } else {
+           navigate('/login');
+        }
       }
-      
-      setError(errorMsg);
-      timeoutId = setTimeout(() => navigate('/login'), 3000);
-      return () => clearTimeout(timeoutId);
     }
-
-    if (accessToken) {
-      isProcessing.current = true;
-      login({ access_token: accessToken })
-        .then(() => {
-          navigate('/dashboard');
-        })
-        .catch(() => {
-          setError('Failed to configure local session after OAuth.');
-          timeoutId = setTimeout(() => navigate('/login'), 3000);
-        });
-    } else {
-      setError('Invalid OAuth callback payload. Missing tokens.');
-      timeoutId = setTimeout(() => navigate('/login'), 3000);
-    }
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [searchParams, navigate, login]);
+  }, [user, loading, navigate]);
 
   return (
     <div className="bg-blueprint bg-forge-glow relative flex min-h-screen flex-col items-center justify-center bg-background p-6">

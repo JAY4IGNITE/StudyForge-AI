@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { apiClient, setAccessToken, refreshAccessToken } from '../lib/axios';
+import { apiClient, setAccessToken } from '../lib/axios';
+import { supabase } from '../lib/supabase';
 
 interface User {
   id: string;
@@ -31,8 +32,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState<boolean>(true);
   const [token, setToken] = useState<string | null>(null);
 
-  const fetchUser = async () => {
+  const fetchUser = async (accessToken?: string) => {
     try {
+      if (accessToken) setAccessToken(accessToken);
       const res = await apiClient.get('/me');
       setUser(res.data);
     } catch (err) {
@@ -43,21 +45,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    // On mount there's no access token in memory yet (it's never persisted
-    // to storage). Silently exchange the httpOnly refresh cookie -- if the
-    // user has a valid session -- for a fresh access token before deciding
-    // whether they're logged in.
-    (async () => {
-      const freshToken = await refreshAccessToken();
-      if (freshToken) {
-        setToken(freshToken);
-        await fetchUser();
+    // Initial session fetch
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setToken(session.access_token);
+        fetchUser(session.access_token);
+      } else {
+        setLoading(false);
+      }
+    });
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session) {
+        setToken(session.access_token);
+        await fetchUser(session.access_token);
       } else {
         setToken(null);
         setUser(null);
+        setAccessToken(null);
         setLoading(false);
       }
-    })();
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (tokens: { access_token: string }) => {
@@ -68,9 +81,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await apiClient.post('/auth/logout');
+      await supabase.auth.signOut();
     } catch {
-      // best-effort; clear client state regardless
+      // best-effort
     }
     setAccessToken(null);
     setToken(null);

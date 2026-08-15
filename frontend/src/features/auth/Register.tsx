@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient, API_BASE_URL } from '../../lib/axios';
+import { supabase } from '../../lib/supabase';
 import { UserPlus, Flame, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Card } from '../../components/ui/card';
@@ -20,9 +21,18 @@ export const Register: React.FC = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    window.location.href = `${API_BASE_URL}/oauth/google/login`;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/oauth/callback',
+      },
+    });
+    if (error) {
+      setError(error.message);
+      setGoogleLoading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

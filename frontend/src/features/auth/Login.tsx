@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient, API_BASE_URL } from '../../lib/axios';
+import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../app/AuthProvider';
 import { Flame, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
@@ -51,9 +52,18 @@ export const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    window.location.href = `${API_BASE_URL}/oauth/google/login`;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/oauth/callback',
+      },
+    });
+    if (error) {
+      setError(error.message);
+      setGoogleLoading(false);
+    }
   };
 
   return (
