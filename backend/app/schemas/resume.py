@@ -1,10 +1,18 @@
 from datetime import datetime
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 ResumeStatus = Literal["uploaded", "processing", "parsed", "scored", "failed"]
 ParseStatus = Literal["pending", "processing", "completed", "failed"]
+
+# Only these are actually handled by resume_parser_service (PyMuPDF / python-docx).
+# Anything else is rejected before we ever hand out an R2 presigned upload URL.
+ALLOWED_RESUME_CONTENT_TYPES = {
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",  # .docx
+}
+ALLOWED_RESUME_EXTENSIONS = {".pdf", ".docx"}
 
 
 class ResumeResponse(BaseModel):
@@ -32,7 +40,24 @@ class ResumeListResponse(BaseModel):
 class ResumeUploadUrlRequest(BaseModel):
     original_filename: str = Field(..., min_length=1, max_length=255)
     content_type: str = Field(..., min_length=1, max_length=127)
-    file_size: int = Field(..., gt=0)
+    file_size: int = Field(..., gt=0, le=10 * 1024 * 1024)  # keep in sync with MAX_RESUME_BYTES
+
+    @field_validator("content_type")
+    @classmethod
+    def content_type_must_be_allowed(cls, v: str) -> str:
+        if v not in ALLOWED_RESUME_CONTENT_TYPES:
+            raise ValueError("Only PDF and DOCX resumes are supported.")
+        return v
+
+    @field_validator("original_filename")
+    @classmethod
+    def filename_must_have_allowed_extension(cls, v: str) -> str:
+        lower = v.lower()
+        if not any(lower.endswith(ext) for ext in ALLOWED_RESUME_EXTENSIONS):
+            raise ValueError("Resume filename must end in .pdf or .docx")
+        # Strip any path components so it can't influence the R2 key structure
+        # (e.g. "../other_user/x.pdf" or "sub/dir/x.pdf").
+        return v.replace("/", "_").replace("\\", "_")
 
 
 class ResumeUploadUrlResponse(BaseModel):

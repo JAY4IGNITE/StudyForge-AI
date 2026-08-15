@@ -15,7 +15,9 @@ export const OAuthCallback: React.FC = () => {
     
     const hashParams = new URLSearchParams(window.location.hash.slice(1));
     const accessToken = searchParams.get('access_token') || hashParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token') || hashParams.get('refresh_token');
+    // The refresh token is no longer passed through the URL -- the backend
+    // sets it as an httpOnly cookie on this same redirect response, so the
+    // browser already has it before this component even mounts.
     const errorParam = searchParams.get('error') || hashParams.get('error');
 
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -35,9 +37,9 @@ export const OAuthCallback: React.FC = () => {
       return () => clearTimeout(timeoutId);
     }
 
-    if (accessToken && refreshToken) {
+    if (accessToken) {
       isProcessing.current = true;
-      login({ access_token: accessToken, refresh_token: refreshToken })
+      login({ access_token: accessToken })
         .then(() => {
           navigate('/dashboard');
         })

@@ -107,20 +107,13 @@ async def process_resume(
     resume.parse_quality = parsed_resume.parse_quality
     resume.parsed_at = datetime.now(timezone.utc)
     
-    # Ideally save `parsed_resume` JSON somewhere (e.g., attach to Resume model, or another collection)
-    # For this architecture, we will store it directly on the Resume model.
-    # Note: I didn't add it to Resume schema initially, so I'll just save it as a dict.
-    # Wait, Phase 6 said: "This becomes the central object used by your ATS engine."
-    # I should add `parsed_data` to Resume model.
-    
-    setattr(resume, "parsed_data", parsed_resume.model_dump())
-    
+    # parsed_data is the structured resume content consumed by the ATS engine.
+    # TODO: promote `parsed_data` to a proper typed field on the Resume model
+    # (currently set dynamically since Beanie allows extra attributes) so it
+    # shows up in schema/OpenAPI instead of being an implicit dynamic field.
+    resume.parsed_data = parsed_resume.model_dump()
     await resume.save()
-    
-    # We should return the response schema
-    # But since we added a dynamic field, we can just return it
-    # We'll adapt ResumeResponse to ignore extra fields.
-    
+
     return resume
 
 @router.get("", response_model=ResumeListResponse)

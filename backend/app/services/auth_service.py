@@ -1,5 +1,6 @@
 import uuid
 from datetime import datetime, timezone, timedelta
+from typing import Tuple
 from fastapi import status
 from app.core.config import settings
 from app.models.user import User, RefreshToken
@@ -25,7 +26,7 @@ class AuthService:
         return user
 
     @staticmethod
-    async def authenticate_user(req: UserLoginRequest) -> TokenResponse:
+    async def authenticate_user(req: UserLoginRequest) -> Tuple[TokenResponse, str]:
         user = await User.find_one({"email": req.email.lower()})
         if not user or not verify_password(req.password, user.password_hash):
             raise StudyForgeException(code="INVALID_CREDENTIALS", message="Invalid email or password.", status_code=status.HTTP_401_UNAUTHORIZED)
@@ -33,7 +34,8 @@ class AuthService:
         return await AuthService.create_user_tokens(user)
 
     @staticmethod
-    async def create_user_tokens(user: User) -> TokenResponse:
+    async def create_user_tokens(user: User) -> Tuple[TokenResponse, str]:
+        """Returns (TokenResponse for the JSON body, raw refresh token for the httpOnly cookie)."""
         jti = str(uuid.uuid4())
         access_token = create_access_token(subject=str(user.id), role=user.role)
         refresh_token = create_refresh_token(subject=str(user.id), jti=jti)
@@ -46,10 +48,10 @@ class AuthService:
             expiry=expires_at
         )
         await token_doc.insert()
-        return TokenResponse(access_token=access_token, refresh_token=refresh_token)
+        return TokenResponse(access_token=access_token), refresh_token
 
     @staticmethod
-    async def refresh_tokens(refresh_token_str: str) -> TokenResponse:
+    async def refresh_tokens(refresh_token_str: str) -> Tuple[TokenResponse, str]:
         payload = decode_refresh_token(refresh_token_str)
         user_id = payload.get("sub")
         jti = payload.get("jti")

@@ -8,13 +8,24 @@ from app.core.config import settings
 from app.models.user import User, OAuthState
 from app.services.auth_service import auth_service
 from app.core.logging import logger
+from app.core.cookies import set_refresh_cookie
 
 router = APIRouter(prefix="/oauth", tags=["OAuth"])
 
 @router.get("/{provider}/login")
 async def oauth_login(provider: str, response: Response):
-    is_google_placeholder = not settings.GOOGLE_CLIENT_ID or settings.GOOGLE_CLIENT_ID.strip() in ("", "your_google_client_id")
-    is_github_placeholder = not settings.GITHUB_CLIENT_ID or settings.GITHUB_CLIENT_ID.strip() in ("", "your_github_client_id")
+    # IMPORTANT: mock auto-login must never be reachable in production, even
+    # if the OAuth client IDs happen to be unset there (misconfiguration).
+    # Previously this only checked for placeholder/missing client IDs, which
+    # meant a production deploy with a missing env var would let *anyone*
+    # log in as a shared mock account with no credentials at all.
+    is_non_production = settings.APP_ENV.lower() != "production"
+    is_google_placeholder = is_non_production and (
+        not settings.GOOGLE_CLIENT_ID or settings.GOOGLE_CLIENT_ID.strip() in ("", "your_google_client_id")
+    )
+    is_github_placeholder = is_non_production and (
+        not settings.GITHUB_CLIENT_ID or settings.GITHUB_CLIENT_ID.strip() in ("", "your_github_client_id")
+    )
 
     if provider == "google" and is_google_placeholder:
         # Auto-authenticate Google mock user
@@ -41,9 +52,10 @@ async def oauth_login(provider: str, response: Response):
                 )
                 await user.insert()
 
-        tokens = await auth_service.create_user_tokens(user)
-        redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}&refresh_token={tokens.refresh_token}"
+        tokens, refresh_token = await auth_service.create_user_tokens(user)
+        redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}"
         res = RedirectResponse(redirect_url)
+        set_refresh_cookie(res, refresh_token)
         res.delete_cookie("oauth_state")
         return res
 
@@ -72,9 +84,10 @@ async def oauth_login(provider: str, response: Response):
                 )
                 await user.insert()
 
-        tokens = await auth_service.create_user_tokens(user)
-        redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}&refresh_token={tokens.refresh_token}"
+        tokens, refresh_token = await auth_service.create_user_tokens(user)
+        redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}"
         res = RedirectResponse(redirect_url)
+        set_refresh_cookie(res, refresh_token)
         res.delete_cookie("oauth_state")
         return res
 
@@ -258,12 +271,15 @@ async def oauth_callback(provider: str, code: str, request: Request, state: str 
             return RedirectResponse(f"{settings.FRONTEND_URL}/login?error=unverified_email")
         
     # Create tokens
-    tokens = await auth_service.create_user_tokens(user)
+    tokens, refresh_token = await auth_service.create_user_tokens(user)
     
-    # Redirect to frontend callback passing tokens in hash fragment
-    # to avoid server log leakage (query params leak, hash does not).
-    redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}&refresh_token={tokens.refresh_token}"
+    # Redirect to frontend callback passing only the short-lived access token
+    # in the hash fragment (not sent to servers, but still avoid putting the
+    # long-lived refresh token here). The refresh token goes in an httpOnly
+    # cookie instead, which JS can never read.
+    redirect_url = f"{settings.FRONTEND_URL}/oauth/callback#access_token={tokens.access_token}"
     response = RedirectResponse(redirect_url)
+    set_refresh_cookie(response, refresh_token)
     
     # Clear the oauth_state cookie
     response.delete_cookie("oauth_state")

@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 import os
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.logging import setup_logging, logger
@@ -14,6 +14,9 @@ from app.db.seed import seed_initial_data
 from app.api.router import api_router
 from app.api.routes.interview_ws import router as interview_ws_router
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from app.core.limiter import limiter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,6 +36,9 @@ app = FastAPI(
 )
 
 FastAPIInstrumentor.instrument_app(app)
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # CORS middleware configuration
 app.add_middleware(
@@ -60,6 +66,21 @@ async def add_request_metadata(request: Request, call_next):
 # Register Exception Handlers
 app.add_exception_handler(StudyForgeException, studyforge_exception_handler)
 
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    request_id = getattr(request.state, "request_id", None)
+    logger.error(f"Unhandled exception (Request ID: {request_id}): {exc!r}")
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": {
+                "code": "INTERNAL_ERROR",
+                "message": "An unexpected error occurred.",
+                "request_id": request_id,
+            }
+        },
+    )
+
 # Include API Router & WebSocket Router
 app.include_router(api_router, prefix="/api")
 app.include_router(interview_ws_router, prefix="/api/v1")
@@ -78,13 +99,19 @@ async def root():
     return RedirectResponse(url="/docs")
 
 # Serve frontend static files
-frontend_dist = os.path.join(os.path.dirname(__file__), "../../frontend/dist")
+frontend_dist = os.path.realpath(os.path.join(os.path.dirname(__file__), "../../frontend/dist"))
 if os.path.isdir(frontend_dist):
     app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
-    
+    index_path = os.path.join(frontend_dist, "index.html")
+
     @app.get("/{full_path:path}", include_in_schema=False)
     async def serve_frontend(full_path: str):
-        file_path = os.path.join(frontend_dist, full_path)
-        if os.path.isfile(file_path):
-            return FileResponse(file_path)
-        return FileResponse(os.path.join(frontend_dist, "index.html"))
+        # Resolve the requested path and make sure it can't escape frontend_dist
+        # (defends against "../../etc/passwd" style traversal and against
+        # full_path values that would otherwise make os.path.join return an
+        # absolute path outside of frontend_dist).
+        candidate = os.path.realpath(os.path.join(frontend_dist, full_path.lstrip("/")))
+        if candidate == frontend_dist or candidate.startswith(frontend_dist + os.sep):
+            if os.path.isfile(candidate):
+                return FileResponse(candidate)
+        return FileResponse(index_path)

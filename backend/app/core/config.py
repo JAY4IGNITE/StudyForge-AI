@@ -14,8 +14,11 @@ class Settings(BaseSettings):
     CHROMA_PORT: int = 8000
     CHROMA_COLLECTION: str = "studyforge-resources"
 
-    JWT_ACCESS_SECRET: str = "dev-secret-key-change-in-production-12345"
-    JWT_REFRESH_SECRET: str = "dev-refresh-secret-key-change-in-production-67890"
+    # No hardcoded fallback: if these are missing from the environment,
+    # Settings() below will raise a ValidationError at startup instead of
+    # silently running with a guessable, public secret.
+    JWT_ACCESS_SECRET: str
+    JWT_REFRESH_SECRET: str
     JWT_ACCESS_TTL_MINUTES: int = 15
     JWT_REFRESH_TTL_DAYS: int = 30
 
@@ -68,4 +71,21 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=["../.env", ".env"], env_file_encoding="utf-8", extra="ignore")
 
-settings = Settings()
+    @field_validator("JWT_ACCESS_SECRET", "JWT_REFRESH_SECRET")
+    @classmethod
+    def secrets_must_be_strong(cls, v: str) -> str:
+        if len(v) < 32:
+            raise ValueError(
+                "JWT secrets must be at least 32 characters. "
+                "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(48))\""
+            )
+        return v
+
+
+try:
+    settings = Settings()
+except Exception as exc:  # pragma: no cover
+    raise RuntimeError(
+        "Failed to load application settings. Check that JWT_ACCESS_SECRET and "
+        f"JWT_REFRESH_SECRET are set in your environment/.env file.\nOriginal error: {exc}"
+    ) from exc
