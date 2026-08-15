@@ -179,22 +179,6 @@ export const Hero: React.FC = () => {
           </div>
         </motion.div>
       </motion.div>
-
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        className="container relative z-10 mt-20 border-t border-border/70 pt-8 md:mt-24 md:pt-10"
-      >
-        <p className="text-center text-xs font-semibold uppercase text-secondary">Learners prepare for roles at</p>
-        <div className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-secondary/70 transition-colors">
-          <div className="font-display text-lg font-semibold">Google</div>
-          <div className="font-display text-lg font-semibold">Meta</div>
-          <div className="font-display text-lg font-semibold">Amazon</div>
-          <div className="font-display text-lg font-semibold">Apple</div>
-          <div className="font-display text-lg font-semibold">Netflix</div>
-        </div>
-      </motion.div>
     </section>
   );
 };
