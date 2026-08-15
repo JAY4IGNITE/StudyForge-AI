@@ -4,7 +4,7 @@ from app.api.deps import get_current_user
 from app.models.user import User
 from app.models.resume import Resume
 from app.models.ats_report import AtsReport
-from app.schemas.ats import AtsAnalyzeRequest, AtsAnalysisResponse, JobDescriptionSchema
+from app.schemas.ats import AtsAnalyzeRequest, AtsAnalysisResponse, JobDescriptionSchema, AtsReportSchema
 from app.services.job_parser import job_parser_service
 from app.services.ats_engine import ats_engine_service
 from app.schemas.resume import ParsedResume
@@ -53,7 +53,7 @@ async def analyze_resume(
     
     return analysis
 
-@router.get("/history", response_model=List[AtsReport])
+@router.get("/history", response_model=List[AtsReportSchema])
 async def get_ats_history(
     current_user: User = Depends(get_current_user)
 ) -> Any:
@@ -61,7 +61,7 @@ async def get_ats_history(
     reports = await AtsReport.find(AtsReport.user_id == str(current_user.id)).sort("-created_at").to_list()
     return reports
 
-@router.get("/{id}", response_model=AtsReport)
+@router.get("/{id}", response_model=AtsReportSchema)
 async def get_ats_report(
     id: str,
     current_user: User = Depends(get_current_user)

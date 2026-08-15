@@ -38,3 +38,25 @@ class JobParserRequest(BaseModel):
 class AtsAnalyzeRequest(BaseModel):
     job_text: str
     resume_id: str
+
+from uuid import UUID
+
+class AtsReportSchema(BaseModel):
+    id: UUID
+    user_id: str
+    resume_id: str
+    job_description_text: str
+    overall_score: float
+    keyword_score: float
+    semantic_score: float
+    formatting_score: float
+    completeness_score: float
+    impact_score: float
+    confidence: float
+    matched_keywords: List[str]
+    missing_keywords: List[str]
+    warnings: List[str]
+    recommendations: List[str]
+    created_at: datetime
+    
+    model_config = {"from_attributes": True}
