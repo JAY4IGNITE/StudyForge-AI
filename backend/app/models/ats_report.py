@@ -1,28 +1,32 @@
 from datetime import datetime, timezone
 from typing import List, Optional
-from beanie import Document, Indexed
-from pydantic import Field
+import uuid
+from sqlalchemy import String, Float, DateTime, Index
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
+from pydantic import BaseModel, Field
+from app.db.database import Base
 
-class AtsReport(Document):
-    user_id: Indexed(str) # type: ignore
-    resume_id: Indexed(str) # type: ignore
-    job_description_text: str # In a full system this might reference a Job model
-    overall_score: float
-    keyword_score: float
-    semantic_score: float
-    formatting_score: float
-    completeness_score: float
-    impact_score: float
-    confidence: float
-    matched_keywords: List[str] = Field(default_factory=list)
-    missing_keywords: List[str] = Field(default_factory=list)
-    warnings: List[str] = Field(default_factory=list)
-    recommendations: List[str] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+class AtsReport(Base):
+    __tablename__ = "ats_reports"
+    
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[str] = mapped_column(String, index=True)
+    resume_id: Mapped[str] = mapped_column(String, index=True)
+    job_description_text: Mapped[str] = mapped_column(String)
+    overall_score: Mapped[float] = mapped_column(Float)
+    keyword_score: Mapped[float] = mapped_column(Float)
+    semantic_score: Mapped[float] = mapped_column(Float)
+    formatting_score: Mapped[float] = mapped_column(Float)
+    completeness_score: Mapped[float] = mapped_column(Float)
+    impact_score: Mapped[float] = mapped_column(Float)
+    confidence: Mapped[float] = mapped_column(Float)
+    matched_keywords: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    missing_keywords: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    warnings: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    recommendations: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
-    class Settings:
-        name = "ats_reports"
-        indexes = [
-            [("user_id", 1), ("created_at", -1)],
-            [("resume_id", 1)]
-        ]
+    __table_args__ = (
+        Index("idx_ats_user_created", "user_id", "created_at"),
+    )

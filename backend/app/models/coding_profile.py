@@ -1,8 +1,11 @@
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import BaseModel, Field
-from beanie import Document, Indexed
-from uuid import UUID
+import uuid
+from sqlalchemy import String, Boolean, DateTime, JSON, Index
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
+from app.db.database import Base
 
 class PlatformConnection(BaseModel):
     username: str
@@ -38,23 +41,23 @@ class SocialLinks(BaseModel):
     twitter: Optional[str] = None
     portfolio: Optional[str] = None
 
-class CodingProfile(Document):
-    user_id: UUID
-    display_name: str
-    bio: Optional[str] = None
-    avatar_url: Optional[str] = None
-    is_public: bool = True
-    profile_slug: Indexed(str, unique=True) # type: ignore
+class CodingProfile(Base):
+    __tablename__ = "coding_profiles"
     
-    platforms: ConnectedPlatforms = Field(default_factory=ConnectedPlatforms)
-    cached_stats: CachedStats = Field(default_factory=CachedStats)
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[str] = mapped_column(String, index=True)
+    display_name: Mapped[str] = mapped_column(String)
+    bio: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    avatar_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    is_public: Mapped[bool] = mapped_column(Boolean, default=True)
+    profile_slug: Mapped[str] = mapped_column(String, unique=True, index=True)
     
-    skills: List[str] = Field(default_factory=list)
-    projects: List[Project] = Field(default_factory=list)
-    social_links: SocialLinks = Field(default_factory=SocialLinks)
+    platforms: Mapped[Dict[str, Any]] = mapped_column(JSON, default=lambda: ConnectedPlatforms().model_dump())
+    cached_stats: Mapped[Dict[str, Any]] = mapped_column(JSON, default=lambda: CachedStats().model_dump())
     
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-
-    class Settings:
-        name = "coding_profiles"
+    skills: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    projects: Mapped[List[Dict[str, Any]]] = mapped_column(JSON, default=list)
+    social_links: Mapped[Dict[str, Any]] = mapped_column(JSON, default=lambda: SocialLinks().model_dump())
+    
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))

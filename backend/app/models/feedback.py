@@ -1,17 +1,21 @@
 from datetime import datetime, timezone
-from typing import Optional, List
-from beanie import Document, Indexed
-from pydantic import Field, BaseModel
+from typing import Optional, List, Dict, Any
+import uuid
+from sqlalchemy import String, Integer, DateTime, JSON, Index
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
+from pydantic import BaseModel, Field
+from app.db.database import Base
 
-class Feedback(Document):
-    user_id: Indexed(str) # type: ignore
-    category: str # practice, interview, platform, bug
-    rating: int # 1 to 5
-    comment: str
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-    class Settings:
-        name = "feedback"
+class Feedback(Base):
+    __tablename__ = "feedback"
+    
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[str] = mapped_column(String, index=True)
+    category: Mapped[str] = mapped_column(String)
+    rating: Mapped[int] = mapped_column(Integer)
+    comment: Mapped[str] = mapped_column(String)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 class RoadmapItem(BaseModel):
     step_number: int
@@ -19,11 +23,11 @@ class RoadmapItem(BaseModel):
     reason: str
     estimated_hours: int
 
-class UserRoadmap(Document):
-    user_id: Indexed(str) # type: ignore
-    target_role: str
-    steps: List[RoadmapItem] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-    class Settings:
-        name = "user_roadmaps"
+class UserRoadmap(Base):
+    __tablename__ = "user_roadmaps"
+    
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[str] = mapped_column(String, index=True)
+    target_role: Mapped[str] = mapped_column(String)
+    steps: Mapped[List[Dict[str, Any]]] = mapped_column(JSON, default=list)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

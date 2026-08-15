@@ -13,6 +13,9 @@ from app.templates.email_builders import (
     build_security_login_template
 )
 
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
 class EmailService:
     @staticmethod
     async def _send_brevo_email(email: str, subject: str, html_content: str) -> bool:
@@ -47,7 +50,7 @@ class EmailService:
             return False
 
     @staticmethod
-    async def generate_and_save_otp(email: str, purpose: str = "verification") -> str:
+    async def generate_and_save_otp(session: AsyncSession, email: str, purpose: str = "verification") -> str:
         otp_code = f"{random.randint(100000, 999999)}"
         expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
         
@@ -58,7 +61,8 @@ class EmailService:
             otp_code=otp_code,
             expires_at=expires_at
         )
-        await otp_entry.insert()
+        session.add(otp_entry)
+        await session.commit()
         
         # Dispatch formatted email
         await EmailService.send_otp_email(email, otp_code, purpose)
@@ -95,12 +99,15 @@ class EmailService:
         await EmailService._send_brevo_email(email, subject, html_content)
 
     @staticmethod
-    async def verify_otp(email: str, otp_code: str, purpose: str) -> bool:
-        otp_entry = await EmailOTP.find_one(
-            EmailOTP.email == email,
-            EmailOTP.purpose == purpose,
-            EmailOTP.consumed_at == None
+    async def verify_otp(session: AsyncSession, email: str, otp_code: str, purpose: str) -> bool:
+        result = await session.execute(
+            select(EmailOTP).where(
+                EmailOTP.email == email,
+                EmailOTP.purpose == purpose,
+                EmailOTP.consumed_at == None
+            )
         )
+        otp_entry = result.scalars().first()
         if not otp_entry:
             return False
 
@@ -109,11 +116,11 @@ class EmailService:
 
         if otp_entry.otp_code != otp_code:
             otp_entry.attempt_count += 1
-            await otp_entry.save()
+            await session.commit()
             return False
 
         otp_entry.consumed_at = datetime.now(timezone.utc)
-        await otp_entry.save()
+        await session.commit()
         return True
 
 email_service = EmailService()

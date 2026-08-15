@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     LOG_LEVEL: str = "INFO"
 
-    MONGODB_URI: str = "mongodb://localhost:27017"
-    MONGODB_DATABASE: str = "studyforge"
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/studyforge"
+    DIRECT_URL: Optional[str] = None
 
     CHROMA_HOST: str = "localhost"
     CHROMA_PORT: int = 8000

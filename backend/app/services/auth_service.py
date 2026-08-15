@@ -2,6 +2,8 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Tuple
 from fastapi import status
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from app.core.config import settings
 from app.models.user import User, RefreshToken
 from app.schemas.auth import UserRegisterRequest, UserLoginRequest, TokenResponse, UserProfileUpdate
@@ -11,8 +13,9 @@ from app.services.email_service import email_service
 
 class AuthService:
     @staticmethod
-    async def register_user(req: UserRegisterRequest) -> User:
-        existing = await User.find_one({"email": req.email.lower()})
+    async def register_user(session: AsyncSession, req: UserRegisterRequest) -> User:
+        result = await session.execute(select(User).where(User.email == req.email.lower()))
+        existing = result.scalars().first()
         if existing:
             raise StudyForgeException(code="EMAIL_EXISTS", message="An account with this email already exists.", status_code=status.HTTP_400_BAD_REQUEST)
         
@@ -21,20 +24,23 @@ class AuthService:
             password_hash=hash_password(req.password),
             display_name=req.display_name
         )
-        await user.insert()
-        await email_service.generate_and_save_otp(user.email, purpose="verification")
+        session.add(user)
+        await session.commit()
+        await session.refresh(user)
+        await email_service.generate_and_save_otp(session, user.email, purpose="verification")
         return user
 
     @staticmethod
-    async def authenticate_user(req: UserLoginRequest) -> Tuple[TokenResponse, str]:
-        user = await User.find_one({"email": req.email.lower()})
+    async def authenticate_user(session: AsyncSession, req: UserLoginRequest) -> Tuple[TokenResponse, str]:
+        result = await session.execute(select(User).where(User.email == req.email.lower()))
+        user = result.scalars().first()
         if not user or not verify_password(req.password, user.password_hash):
             raise StudyForgeException(code="INVALID_CREDENTIALS", message="Invalid email or password.", status_code=status.HTTP_401_UNAUTHORIZED)
         
-        return await AuthService.create_user_tokens(user)
+        return await AuthService.create_user_tokens(session, user)
 
     @staticmethod
-    async def create_user_tokens(user: User) -> Tuple[TokenResponse, str]:
+    async def create_user_tokens(session: AsyncSession, user: User) -> Tuple[TokenResponse, str]:
         """Returns (TokenResponse for the JSON body, raw refresh token for the httpOnly cookie)."""
         jti = str(uuid.uuid4())
         access_token = create_access_token(subject=str(user.id), role=user.role)
@@ -47,26 +53,30 @@ class AuthService:
             jti=jti,
             expiry=expires_at
         )
-        await token_doc.insert()
+        session.add(token_doc)
+        await session.commit()
         return TokenResponse(access_token=access_token), refresh_token
 
     @staticmethod
-    async def refresh_tokens(refresh_token_str: str) -> Tuple[TokenResponse, str]:
+    async def refresh_tokens(session: AsyncSession, refresh_token_str: str) -> Tuple[TokenResponse, str]:
         payload = decode_refresh_token(refresh_token_str)
         user_id = payload.get("sub")
         jti = payload.get("jti")
         
-        token_doc = await RefreshToken.find_one(RefreshToken.jti == jti, RefreshToken.is_revoked == False)
+        result = await session.execute(select(RefreshToken).where(RefreshToken.jti == jti, RefreshToken.is_revoked == False))
+        token_doc = result.scalars().first()
         if not token_doc:
             raise StudyForgeException(code="TOKEN_REVOKED", message="Refresh token revoked or invalid", status_code=status.HTTP_401_UNAUTHORIZED)
             
         token_doc.is_revoked = True
-        await token_doc.save()
+        await session.commit()
         
-        user = await User.get(user_id)
+        user_uuid = uuid.UUID(user_id) if isinstance(user_id, str) else user_id
+        user_result = await session.execute(select(User).where(User.id == user_uuid))
+        user = user_result.scalars().first()
         if not user:
             raise StudyForgeException(code="USER_NOT_FOUND", message="User not found", status_code=status.HTTP_404_NOT_FOUND)
             
-        return await AuthService.create_user_tokens(user)
+        return await AuthService.create_user_tokens(session, user)
 
 auth_service = AuthService()

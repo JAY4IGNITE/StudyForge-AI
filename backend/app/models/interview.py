@@ -1,7 +1,11 @@
 from datetime import datetime, timezone
 from typing import Optional, List, Dict, Any
-from beanie import Document, Indexed
+import uuid
+from sqlalchemy import String, Float, Integer, DateTime, JSON, Index
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID, ARRAY
 from pydantic import BaseModel, Field
+from app.db.database import Base
 
 class VisionTelemetry(BaseModel):
     eye_contact_percentage: float = 87.0
@@ -36,24 +40,24 @@ class TurnTurnData(BaseModel):
     code_execution_result: Optional[str] = None
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class InterviewSession(Document):
-    user_id: Indexed(str) # type: ignore
-    mode: str = "technical" # technical, behavioral, coding, hr, resume, job_description
-    target_role: str = "Software Engineer"
-    target_company: Optional[str] = None
-    job_description_text: Optional[str] = None
-    resume_id: Optional[str] = None
-    livekit_room_name: Optional[str] = None
-    livekit_token: Optional[str] = None
-    recording_url: Optional[str] = None
-    pending_question: Optional[str] = None
-    turns: List[TurnTurnData] = Field(default_factory=list)
-    status: str = "active" # active, completed, canceled
-    started_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    completed_at: Optional[datetime] = None
-
-    class Settings:
-        name = "interview_sessions"
+class InterviewSession(Base):
+    __tablename__ = "interview_sessions"
+    
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[str] = mapped_column(String, index=True)
+    mode: Mapped[str] = mapped_column(String, default="technical")
+    target_role: Mapped[str] = mapped_column(String, default="Software Engineer")
+    target_company: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    job_description_text: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    resume_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    livekit_room_name: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    livekit_token: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    recording_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    pending_question: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    turns: Mapped[List[Dict[str, Any]]] = mapped_column(JSON, default=list)
+    status: Mapped[str] = mapped_column(String, default="active")
+    started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
 class RadarScore(BaseModel):
     communication: float = 85.0
@@ -69,32 +73,32 @@ class LearningPlanDay(BaseModel):
     focus: str
     recommended_resources: List[str] = Field(default_factory=list)
 
-class InterviewReport(Document):
-    interview_id: Indexed(str) # type: ignore
-    user_id: Indexed(str) # type: ignore
-    overall_score: float = 85.0
-    scores: RadarScore = Field(default_factory=RadarScore)
-    strengths: List[str] = Field(default_factory=list)
-    weaknesses: List[str] = Field(default_factory=list)
-    ats_keywords_missing: List[str] = Field(default_factory=list)
-    resume_improvements: List[str] = Field(default_factory=list)
-    ats_score: float = Field(default=0.0)
-    learning_plan_7_days: List[LearningPlanDay] = Field(default_factory=list)
-    learning_plan_14_days: List[LearningPlanDay] = Field(default_factory=list)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+class InterviewReport(Base):
+    __tablename__ = "interview_reports"
+    
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    interview_id: Mapped[str] = mapped_column(String, index=True)
+    user_id: Mapped[str] = mapped_column(String, index=True)
+    overall_score: Mapped[float] = mapped_column(Float, default=85.0)
+    scores: Mapped[Dict[str, Any]] = mapped_column(JSON, default=lambda: RadarScore().model_dump())
+    strengths: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    weaknesses: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    ats_keywords_missing: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    resume_improvements: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    ats_score: Mapped[float] = mapped_column(Float, default=0.0)
+    learning_plan_7_days: Mapped[List[Dict[str, Any]]] = mapped_column(JSON, default=list)
+    learning_plan_14_days: Mapped[List[Dict[str, Any]]] = mapped_column(JSON, default=list)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
-    class Settings:
-        name = "interview_reports"
-
-class ResumeAnalysis(Document):
-    user_id: Indexed(str) # type: ignore
-    file_name: str
-    extracted_skills: List[str] = Field(default_factory=list)
-    extracted_projects: List[str] = Field(default_factory=list)
-    extracted_experience: List[str] = Field(default_factory=list)
-    generated_questions: List[str] = Field(default_factory=list)
-    ats_score: float = Field(default=0.0)
-    uploaded_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-    class Settings:
-        name = "resume_analyses"
+class ResumeAnalysis(Base):
+    __tablename__ = "resume_analyses"
+    
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[str] = mapped_column(String, index=True)
+    file_name: Mapped[str] = mapped_column(String)
+    extracted_skills: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    extracted_projects: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    extracted_experience: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    generated_questions: Mapped[List[str]] = mapped_column(ARRAY(String), default=list)
+    ats_score: Mapped[float] = mapped_column(Float, default=0.0)
+    uploaded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
