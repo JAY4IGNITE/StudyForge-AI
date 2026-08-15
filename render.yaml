@@ -60,6 +60,10 @@ services:
         sync: false
       - key: MONGODB_DATABASE
         value: studyforge
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
       - key: REDIS_URL
         fromService:
           type: redis
