@@ -11,7 +11,8 @@ export const OAuthCallback: React.FC = () => {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        navigate('/dashboard');
+        // Redirect to OTP page for extra 2FA step as requested
+        navigate('/verify-email', { state: { email: user.email } });
       } else {
         const hashParams = new URLSearchParams(window.location.hash.slice(1));
         const errorParam = hashParams.get('error_description') || hashParams.get('error');
