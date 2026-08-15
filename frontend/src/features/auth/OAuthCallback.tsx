@@ -15,9 +15,14 @@ export const OAuthCallback: React.FC = () => {
       } else {
         const hashParams = new URLSearchParams(window.location.hash.slice(1));
         const errorParam = hashParams.get('error_description') || hashParams.get('error');
+        const accessToken = hashParams.get('access_token');
+        
         if (errorParam) {
           setError(errorParam);
           setTimeout(() => navigate('/login'), 3000);
+        } else if (accessToken) {
+          // Tokens are present in URL hash, Supabase auth is still processing
+          // Do nothing, wait for AuthProvider to update user state
         } else {
            navigate('/login');
         }

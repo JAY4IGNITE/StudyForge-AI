@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../app/AuthProvider';
 import { supabase } from '../../lib/supabase';
 import { UserPlus, Flame, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -11,6 +12,7 @@ import { PasswordInput } from '../../components/ui/PasswordInput';
 import { Separator } from '../../components/ui/separator';
 
 export const Register: React.FC = () => {
+  const { user } = useAuth();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,6 +21,12 @@ export const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
