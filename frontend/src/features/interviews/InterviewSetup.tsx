@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { apiClient } from '../../lib/axios';
 import {
@@ -23,7 +23,8 @@ const MODES = [
 export const InterviewSetup: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [mode, setMode] = useState(searchParams.get('mode') || 'technical');
+  const initialMode = searchParams.get('mode') || 'technical';
+  const [mode, setMode] = useState(initialMode);
   const [targetRole, setTargetRole] = useState('Software Engineer');
   const [targetCompany, setTargetCompany] = useState('');
   const [jdText, setJdText] = useState('');
@@ -32,6 +33,13 @@ export const InterviewSetup: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingResume, setUploadingResume] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const urlMode = searchParams.get('mode');
+    if (urlMode && MODES.some((m) => m.id === urlMode)) {
+      setMode(urlMode);
+    }
+  }, [searchParams]);
 
   const handleResumeUpload = async () => {
     if (!resumeFile) return;
@@ -99,6 +107,7 @@ export const InterviewSetup: React.FC = () => {
               return (
                 <button
                   key={m.id}
+                  type="button"
                   onClick={() => setMode(m.id)}
                   className={cn(
                     'rounded-xl border p-3 text-left transition-all',

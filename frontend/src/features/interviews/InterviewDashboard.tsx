@@ -29,11 +29,38 @@ export const InterviewDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [history, setHistory] = useState<any[]>([]);
   const [analytics, setAnalytics] = useState<any>(null);
+  const [launchingMode, setLaunchingMode] = useState<string | null>(null);
 
   useEffect(() => {
     apiClient.get('/interviews/history').then((r) => setHistory(r.data.history || [])).catch(() => {});
     apiClient.get('/interviews/analytics/dashboard').then((r) => setAnalytics(r.data)).catch(() => {});
   }, []);
+
+  const handleSelectMode = async (modeId: string) => {
+    if (modeId === 'resume' || modeId === 'job_description') {
+      navigate(`/interview/setup?mode=${modeId}`);
+      return;
+    }
+
+    setLaunchingMode(modeId);
+    try {
+      const res = await apiClient.post('/interviews/setup', {
+        mode: modeId,
+        target_role: 'Software Engineer',
+      });
+      const sessionId = res.data.session_id;
+      if (modeId === 'coding') {
+        navigate(`/interview/coding/${sessionId}`);
+      } else {
+        navigate(`/interview/room/${sessionId}`);
+      }
+    } catch (err) {
+      console.error('Direct interview launch failed, redirecting to setup', err);
+      navigate(`/interview/setup?mode=${modeId}`);
+    } finally {
+      setLaunchingMode(null);
+    }
+  };
 
   return (
     <Layout>
@@ -60,7 +87,7 @@ export const InterviewDashboard: React.FC = () => {
             </div>
             <Button size="lg" onClick={() => navigate('/interview/setup')} className="gap-2">
               <Sparkles className="h-5 w-5" />
-              Start new interview
+              Customize interview
             </Button>
           </div>
         </Card>
@@ -71,18 +98,24 @@ export const InterviewDashboard: React.FC = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {INTERVIEW_MODES.map((mode) => {
               const Icon = mode.icon;
+              const isLaunching = launchingMode === mode.id;
               return (
                 <button
                   key={mode.id}
-                  onClick={() => navigate(`/interview/setup?mode=${mode.id}`)}
-                  className="group relative rounded-2xl border border-border bg-card p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-ember/30 hover:shadow-[0_14px_32px_-18px_hsl(var(--ember)/0.35)]"
+                  type="button"
+                  disabled={launchingMode !== null}
+                  onClick={() => handleSelectMode(mode.id)}
+                  className="group relative rounded-2xl border border-border bg-card p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:border-ember/30 hover:shadow-[0_14px_32px_-18px_hsl(var(--ember)/0.35)] disabled:opacity-60"
                 >
                   <div
                     className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-110 ${accentClasses[mode.accent]}`}
                   >
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mb-1 text-sm font-semibold text-foreground">{mode.label}</h3>
+                  <h3 className="mb-1 text-sm font-semibold text-foreground flex items-center justify-between">
+                    {mode.label}
+                    {isLaunching && <span className="text-[10px] text-ember animate-pulse font-normal">Starting session...</span>}
+                  </h3>
                   <p className="text-xs leading-relaxed text-secondary">{mode.desc}</p>
                   <ChevronRight className="absolute right-5 top-5 h-4 w-4 text-secondary transition-colors group-hover:text-ember" />
                 </button>
