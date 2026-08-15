@@ -37,42 +37,12 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-let refreshInFlight: Promise<string | null> | null = null;
-
-export async function refreshAccessToken(): Promise<string | null> {
-  // De-dupe concurrent 401s so we don't fire multiple refresh requests.
-  if (!refreshInFlight) {
-    refreshInFlight = axios
-      .post(`${API_BASE_URL}/auth/refresh`, {}, { withCredentials: true })
-      .then((res) => {
-        const { access_token } = res.data;
-        setAccessToken(access_token);
-        return access_token as string;
-      })
-      .catch(() => {
-        setAccessToken(null);
-        return null;
-      })
-      .finally(() => {
-        refreshInFlight = null;
-      });
-  }
-  return refreshInFlight;
-}
-
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const newAccessToken = await refreshAccessToken();
-      if (newAccessToken) {
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return apiClient(originalRequest);
-      }
-      window.location.href = '/login';
-    }
+    // We let Supabase handle token refreshes via AuthProvider's onAuthStateChange.
+    // If we get a 401 here, it means the token is truly invalid or expired
+    // beyond repair, or the user is not authenticated.
     return Promise.reject(error);
   }
 );

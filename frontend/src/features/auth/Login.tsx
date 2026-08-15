@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { apiClient, API_BASE_URL } from '../../lib/axios';
 import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../app/AuthProvider';
 import { Flame, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { Card } from '../../components/ui/card';
@@ -34,7 +32,6 @@ export const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {

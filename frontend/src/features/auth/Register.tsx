@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { apiClient, API_BASE_URL } from '../../lib/axios';
 import { supabase } from '../../lib/supabase';
 import { UserPlus, Flame, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
