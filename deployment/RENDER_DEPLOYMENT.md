@@ -14,7 +14,7 @@ This directory and the root [`render.yaml`](../render.yaml) blueprint make **Stu
    - **`studyforge-backend`** (Python Web Service)
    - **`studyforge-frontend`** (Static Site)
 6. Enter required Environment Variables in Render Dashboard when prompted:
-   - `MONGODB_URI`: Your MongoDB Atlas Connection String (`mongodb+srv://user:pass@cluster.mongodb.net/studyforge`)
+   - `MONGODB_URI`: Your Supabase PostgreSQL Connection String (`postgresql+asyncpg://...`)
    - `BREVO_API_KEY`: Your Brevo API Key
 7. Click **Apply**. Render will build and deploy both services automatically!
 
@@ -22,9 +22,9 @@ This directory and the root [`render.yaml`](../render.yaml) blueprint make **Stu
 
 ## Method 2: Manual Deployment
 
-### 1. Database (MongoDB Atlas)
-Render does not host MongoDB natively. Use a free **MongoDB Atlas** cluster:
-1. Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+### 1. Database (Supabase PostgreSQL)
+Render does not host Supabase natively. Use a free **Supabase PostgreSQL** cluster:
+1. Create a free cluster on [Supabase PostgreSQL](https://www.mongodb.com/cloud/atlas).
 2. Get your connection URI string.
 
 ### 2. Backend Service (FastAPI)

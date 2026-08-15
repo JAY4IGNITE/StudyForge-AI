@@ -8,7 +8,7 @@
     <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-18.0-blue.svg?logo=react&logoColor=white" alt="React" /></a>
     <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-0.110+-009688.svg?logo=fastapi&logoColor=white" alt="FastAPI" /></a>
     <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.0-3178C6.svg?logo=typescript&logoColor=white" alt="TypeScript" /></a>
-    <a href="https://www.mongodb.com/"><img src="https://img.shields.io/badge/MongoDB-Atlas-47A248.svg?logo=mongodb&logoColor=white" alt="MongoDB" /></a>
+    <a href="https://www.mongodb.com/"><img src="https://img.shields.io/badge/PostgreSQL-Atlas-47A248.svg?logo=mongodb&logoColor=white" alt="PostgreSQL" /></a>
     <a href="https://developer.nvidia.com/nim"><img src="https://img.shields.io/badge/NVIDIA_NIM-Llama_3.1-76B900.svg?logo=nvidia&logoColor=white" alt="NVIDIA" /></a>
   </p>
 </div>
@@ -57,7 +57,7 @@ Whether preparing for software engineering roles, system architecture design, or
 
 ### Backend
 * **Framework**: FastAPI (Python 3.11+)
-* **Database & ODM**: MongoDB Atlas, Beanie ODM, Motor (AsyncIOMotorClient)
+* **Database & ODM**: Supabase PostgreSQL, SQLAlchemy ORM, asyncpg
 * **Authentication**: Local (JWT + bcrypt) & OAuth (Google/GitHub integration)
 * **Communication**: WebSockets (Bidirectional AI Streaming), RESTful API
 * **Cloud Storage**: Cloudflare R2 (S3-compatible)
@@ -78,7 +78,7 @@ StudyForge-AI/
 │   ├── app/
 │   │   ├── api/          # REST & WebSocket route handlers
 │   │   ├── core/         # Security, OAuth, configuration, and logging
-│   │   ├── db/           # MongoDB initialization and seeding
+│   │   ├── db/           # PostgreSQL initialization and seeding
 │   │   ├── models/       # Beanie document models
 │   │   └── services/     # ATS Scanner, R2 Storage, AI Engine, Resume Parser
 │   └── venv/
@@ -101,7 +101,7 @@ StudyForge-AI/
 ### Prerequisites
 * **Node.js**: v18.0.0 or higher
 * **Python**: v3.11.0 or higher
-* **MongoDB**: MongoDB Atlas Cluster connection URI
+* **PostgreSQL**: Supabase PostgreSQL Cluster connection URI
 
 ### 1. Clone the Repository
 ```bash

@@ -9,8 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.logging import setup_logging, logger
 from app.core.errors import StudyForgeException, studyforge_exception_handler
-from app.db.mongodb import init_db, close_db
-from app.db.seed import seed_initial_data
+from app.db.database import engine
 from app.api.router import api_router
 from app.api.routes.interview_ws import router as interview_ws_router
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -22,10 +21,10 @@ from app.core.limiter import limiter
 async def lifespan(app: FastAPI):
     setup_logging()
     logger.info(f"Starting {settings.APP_NAME} in environment: {settings.APP_ENV}")
-    await init_db()
-    await seed_initial_data()
+    # Startup: SQLAlchemy engine is already initialized
     yield
-    await close_db()
+    # Shutdown
+    await engine.dispose()
     logger.info("Shutdown complete.")
 
 app = FastAPI(
