@@ -8,23 +8,19 @@ services:
     env: static
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
-    # Optional fallback for React Router SPA (if not automatically handled)
     routes:
       - type: rewrite
         source: /*
         destination: /index.html
     envVars:
-      # Explicitly set production environment variable so Vite uses '/api/v1' instead of localhost
       - key: VITE_API_BASE_URL
         fromService:
           type: web
           name: studyforge-backend
           envVarKey: RENDER_EXTERNAL_URL
-      # We need to append /api/v1 in Vite or handle it in axios.ts
-      # Using a dynamic value here ensures the frontend hits the actual backend URL
 
   # -------------------------------------------------------------
-  # Backend (Python / FastAPI)
+  # Backend (FastAPI)
   # -------------------------------------------------------------
   - type: web
     name: studyforge-backend
@@ -32,13 +28,9 @@ services:
     rootDir: backend
     plan: free
     dockerfilePath: Dockerfile
-    # Alternatively, you can deploy using native Python instead of Docker:
-    # env: python
-    # buildCommand: cd backend && pip install -r requirements.txt
-    # startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: APP_ENV
-        value: development
+        value: production
       - key: PORT
         value: 8000
       - key: FRONTEND_URL
@@ -64,6 +56,21 @@ services:
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
+      # OAuth secrets must be added in the Render dashboard.
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: NVIDIA_NIM_API_KEY
+        sync: false
+      - key: JSEARCH_API_KEY
+        sync: false
+      - key: BREVO_API_KEY
+        sync: false
       - key: REDIS_URL
         fromService:
           type: redis
@@ -75,5 +82,5 @@ services:
   # -------------------------------------------------------------
   - type: redis
     name: studyforge-redis
-    ipAllowList: [] # empty means all services in this Render account can connect
-    plan: free # or starter
+    ipAllowList: []
+    plan: free
