@@ -40,7 +40,9 @@ class ResumeListResponse(BaseModel):
 class ResumeUploadUrlRequest(BaseModel):
     original_filename: str = Field(..., min_length=1, max_length=255)
     content_type: str = Field(..., min_length=1, max_length=127)
-    file_size: int = Field(..., gt=0, le=10 * 1024 * 1024)  # keep in sync with MAX_RESUME_BYTES
+    file_size: int = Field(
+        ..., gt=0, le=10 * 1024 * 1024
+    )  # keep in sync with MAX_RESUME_BYTES
 
     @field_validator("content_type")
     @classmethod
@@ -68,6 +70,7 @@ class ResumeUploadUrlResponse(BaseModel):
     expires_in: int
     content_type: str
 
+
 class ResumeExperience(BaseModel):
     title: Optional[str] = None
     company: Optional[str] = None
@@ -77,11 +80,13 @@ class ResumeExperience(BaseModel):
     description: Optional[str] = None
     bullets: list[str] = Field(default_factory=list)
 
+
 class ResumeProject(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     technologies: list[str] = Field(default_factory=list)
     bullets: list[str] = Field(default_factory=list)
+
 
 class ResumeEducation(BaseModel):
     institution: Optional[str] = None
@@ -89,6 +94,7 @@ class ResumeEducation(BaseModel):
     field_of_study: Optional[str] = None
     start_date: Optional[str] = None
     end_date: Optional[str] = None
+
 
 class ParsedResume(BaseModel):
     contact: dict[str, str] = Field(default_factory=dict)

@@ -17,6 +17,7 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from app.core.limiter import limiter
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     setup_logging()
@@ -27,11 +28,9 @@ async def lifespan(app: FastAPI):
     await engine.dispose()
     logger.info("Shutdown complete.")
 
+
 app = FastAPI(
-    title=settings.APP_NAME,
-    lifespan=lifespan,
-    docs_url="/docs",
-    redoc_url="/redoc"
+    title=settings.APP_NAME, lifespan=lifespan, docs_url="/docs", redoc_url="/redoc"
 )
 
 FastAPIInstrumentor.instrument_app(app)
@@ -48,22 +47,25 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Middleware for request ID and timing log
 @app.middleware("http")
 async def add_request_metadata(request: Request, call_next):
     request_id = str(uuid.uuid4())
     request.state.request_id = request_id
     start_time = time.time()
-    
+
     response = await call_next(request)
-    
+
     process_time = round((time.time() - start_time) * 1000, 2)
     response.headers["X-Request-ID"] = request_id
     response.headers["X-Process-Time-Ms"] = str(process_time)
     return response
 
+
 # Register Exception Handlers
 app.add_exception_handler(StudyForgeException, studyforge_exception_handler)
+
 
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
@@ -80,27 +82,39 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
         },
     )
 
+
 # Include API Router & WebSocket Router
 app.include_router(api_router, prefix="/api")
 app.include_router(interview_ws_router, prefix="/api/v1")
+
 
 @app.get("/health", tags=["Health"])
 async def health_check():
     return {"status": "healthy", "service": settings.APP_NAME, "env": settings.APP_ENV}
 
+
 @app.get("/ready", tags=["Health"])
 async def ready_check():
     return {"status": "ready", "database": "connected"}
 
+
 @app.get("/", include_in_schema=False)
 async def root():
     from fastapi.responses import RedirectResponse
+
     return RedirectResponse(url="/docs")
 
+
 # Serve frontend static files
-frontend_dist = os.path.realpath(os.path.join(os.path.dirname(__file__), "../../frontend/dist"))
+frontend_dist = os.path.realpath(
+    os.path.join(os.path.dirname(__file__), "../../frontend/dist")
+)
 if os.path.isdir(frontend_dist):
-    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+    app.mount(
+        "/assets",
+        StaticFiles(directory=os.path.join(frontend_dist, "assets")),
+        name="assets",
+    )
     index_path = os.path.join(frontend_dist, "index.html")
 
     @app.get("/{full_path:path}", include_in_schema=False)

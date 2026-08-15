@@ -6,14 +6,19 @@ from fastapi import APIRouter, Query, HTTPException
 router = APIRouter(prefix="/leetcode", tags=["leetcode"])
 
 POSSIBLE_PATHS = [
-    os.path.join(os.path.dirname(__file__), "../../../../datasets/interview_problems_1000.json"),
-    os.path.join(os.path.dirname(__file__), "../../../datasets/interview_problems_1000.json"),
+    os.path.join(
+        os.path.dirname(__file__), "../../../../datasets/interview_problems_1000.json"
+    ),
+    os.path.join(
+        os.path.dirname(__file__), "../../../datasets/interview_problems_1000.json"
+    ),
     os.path.abspath("datasets/interview_problems_1000.json"),
 ]
 
 import aiofiles
 
 _problems_cache: List[dict] = []
+
 
 async def _load_problems() -> List[dict]:
     global _problems_cache
@@ -25,6 +30,7 @@ async def _load_problems() -> List[dict]:
                     _problems_cache = json.loads(content)
                 break
     return _problems_cache
+
 
 @router.get("/problems")
 async def get_problems(
@@ -45,7 +51,8 @@ async def get_problems(
     if search:
         s_lower = search.lower()
         filtered = [
-            p for p in filtered
+            p
+            for p in filtered
             if s_lower in p["title"].lower() or s_lower in p["description"].lower()
         ]
 
@@ -56,14 +63,16 @@ async def get_problems(
     if tag:
         t_lower = tag.lower()
         filtered = [
-            p for p in filtered
+            p
+            for p in filtered
             if any(t_lower in tg.lower() for tg in p.get("tags", []))
         ]
 
     if company:
         c_lower = company.lower()
         filtered = [
-            p for p in filtered
+            p
+            for p in filtered
             if any(c_lower in cmp.lower() for cmp in p.get("companyTags", []))
         ]
 
@@ -77,8 +86,9 @@ async def get_problems(
         "page": page,
         "limit": limit,
         "total_pages": (total + limit - 1) // limit,
-        "problems": paginated_items
+        "problems": paginated_items,
     }
+
 
 @router.get("/problems/{problem_id}")
 async def get_problem_by_id(problem_id: str):

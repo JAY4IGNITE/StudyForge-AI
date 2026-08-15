@@ -1,6 +1,7 @@
 from typing import Dict, Any, Optional
 import re
 
+
 class BehavioralValidator:
     """
     Validates, normalizes, and audits behavioral mock interview telemetry.
@@ -11,7 +12,17 @@ class BehavioralValidator:
     MIN_TURN_WORDS = 3
     OPTIMAL_WPM_MIN = 100.0
     OPTIMAL_WPM_MAX = 170.0
-    FILLER_CORPUS = ["um", "uh", "like", "you know", "basically", "actually", "literally", "sort of", "kind of"]
+    FILLER_CORPUS = [
+        "um",
+        "uh",
+        "like",
+        "you know",
+        "basically",
+        "actually",
+        "literally",
+        "sort of",
+        "kind of",
+    ]
 
     @classmethod
     def validate_and_normalize_turn(
@@ -19,7 +30,7 @@ class BehavioralValidator:
         user_answer: str,
         audio_duration_seconds: float,
         vision_metrics: Optional[Dict[str, Any]] = None,
-        audio_metrics: Optional[Dict[str, Any]] = None
+        audio_metrics: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Validates a submitted interview turn, calculates auditable telemetry,
@@ -27,7 +38,7 @@ class BehavioralValidator:
         """
         validation_flags = []
         user_answer_clean = user_answer.strip() if user_answer else ""
-        words = re.findall(r'\b\w+\b', user_answer_clean.lower())
+        words = re.findall(r"\b\w+\b", user_answer_clean.lower())
         word_count = len(words)
 
         # 1. Turn content validation
@@ -44,7 +55,7 @@ class BehavioralValidator:
         total_fillers = 0
         transcript_lower = user_answer_clean.lower()
         for f in cls.FILLER_CORPUS:
-            cnt = len(re.findall(r'\b' + re.escape(f) + r'\b', transcript_lower))
+            cnt = len(re.findall(r"\b" + re.escape(f) + r"\b", transcript_lower))
             if cnt > 0:
                 filler_breakdown[f] = cnt
                 total_fillers += cnt
@@ -66,7 +77,7 @@ class BehavioralValidator:
             "filler_word_count": total_fillers,
             "filler_word_breakdown": filler_breakdown,
             "speech_clarity_score": max(40.0, round(speech_clarity, 1)),
-            "signal_confidence": 0.98 if word_count > 5 else 0.70
+            "signal_confidence": 0.98 if word_count > 5 else 0.70,
         }
 
         # 3. Vision Telemetry Processing & Fallback Policy
@@ -74,31 +85,41 @@ class BehavioralValidator:
 
         # 4. Compute overall turn confidence rating
         overall_confidence = round(
-            (audio_telemetry["signal_confidence"] + processed_vision["signal_confidence"]) / 2.0, 2
+            (
+                audio_telemetry["signal_confidence"]
+                + processed_vision["signal_confidence"]
+            )
+            / 2.0,
+            2,
         )
 
         return {
-            "is_valid": len([f for f in validation_flags if f == "TRANSCRIPT_TOO_SHORT"]) == 0,
+            "is_valid": len(
+                [f for f in validation_flags if f == "TRANSCRIPT_TOO_SHORT"]
+            )
+            == 0,
             "validation_flags": validation_flags,
             "auditable_telemetry": {
                 "audio": audio_telemetry,
                 "vision": processed_vision,
                 "overall_signal_confidence": overall_confidence,
                 "has_sensor_fallbacks": processed_vision["status"] != "active",
-            }
+            },
         }
 
     @classmethod
     def _process_vision_metrics(
-        cls,
-        raw_vision: Optional[Dict[str, Any]],
-        validation_flags: list
+        cls, raw_vision: Optional[Dict[str, Any]], validation_flags: list
     ) -> Dict[str, Any]:
         """
         Ensures vision metrics are verifiable. If camera is off or unreadable,
         returns explicit disabled state rather than fabricating numbers.
         """
-        if not raw_vision or raw_vision.get("status") in ["disabled", "off", "sensor_unavailable"]:
+        if not raw_vision or raw_vision.get("status") in [
+            "disabled",
+            "off",
+            "sensor_unavailable",
+        ]:
             validation_flags.append("VISION_SENSOR_DISABLED")
             return {
                 "status": "disabled",
@@ -109,7 +130,7 @@ class BehavioralValidator:
                 "shoulder_alignment_score": None,
                 "attention_score": None,
                 "signal_confidence": 1.0,  # Explicit deterministic disabled state
-                "message": "Camera telemetry was turned off by candidate during turn."
+                "message": "Camera telemetry was turned off by candidate during turn.",
             }
 
         # Validate bounds for active metrics
@@ -131,7 +152,7 @@ class BehavioralValidator:
             "shoulder_alignment_score": shoulder,
             "attention_score": attention,
             "frame_samples_processed": raw_vision.get("frame_samples_processed", 0),
-            "signal_confidence": round(confidence, 2)
+            "signal_confidence": round(confidence, 2),
         }
 
     @staticmethod
@@ -141,5 +162,6 @@ class BehavioralValidator:
             return max(0.0, min(100.0, round(f_val, 1)))
         except (ValueError, TypeError):
             return 80.0
+
 
 behavioral_validator = BehavioralValidator()

@@ -1,6 +1,9 @@
 from app.templates.email_base import get_base_email_layout
 
-def build_otp_template(otp_code: str, action_title: str, expire_minutes: int = 15) -> str:
+
+def build_otp_template(
+    otp_code: str, action_title: str, expire_minutes: int = 15
+) -> str:
     body = f"""
     <h2 style="color: #f8fafc; font-size: 22px; font-weight: 700; margin-top: 0; text-align: center;">
       {action_title}
@@ -17,7 +20,12 @@ def build_otp_template(otp_code: str, action_title: str, expire_minutes: int = 1
       ⏰ This code expires in <strong>{expire_minutes} minutes</strong>. Do not share this code with anyone.
     </p>
     """
-    return get_base_email_layout(title=action_title, preheader=f"Your verification code is {otp_code}", content_body=body)
+    return get_base_email_layout(
+        title=action_title,
+        preheader=f"Your verification code is {otp_code}",
+        content_body=body,
+    )
+
 
 def build_welcome_template(display_name: str) -> str:
     body = f"""
@@ -44,10 +52,15 @@ def build_welcome_template(display_name: str) -> str:
       <a href="http://localhost:5173/dashboard" class="btn">Launch Your Dashboard &rarr;</a>
     </div>
     """
-    return get_base_email_layout(title="Welcome to StudyForge AI", preheader="Your account is fully activated!", content_body=body)
+    return get_base_email_layout(
+        title="Welcome to StudyForge AI",
+        preheader="Your account is fully activated!",
+        content_body=body,
+    )
+
 
 def build_password_changed_template() -> str:
-    body = f"""
+    body = """
     <h2 style="color: #f8fafc; font-size: 22px; font-weight: 700; margin-top: 0;">
       Password Changed Successfully
     </h2>
@@ -61,7 +74,12 @@ def build_password_changed_template() -> str:
       </p>
     </div>
     """
-    return get_base_email_layout(title="Password Changed", preheader="Your account password was updated.", content_body=body)
+    return get_base_email_layout(
+        title="Password Changed",
+        preheader="Your account password was updated.",
+        content_body=body,
+    )
+
 
 def build_security_login_template(device_info: str, timestamp_str: str) -> str:
     body = f"""
@@ -89,4 +107,8 @@ def build_security_login_template(device_info: str, timestamp_str: str) -> str:
       If this was you, no action is required. If you don't recognize this activity, please change your password.
     </p>
     """
-    return get_base_email_layout(title="Security Alert", preheader="New sign-in detected on your account.", content_body=body)
+    return get_base_email_layout(
+        title="Security Alert",
+        preheader="New sign-in detected on your account.",
+        content_body=body,
+    )

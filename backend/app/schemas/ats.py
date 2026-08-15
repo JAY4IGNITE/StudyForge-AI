@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from app.schemas.resume import ParsedResume
 
+
 class JobDescriptionSchema(BaseModel):
     title: str = ""
     required_skills: List[str] = Field(default_factory=list)
@@ -15,12 +16,14 @@ class JobDescriptionSchema(BaseModel):
     certifications: List[str] = Field(default_factory=list)
     seniority: str = ""
 
+
 class AtsScoreBreakdown(BaseModel):
     keyword_score: float = 0.0
     semantic_score: float = 0.0
     formatting_score: float = 0.0
     completeness_score: float = 0.0
     impact_score: float = 0.0
+
 
 class AtsAnalysisResponse(BaseModel):
     overall_score: float
@@ -31,15 +34,19 @@ class AtsAnalysisResponse(BaseModel):
     missing_keywords: List[str] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
     recommendations: List[str] = Field(default_factory=list)
-    
+
+
 class JobParserRequest(BaseModel):
     job_text: str
-    
+
+
 class AtsAnalyzeRequest(BaseModel):
     job_text: str
     resume_id: str
 
+
 from uuid import UUID
+
 
 class AtsReportSchema(BaseModel):
     id: UUID
@@ -58,5 +65,5 @@ class AtsReportSchema(BaseModel):
     warnings: List[str]
     recommendations: List[str]
     created_at: datetime
-    
+
     model_config = {"from_attributes": True}

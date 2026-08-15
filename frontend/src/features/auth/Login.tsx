@@ -42,11 +42,15 @@ export const Login: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await apiClient.post('/auth/login', { email, password });
-      await login(res.data);
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      // We don't need to manually set login since AuthProvider listens to session changes.
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Failed to login. Check credentials.');
+      setError(err.message || 'Failed to login. Check credentials.');
     } finally {
       setLoading(false);
     }

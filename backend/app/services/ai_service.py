@@ -3,13 +3,21 @@ import httpx
 from typing import List, Dict, Any, Optional
 from app.core.config import settings
 from app.core.logging import logger
-from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type
+from tenacity import (
+    retry,
+    wait_exponential,
+    stop_after_attempt,
+    retry_if_exception_type,
+)
+
 
 class RateLimitError(Exception):
     pass
 
+
 NVIDIA_NIM_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 DEFAULT_MODEL = "meta/llama-3.1-70b-instruct"
+
 
 class AIService:
     @staticmethod
@@ -19,7 +27,11 @@ class AIService:
         retry=retry_if_exception_type((httpx.RequestError, RateLimitError)),
         reraise=True,
     )
-    async def chat_with_mentor(message: str, user_name: Optional[str] = None, history: Optional[List[Dict[str, str]]] = None) -> str:
+    async def chat_with_mentor(
+        message: str,
+        user_name: Optional[str] = None,
+        history: Optional[List[Dict[str, str]]] = None,
+    ) -> str:
         """
         Interacts with NVIDIA NIM (Llama 3.1 70B) to act as Socratic Study Mentor & Interview Coach.
         Generates progressive hints, explanations, and step-by-step solutions.
@@ -34,11 +46,16 @@ class AIService:
         )
 
         messages = [{"role": "system", "content": system_prompt}]
-        
+
         if history:
-            for item in history[-6:]: # Keep context compact
-                messages.append({"role": item.get("role", "user"), "content": item.get("content", "")})
-        
+            for item in history[-6:]:  # Keep context compact
+                messages.append(
+                    {
+                        "role": item.get("role", "user"),
+                        "content": item.get("content", ""),
+                    }
+                )
+
         messages.append({"role": "user", "content": message})
 
         headers = {
@@ -63,7 +80,9 @@ class AIService:
                     logger.warning("NVIDIA NIM Rate Limit Exceeded (429). Retrying...")
                     raise RateLimitError("Rate limit exceeded")
                 else:
-                    logger.error(f"NVIDIA NIM Chat API error {res.status_code}: {res.text}")
+                    logger.error(
+                        f"NVIDIA NIM Chat API error {res.status_code}: {res.text}"
+                    )
                     return f"NVIDIA NIM service error ({res.status_code}). Please try again."
         except httpx.RequestError as e:
             logger.error(f"Request error calling NVIDIA NIM API: {e}")
@@ -73,7 +92,9 @@ class AIService:
             return "Failed to reach NVIDIA NIM AI service. Please check network connectivity."
 
     @staticmethod
-    async def generate_questions_and_solutions(topic: str, difficulty: str = "medium", count: int = 3) -> List[Dict[str, Any]]:
+    async def generate_questions_and_solutions(
+        topic: str, difficulty: str = "medium", count: int = 3
+    ) -> List[Dict[str, Any]]:
         """
         Uses NVIDIA NIM to generate structured multiple-choice questions with detailed step-by-step solutions.
         """
@@ -123,7 +144,9 @@ Respond ONLY with a valid JSON array of objects with the following format (no ma
                     content = content.strip()
                     return json.loads(content)
                 else:
-                    logger.error(f"NVIDIA NIM question generation error {res.status_code}: {res.text}")
+                    logger.error(
+                        f"NVIDIA NIM question generation error {res.status_code}: {res.text}"
+                    )
                     return []
         except Exception as e:
             logger.error(f"Exception generating questions via NVIDIA NIM: {e}")
@@ -164,7 +187,9 @@ Respond ONLY with a valid JSON array of objects with the following format (no ma
                     content = content.strip()
                     return json.loads(content)
                 else:
-                    logger.error(f"NVIDIA NIM json generation error {res.status_code}: {res.text}")
+                    logger.error(
+                        f"NVIDIA NIM json generation error {res.status_code}: {res.text}"
+                    )
                     return {}
         except Exception as e:
             logger.error(f"Exception generating json via NVIDIA NIM: {e}")

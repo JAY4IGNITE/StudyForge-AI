@@ -3,6 +3,7 @@ from app.services.ai_interview_engine import ai_interview_engine
 from app.schemas.ats import JobDescriptionSchema
 from app.core.logging import logger
 
+
 class JobParserService:
     @staticmethod
     async def parse_job_description(job_text: str) -> JobDescriptionSchema:
@@ -27,7 +28,9 @@ Respond ONLY with valid JSON matching exactly this structure (no markdown fences
   "seniority": "Senior"
 }}
 """
-        raw = await ai_interview_engine._call_nvidia_nim([{"role": "user", "content": prompt}], temperature=0.1)
+        raw = await ai_interview_engine._call_nvidia_nim(
+            [{"role": "user", "content": prompt}], temperature=0.1
+        )
         try:
             cleaned = raw.strip()
             if cleaned.startswith("```json"):
@@ -36,7 +39,7 @@ Respond ONLY with valid JSON matching exactly this structure (no markdown fences
                 cleaned = cleaned[3:]
             if cleaned.endswith("```"):
                 cleaned = cleaned[:-3]
-            
+
             data = json.loads(cleaned.strip())
             return JobDescriptionSchema(**data)
         except Exception as e:
@@ -44,7 +47,10 @@ Respond ONLY with valid JSON matching exactly this structure (no markdown fences
             # Fallback to basic extraction
             return JobDescriptionSchema(
                 title="Unknown Title",
-                required_skills=[word for word in job_text.split() if len(word) > 4][:10]
+                required_skills=[word for word in job_text.split() if len(word) > 4][
+                    :10
+                ],
             )
+
 
 job_parser_service = JobParserService()

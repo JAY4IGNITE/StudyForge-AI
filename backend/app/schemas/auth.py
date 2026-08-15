@@ -23,9 +23,11 @@ class UserRegisterRequest(BaseModel):
     def check_password_strength(cls, v: str) -> str:
         return _validate_password_strength(v)
 
+
 class UserLoginRequest(BaseModel):
     email: EmailStr
     password: str
+
 
 class TokenResponse(BaseModel):
     # The refresh token is set as an httpOnly cookie (see auth.py routes)
@@ -34,12 +36,15 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
+
 class OTPVerifyRequest(BaseModel):
     email: EmailStr
     otp_code: str
 
+
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+
 
 class ResetPasswordRequest(BaseModel):
     email: EmailStr
@@ -50,6 +55,7 @@ class ResetPasswordRequest(BaseModel):
     @classmethod
     def check_password_strength(cls, v: str) -> str:
         return _validate_password_strength(v)
+
 
 class UserProfileUpdate(BaseModel):
     display_name: Optional[str] = None

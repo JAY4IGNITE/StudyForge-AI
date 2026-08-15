@@ -7,9 +7,12 @@ from app.core.logging import logger
 NVIDIA_NIM_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 DEFAULT_MODEL = "meta/llama-3.1-70b-instruct"
 
+
 class AIInterviewEngine:
     @staticmethod
-    async def _call_nvidia_nim(messages: List[Dict[str, str]], temperature: float = 0.5, max_tokens: int = 1500) -> str:
+    async def _call_nvidia_nim(
+        messages: List[Dict[str, str]], temperature: float = 0.5, max_tokens: int = 1500
+    ) -> str:
         if not settings.NVIDIA_NIM_API_KEY:
             logger.warning("NVIDIA_NIM_API_KEY is not set. Using fallback AI response.")
             return ""
@@ -38,7 +41,12 @@ class AIInterviewEngine:
             return ""
 
     @staticmethod
-    async def get_initial_question(mode: str, target_role: str, job_description: Optional[str] = None, resume_context: Optional[str] = None) -> str:
+    async def get_initial_question(
+        mode: str,
+        target_role: str,
+        job_description: Optional[str] = None,
+        resume_context: Optional[str] = None,
+    ) -> str:
         prompt = f"""
 You are an expert executive AI interviewer conducting a real-time voice & video interview for the role of '{target_role}'.
 Interview Mode: '{mode}' (technical, behavioral, coding, hr, resume, job_description).
@@ -60,7 +68,7 @@ Keep your response concise, spoken-friendly, and clear (2-4 sentences).
         user_answer: str,
         mode: str,
         target_role: str,
-        code_submission: Optional[str] = None
+        code_submission: Optional[str] = None,
     ) -> Dict[str, Any]:
         """
         Evaluates the turn answer and generates the next turn or completion status.
@@ -68,7 +76,7 @@ Keep your response concise, spoken-friendly, and clear (2-4 sentences).
         history_summary = []
         for h in history:
             history_summary.append(f"Interviewer: {h.get('question')}")
-            if h.get('user_answer'):
+            if h.get("user_answer"):
                 history_summary.append(f"Candidate: {h.get('user_answer')}")
 
         prompt = f"""
@@ -94,7 +102,7 @@ Respond ONLY in valid JSON format without markdown code blocks:
 """
         messages = [{"role": "user", "content": prompt}]
         raw = await AIInterviewEngine._call_nvidia_nim(messages, temperature=0.4)
-        
+
         try:
             cleaned = raw.strip()
             if cleaned.startswith("```json"):
@@ -113,7 +121,11 @@ Respond ONLY in valid JSON format without markdown code blocks:
                 "ideal_answer": "An optimal answer includes specific metrics, architectural choices, and trade-off analysis.",
                 "better_answer": user_answer,
                 "is_completed": is_done,
-                "next_question": "Can you describe a challenging bug or systemic failure you resolved in your recent project?" if not is_done else ""
+                "next_question": (
+                    "Can you describe a challenging bug or systemic failure you resolved in your recent project?"
+                    if not is_done
+                    else ""
+                ),
             }
 
     @staticmethod
@@ -123,8 +135,13 @@ Respond ONLY in valid JSON format without markdown code blocks:
         """
         role = session_data.get("target_role", "Software Engineer")
         turns = session_data.get("turns", [])
-        
-        turns_text = "\n".join([f"Q: {t.get('question')}\nA: {t.get('user_answer', 'N/A')}\n" for t in turns])
+
+        turns_text = "\n".join(
+            [
+                f"Q: {t.get('question')}\nA: {t.get('user_answer', 'N/A')}\n"
+                for t in turns
+            ]
+        )
 
         prompt = f"""
 Generate an in-depth executive Interview Performance Report for a '{role}' interview.
@@ -182,15 +199,26 @@ Respond ONLY in valid JSON format (no markdown fences):
                     "confidence": 88.0,
                     "problem_solving": 82.0,
                     "coding": 85.0,
-                    "behavioral": 85.0
+                    "behavioral": 85.0,
                 },
-                "strengths": ["Clear articulation", "Strong fundamental technical knowledge"],
+                "strengths": [
+                    "Clear articulation",
+                    "Strong fundamental technical knowledge",
+                ],
                 "weaknesses": ["Elaborate more on specific project metrics"],
                 "ats_keywords_missing": ["CI/CD", "Docker", "REST API"],
-                "resume_improvements": ["Highlight impact metrics in project descriptions"],
+                "resume_improvements": [
+                    "Highlight impact metrics in project descriptions"
+                ],
                 "learning_plan_7_days": [
-                    {"day": 1, "topic": "Core Fundamentals", "focus": "Review key data structures", "recommended_resources": ["StudyForge DSA Module"]}
-                ]
+                    {
+                        "day": 1,
+                        "topic": "Core Fundamentals",
+                        "focus": "Review key data structures",
+                        "recommended_resources": ["StudyForge DSA Module"],
+                    }
+                ],
             }
+
 
 ai_interview_engine = AIInterviewEngine()

@@ -40,14 +40,19 @@ export const Register: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      await apiClient.post('/auth/register', {
-        display_name: displayName,
+      const { error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: displayName,
+          },
+        },
       });
+      if (error) throw error;
       navigate('/verify-email', { state: { email } });
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Registration failed.');
+      setError(err.message || 'Registration failed.');
     } finally {
       setLoading(false);
     }

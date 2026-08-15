@@ -1,11 +1,19 @@
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel
-from app.models.coding_profile import PlatformConnection, ConnectedPlatforms, CachedStats, Project, SocialLinks
+from app.models.coding_profile import (
+    PlatformConnection,
+    ConnectedPlatforms,
+    CachedStats,
+    Project,
+    SocialLinks,
+)
+
 
 class CodingProfileCreate(BaseModel):
     display_name: str
     bio: Optional[str] = None
     profile_slug: str
+
 
 class CodingProfileUpdate(BaseModel):
     display_name: Optional[str] = None
@@ -15,9 +23,11 @@ class CodingProfileUpdate(BaseModel):
     projects: Optional[List[Project]] = None
     social_links: Optional[SocialLinks] = None
 
+
 class PlatformConnectRequest(BaseModel):
     platform: str
     username: str
+
 
 class CodingProfileResponse(BaseModel):
     id: str
@@ -34,6 +44,7 @@ class CodingProfileResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 class PublicCodingProfileResponse(CodingProfileResponse):
     pass

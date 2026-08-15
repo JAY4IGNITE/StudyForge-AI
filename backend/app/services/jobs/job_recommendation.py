@@ -5,6 +5,7 @@ from app.services.jobs.job_matcher import job_matcher
 from fastapi import HTTPException
 from typing import Dict, Any
 
+
 class JobRecommendationService:
     def __init__(self):
         pass
@@ -18,20 +19,24 @@ class JobRecommendationService:
             job_details = await jsearch_service.get_job_details(job_id)
             if not job_details.get("data"):
                 raise HTTPException(status_code=404, detail="Job not found.")
-                
+
             job_data = job_details["data"][0]
-            
+
             # 2. Extract job context
             job_title = job_data.get("job_title", "Unknown Role")
             job_description = job_data.get("job_description", "")
             job_skills = job_data.get("job_required_skills", [])
-            
+
             # 3. Get user match score
-            match_data = job_matcher.calculate_match(job_skills, current_user.preferences.preferred_subjects, current_user.preferences.dict())
-            
+            match_data = job_matcher.calculate_match(
+                job_skills,
+                current_user.preferences.preferred_subjects,
+                current_user.preferences.dict(),
+            )
+
             missing_skills = match_data.get("missing_skills", [])
             matched_skills = match_data.get("matched_skills", [])
-            
+
             # 4. Generate AI Prompt
             prompt = f"""
             Analyze the following job description for the role of '{job_title}'.
@@ -50,18 +55,21 @@ class JobRecommendationService:
                 "preparation_recommendations": ["Actionable step 1", "Actionable step 2", "Actionable step 3"]
             }}
             """
-            
+
             # 5. Call AI (using existing infrastructure)
             analysis_result = await AIService.generate_json(prompt)
-            
+
             return {
                 "match_score": match_data["overall_match_percentage"],
-                "analysis": analysis_result
+                "analysis": analysis_result,
             }
-            
+
         except Exception as e:
             if isinstance(e, HTTPException):
                 raise
-            raise HTTPException(status_code=500, detail=f"Failed to analyze job: {str(e)}")
+            raise HTTPException(
+                status_code=500, detail=f"Failed to analyze job: {str(e)}"
+            )
+
 
 job_recommendation_service = JobRecommendationService()

@@ -3,6 +3,7 @@ from app.models.practice import MasteryProfile
 
 router = APIRouter(prefix="/adaptive", tags=["Adaptive Learning"])
 
+
 @router.get("/policy-summary")
 async def get_adaptive_policy_summary():
     return {
@@ -13,6 +14,6 @@ async def get_adaptive_policy_summary():
         "difficulty_thresholds": {
             "hard": "Mastery >= 80.0%",
             "medium": "45.0% < Mastery < 80.0%",
-            "easy": "Mastery <= 45.0%"
-        }
+            "easy": "Mastery <= 45.0%",
+        },
     }

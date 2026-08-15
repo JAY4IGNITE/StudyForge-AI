@@ -7,18 +7,29 @@ from datetime import datetime, timezone
 
 security_bearer = HTTPBearer()
 
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security_bearer)) -> User:
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security_bearer),
+) -> User:
     token = credentials.credentials
     supabase = get_supabase_client()
-    
+
     try:
         user_response = supabase.auth.get_user(token)
         sb_user = user_response.user
     except Exception as e:
-        raise StudyForgeException(code="INVALID_TOKEN", message="Could not validate credentials", status_code=status.HTTP_401_UNAUTHORIZED)
-        
+        raise StudyForgeException(
+            code="INVALID_TOKEN",
+            message="Could not validate credentials",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
+
     if not sb_user:
-        raise StudyForgeException(code="INVALID_TOKEN", message="Could not validate credentials", status_code=status.HTTP_401_UNAUTHORIZED)
+        raise StudyForgeException(
+            code="INVALID_TOKEN",
+            message="Could not validate credentials",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
 
     # Sync user to local DB
     user = await User.find_one({"oauth_id": sb_user.id})
@@ -30,14 +41,18 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
             user.auth_provider = "supabase"
             await user.save()
         else:
-            name = sb_user.user_metadata.get("full_name", sb_user.email.split('@')[0]) if sb_user.user_metadata else sb_user.email.split('@')[0]
+            name = (
+                sb_user.user_metadata.get("full_name", sb_user.email.split("@")[0])
+                if sb_user.user_metadata
+                else sb_user.email.split("@")[0]
+            )
             user = User(
                 email=sb_user.email,
                 auth_provider="supabase",
                 oauth_id=sb_user.id,
                 display_name=name,
-                email_verified_at=datetime.now(timezone.utc)
+                email_verified_at=datetime.now(timezone.utc),
             )
             await user.insert()
-            
+
     return user

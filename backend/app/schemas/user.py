@@ -2,10 +2,12 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
 
+
 class UserPreferencesResponse(BaseModel):
     preferred_subjects: List[str]
     difficulty_preference: str
     practice_mode: str
+
 
 class UserResponse(BaseModel):
     id: str

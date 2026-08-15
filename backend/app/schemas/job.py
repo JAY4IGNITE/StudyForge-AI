@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Any
 from datetime import datetime
 
+
 class JobSearchRequest(BaseModel):
     query: str
     page: int = 1
@@ -10,10 +11,12 @@ class JobSearchRequest(BaseModel):
     remote_jobs_only: bool = False
     date_posted: str = "all"
 
+
 class JobRequiredExperience(BaseModel):
     required_experience_in_months: Optional[int] = None
     experience_mentioned: Optional[bool] = None
     experience_preferred: Optional[bool] = None
+
 
 class JobData(BaseModel):
     job_id: str
@@ -37,17 +40,20 @@ class JobData(BaseModel):
     job_required_skills: Optional[List[str]] = None
     job_required_experience: Optional[JobRequiredExperience] = None
 
+
 class JobSearchResponse(BaseModel):
     status: str
     request_id: str
     parameters: dict
     data: List[JobData]
 
+
 class JobMatchScore(BaseModel):
     overall_match_percentage: int
     matched_skills: List[str]
     missing_skills: List[str]
     analysis_reasoning: str
+
 
 class JobApplicationCreate(BaseModel):
     job_id: str
@@ -56,9 +62,11 @@ class JobApplicationCreate(BaseModel):
     location: Optional[str] = None
     application_url: Optional[str] = None
 
+
 class JobApplicationUpdate(BaseModel):
     status: Optional[str] = None
     notes: Optional[str] = None
+
 
 class JobApplicationResponse(BaseModel):
     id: str

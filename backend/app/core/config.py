@@ -2,12 +2,15 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List, Optional, Union, Any
 from pydantic import field_validator
 
+
 class Settings(BaseSettings):
     APP_NAME: str = "StudyForge AI"
     APP_ENV: str = "development"
     LOG_LEVEL: str = "INFO"
 
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/studyforge"
+    DATABASE_URL: str = (
+        "postgresql+asyncpg://postgres:postgres@localhost:5432/studyforge"
+    )
     DIRECT_URL: Optional[str] = None
 
     CHROMA_HOST: str = "localhost"
@@ -34,7 +37,10 @@ class Settings(BaseSettings):
     GITHUB_CLIENT_ID: Optional[str] = None
     GITHUB_CLIENT_SECRET: Optional[str] = None
 
-    CORS_ORIGINS: Union[List[str], str] = ["http://localhost:5173", "http://localhost:3000"]
+    CORS_ORIGINS: Union[List[str], str] = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+    ]
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
@@ -42,6 +48,7 @@ class Settings(BaseSettings):
         if isinstance(v, str):
             if v.startswith("[") and v.endswith("]"):
                 import json
+
                 try:
                     return json.loads(v)
                 except Exception:
@@ -73,7 +80,9 @@ class Settings(BaseSettings):
 
     JSEARCH_API_KEY: Optional[str] = None
 
-    model_config = SettingsConfigDict(env_file=["../.env", ".env"], env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=["../.env", ".env"], env_file_encoding="utf-8", extra="ignore"
+    )
 
     @field_validator("JWT_ACCESS_SECRET", "JWT_REFRESH_SECRET")
     @classmethod
@@ -81,7 +90,7 @@ class Settings(BaseSettings):
         if len(v) < 32:
             raise ValueError(
                 "JWT secrets must be at least 32 characters. "
-                "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(48))\""
+                'Generate one with: python -c "import secrets; print(secrets.token_urlsafe(48))"'
             )
         return v
 
