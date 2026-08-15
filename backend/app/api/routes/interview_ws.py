@@ -31,6 +31,8 @@ async def stream_text_chunks(
         await asyncio.sleep(delay)
 
 
+from app.db.database import AsyncSessionLocal, db_session
+
 @router.websocket("/{session_id}")
 async def interview_websocket(websocket: WebSocket, session_id: str):
     """
@@ -38,6 +40,15 @@ async def interview_websocket(websocket: WebSocket, session_id: str):
     Handles auth, AI streaming, and telemetry.
     """
     await websocket.accept()
+
+    async with AsyncSessionLocal() as db_sess:
+        token = db_session.set(db_sess)
+        try:
+            await _handle_interview_websocket(websocket, session_id)
+        finally:
+            db_session.reset(token)
+
+async def _handle_interview_websocket(websocket: WebSocket, session_id: str):
 
     # Phase 4: Authentication via first message
     user = await authenticate_websocket(websocket)

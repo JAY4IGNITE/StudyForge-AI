@@ -48,6 +48,8 @@ app.add_middleware(
 )
 
 
+from app.db.database import AsyncSessionLocal, db_session
+
 # Middleware for request ID and timing log
 @app.middleware("http")
 async def add_request_metadata(request: Request, call_next):
@@ -55,7 +57,13 @@ async def add_request_metadata(request: Request, call_next):
     request.state.request_id = request_id
     start_time = time.time()
 
-    response = await call_next(request)
+    # Open DB session and bind to context var for Beanie emulator
+    async with AsyncSessionLocal() as session:
+        token = db_session.set(session)
+        try:
+            response = await call_next(request)
+        finally:
+            db_session.reset(token)
 
     process_time = round((time.time() - start_time) * 1000, 2)
     response.headers["X-Request-ID"] = request_id
