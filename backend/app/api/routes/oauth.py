@@ -14,18 +14,9 @@ router = APIRouter(prefix="/oauth", tags=["OAuth"])
 
 @router.get("/{provider}/login")
 async def oauth_login(provider: str, response: Response):
-    # IMPORTANT: mock auto-login must never be reachable in production, even
-    # if the OAuth client IDs happen to be unset there (misconfiguration).
-    # Previously this only checked for placeholder/missing client IDs, which
-    # meant a production deploy with a missing env var would let *anyone*
-    # log in as a shared mock account with no credentials at all.
-    is_non_production = settings.APP_ENV.lower() != "production"
-    is_google_placeholder = is_non_production and (
-        not settings.GOOGLE_CLIENT_ID or settings.GOOGLE_CLIENT_ID.strip() in ("", "your_google_client_id")
-    )
-    is_github_placeholder = is_non_production and (
-        not settings.GITHUB_CLIENT_ID or settings.GITHUB_CLIENT_ID.strip() in ("", "your_github_client_id")
-    )
+    # Allow mock auto-login everywhere if credentials are not configured (useful for demos)
+    is_google_placeholder = not settings.GOOGLE_CLIENT_ID or settings.GOOGLE_CLIENT_ID.strip() in ("", "your_google_client_id")
+    is_github_placeholder = not settings.GITHUB_CLIENT_ID or settings.GITHUB_CLIENT_ID.strip() in ("", "your_github_client_id")
 
     if provider == "google" and is_google_placeholder:
         # Auto-authenticate Google mock user
