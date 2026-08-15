@@ -18,6 +18,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  token: string | null;
   login: (tokens: { access_token: string }) => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -28,6 +29,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [token, setToken] = useState<string | null>(null);
 
   const fetchUser = async () => {
     try {
@@ -46,10 +48,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // user has a valid session -- for a fresh access token before deciding
     // whether they're logged in.
     (async () => {
-      const token = await refreshAccessToken();
-      if (token) {
+      const freshToken = await refreshAccessToken();
+      if (freshToken) {
+        setToken(freshToken);
         await fetchUser();
       } else {
+        setToken(null);
         setUser(null);
         setLoading(false);
       }
@@ -58,6 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (tokens: { access_token: string }) => {
     setAccessToken(tokens.access_token);
+    setToken(tokens.access_token);
     await fetchUser();
   };
 
@@ -68,11 +73,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // best-effort; clear client state regardless
     }
     setAccessToken(null);
+    setToken(null);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser: fetchUser }}>
+    <AuthContext.Provider value={{ user, loading, token, login, logout, refreshUser: fetchUser }}>
       {children}
     </AuthContext.Provider>
   );
