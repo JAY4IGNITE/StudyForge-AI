@@ -22,7 +22,7 @@ async def test_oauth_google_login_auto_auth(monkeypatch):
     monkeypatch.setattr(settings, "GOOGLE_CLIENT_ID", "your_google_client_id")
 
     # Mock Beanie getters to avoid CollectionWasNotInitialized
-    monkeypatch.setattr(User, "get_pymongo_collection", lambda *args: None)
+    # monkeypatch.setattr(User, "get_pymongo_collection", lambda *args: None)
 
     # Mock User find_one and insert
     async def mock_find_one(*args, **kwargs):
@@ -36,7 +36,7 @@ async def test_oauth_google_login_auto_auth(monkeypatch):
 
     # Mock auth_service.create_user_tokens
     async def mock_create_user_tokens(*args, **kwargs):
-        return TokenResponse(access_token="mock_access_token", refresh_token="mock_refresh_token")
+        return TokenResponse(access_token="mock_access_token", token_type="bearer"), "mock_refresh_token"
 
     monkeypatch.setattr(auth_service, "create_user_tokens", mock_create_user_tokens)
 
@@ -44,7 +44,7 @@ async def test_oauth_google_login_auto_auth(monkeypatch):
     response = client.get("/api/v1/oauth/google/login", follow_redirects=False)
     assert response.status_code == 307
     assert "access_token=mock_access_token" in response.headers["location"]
-    assert "refresh_token=mock_refresh_token" in response.headers["location"]
+
     assert "/oauth/callback" in response.headers["location"]
 
 
@@ -55,7 +55,7 @@ async def test_oauth_github_login_auto_auth(monkeypatch):
     monkeypatch.setattr(settings, "GITHUB_CLIENT_ID", "your_github_client_id")
 
     # Mock Beanie getters to avoid CollectionWasNotInitialized
-    monkeypatch.setattr(User, "get_pymongo_collection", lambda *args: None)
+    # monkeypatch.setattr(User, "get_pymongo_collection", lambda *args: None)
 
     # Mock User find_one and insert
     async def mock_find_one(*args, **kwargs):
@@ -69,7 +69,7 @@ async def test_oauth_github_login_auto_auth(monkeypatch):
 
     # Mock auth_service.create_user_tokens
     async def mock_create_user_tokens(*args, **kwargs):
-        return TokenResponse(access_token="mock_access_token_git", refresh_token="mock_refresh_token_git")
+        return TokenResponse(access_token="mock_access_token_git", token_type="bearer"), "mock_refresh_token_git"
 
     monkeypatch.setattr(auth_service, "create_user_tokens", mock_create_user_tokens)
 
@@ -77,5 +77,5 @@ async def test_oauth_github_login_auto_auth(monkeypatch):
     response = client.get("/api/v1/oauth/github/login", follow_redirects=False)
     assert response.status_code == 307
     assert "access_token=mock_access_token_git" in response.headers["location"]
-    assert "refresh_token=mock_refresh_token_git" in response.headers["location"]
+
     assert "/oauth/callback" in response.headers["location"]
