@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { apiClient, API_BASE_URL } from '../../lib/axios';
 import { useAuth } from '../../app/AuthProvider';
-import { Flame, Mail, Lock, ArrowRight, Github, Loader2 } from 'lucide-react';
+import { Flame, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -33,7 +33,6 @@ export const Login: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [githubLoading, setGithubLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -55,11 +54,6 @@ export const Login: React.FC = () => {
   const handleGoogleLogin = () => {
     setGoogleLoading(true);
     window.location.href = `${API_BASE_URL}/oauth/google/login`;
-  };
-
-  const handleGithubLogin = () => {
-    setGithubLoading(true);
-    window.location.href = `${API_BASE_URL}/oauth/github/login`;
   };
 
   return (
@@ -219,7 +213,7 @@ export const Login: React.FC = () => {
             variant="secondary" 
             className="h-12 w-full gap-3 overflow-hidden relative"
             onClick={handleGoogleLogin}
-            disabled={loading || googleLoading || githubLoading}
+            disabled={loading || googleLoading}
           >
             <AnimatePresence mode="wait">
               {googleLoading ? (
@@ -250,40 +244,6 @@ export const Login: React.FC = () => {
                     />
                   </svg>
                   Continue with Google
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Button>
-          <Button 
-            variant="secondary" 
-            className="h-12 w-full gap-3 overflow-hidden relative"
-            onClick={handleGithubLogin}
-            disabled={loading || googleLoading || githubLoading}
-          >
-            <AnimatePresence mode="wait">
-              {githubLoading ? (
-                <motion.div
-                  key="loading"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="flex items-center gap-2"
-                >
-                  <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}>
-                    <Loader2 className="h-4 w-4" />
-                  </motion.div>
-                  Redirecting...
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="idle"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="flex items-center gap-3"
-                >
-                  <Github className="h-5 w-5" />
-                  Continue with GitHub
                 </motion.div>
               )}
             </AnimatePresence>
