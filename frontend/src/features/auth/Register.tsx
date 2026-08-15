@@ -47,7 +47,7 @@ export const Register: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -57,7 +57,12 @@ export const Register: React.FC = () => {
         },
       });
       if (error) throw error;
-      navigate('/verify-email', { state: { email } });
+      
+      if (data.session) {
+        navigate('/dashboard');
+      } else {
+        navigate('/verify-email', { state: { email } });
+      }
     } catch (err: any) {
       setError(err.message || 'Registration failed.');
     } finally {
