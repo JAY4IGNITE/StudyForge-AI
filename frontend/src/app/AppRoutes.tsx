@@ -20,11 +20,9 @@ const CodingInterviewRoom = React.lazy(() => import('../features/interviews/Codi
 const InterviewReportView = React.lazy(() => import('../features/interviews/InterviewReportView').then(m => ({ default: m.InterviewReportView })));
 const CodingPracticePage = React.lazy(() => import('../features/leetcode/components/CodingPracticePage').then(m => ({ default: m.CodingPracticePage })));
 const StudyRoadmap = React.lazy(() => import('../pages/StudyRoadmap').then(m => ({ default: m.StudyRoadmap })));
-const Resources = React.lazy(() => import('../pages/Resources').then(m => ({ default: m.Resources })));
+
 const Profile = React.lazy(() => import('../features/profile/Profile').then(m => ({ default: m.Profile })));
-const Flashcards = React.lazy(() => import('../pages/Flashcards').then(m => ({ default: m.Flashcards })));
-const AITutor = React.lazy(() => import('../pages/AITutor').then(m => ({ default: m.AITutor })));
-const PhotoSolve = React.lazy(() => import('../pages/PhotoSolve').then(m => ({ default: m.PhotoSolve })));
+
 const AtsDashboard = React.lazy(() => import('../pages/AtsDashboard'));
 const JobSearch = React.lazy(() => import('../pages/JobSearch').then(m => ({ default: m.JobSearch })));
 const JobDetails = React.lazy(() => import('../pages/JobDetails').then(m => ({ default: m.JobDetails })));
@@ -88,10 +86,7 @@ const AnimatedRoutes: React.FC = () => {
         <Route path="/interview/legacy" element={<ProtectedRoute><AnimatedPage><MockInterview /></AnimatedPage></ProtectedRoute>} />
 
         <Route path="/roadmap" element={<ProtectedRoute><AnimatedPage><StudyRoadmap /></AnimatedPage></ProtectedRoute>} />
-        <Route path="/resources" element={<ProtectedRoute><AnimatedPage><Resources /></AnimatedPage></ProtectedRoute>} />
-        <Route path="/flashcards" element={<ProtectedRoute><AnimatedPage><Flashcards /></AnimatedPage></ProtectedRoute>} />
-        <Route path="/ai-tutor" element={<ProtectedRoute><AnimatedPage><AITutor /></AnimatedPage></ProtectedRoute>} />
-        <Route path="/photo-solve" element={<ProtectedRoute><AnimatedPage><PhotoSolve /></AnimatedPage></ProtectedRoute>} />
+
         <Route path="/profile" element={<ProtectedRoute><AnimatedPage><Profile /></AnimatedPage></ProtectedRoute>} />
 
         {/* LeetCode-Style Coding Practice */}
