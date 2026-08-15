@@ -38,7 +38,7 @@ services:
     # startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: APP_ENV
-        value: production
+        value: development
       - key: PORT
         value: 8000
       - key: FRONTEND_URL
