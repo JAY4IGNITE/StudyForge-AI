@@ -1,6 +1,6 @@
 --extra-index-url https://download.pytorch.org/whl/cpu
 fastapi>=0.110.0
-uvicorn>=0.28.0
+uvicorn>=0.52.2
 gunicorn>=21.2.0
 sqlalchemy>=2.0.29
 asyncpg>=0.29.0
