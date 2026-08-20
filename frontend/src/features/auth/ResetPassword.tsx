@@ -17,34 +17,41 @@ export const ResetPassword: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasRecoverySession, setHasRecoverySession] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   React.useEffect(() => {
     const handleUrlTokens = async () => {
-      const searchParams = new URLSearchParams(window.location.search);
-      const code = searchParams.get('code');
-      const tokenHash = searchParams.get('token_hash');
-      const type = searchParams.get('type');
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get('code');
+        const tokenHash = searchParams.get('token_hash');
+        const type = searchParams.get('type');
 
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (!error) {
-          setHasRecoverySession(true);
-          return;
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error) {
+            setHasRecoverySession(true);
+            return;
+          }
+        } else if (tokenHash && type === 'recovery') {
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: 'recovery',
+          });
+          if (!error) {
+            setHasRecoverySession(true);
+            return;
+          }
         }
-      } else if (tokenHash && type === 'recovery') {
-        const { error } = await supabase.auth.verifyOtp({
-          token_hash: tokenHash,
-          type: 'recovery',
-        });
-        if (!error) {
-          setHasRecoverySession(true);
-          return;
-        }
-      }
 
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setHasRecoverySession(true);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          setHasRecoverySession(true);
+        }
+      } catch (err) {
+        // ignore initialization errors
+      } finally {
+        setIsInitializing(false);
       }
     };
 
@@ -53,11 +60,13 @@ export const ResetPassword: React.FC = () => {
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isInitializing) return;
+
     setLoading(true);
     setError('');
     setMessage('');
     try {
-      // 1. If no active recovery session yet, verify OTP code provided by user
+      // 1. If no active recovery session yet and init complete, verify OTP code provided by user
       if (!hasRecoverySession && otpCode) {
         const { error: verifyError } = await supabase.auth.verifyOtp({
           email,
@@ -83,7 +92,11 @@ export const ResetPassword: React.FC = () => {
   };
 
   return (
-    <AuthShell icon={ShieldCheck} title="Set new password" subtitle="Enter your OTP code and new account password">
+    <AuthShell
+      icon={ShieldCheck}
+      title="Set new password"
+      subtitle={hasRecoverySession ? "Enter your new account password" : "Enter your email, OTP code, and new account password"}
+    >
       {error && (
         <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
           {error}
@@ -97,29 +110,31 @@ export const ResetPassword: React.FC = () => {
       )}
 
       <form onSubmit={handleReset} className="space-y-4">
-        <div>
-          <Label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground">
-            Email address
-          </Label>
-          <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
-        </div>
+        {!isInitializing && !hasRecoverySession && (
+          <>
+            <div>
+              <Label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground">
+                Email address
+              </Label>
+              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
+            </div>
 
-        {!hasRecoverySession && (
-          <div>
-            <Label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-foreground">
-              6-digit reset OTP code
-            </Label>
-            <Input
-              id="otp"
-              type="text"
-              required={!hasRecoverySession}
-              maxLength={6}
-              value={otpCode}
-              onChange={(e) => setOtpCode(e.target.value)}
-              placeholder="123456"
-              className="h-14 text-center font-mono text-2xl tracking-widest"
-            />
-          </div>
+            <div>
+              <Label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-foreground">
+                6-digit reset OTP code
+              </Label>
+              <Input
+                id="otp"
+                type="text"
+                required
+                maxLength={6}
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value)}
+                placeholder="123456"
+                className="h-14 text-center font-mono text-2xl tracking-widest"
+              />
+            </div>
+          </>
         )}
 
         <div>
@@ -137,8 +152,8 @@ export const ResetPassword: React.FC = () => {
           />
         </div>
 
-        <Button type="submit" disabled={loading} className="h-12 w-full">
-          {loading ? 'Resetting password...' : 'Reset password'}
+        <Button type="submit" disabled={loading || isInitializing} className="h-12 w-full">
+          {isInitializing ? 'Verifying session...' : loading ? 'Resetting password...' : 'Reset password'}
         </Button>
       </form>
 
