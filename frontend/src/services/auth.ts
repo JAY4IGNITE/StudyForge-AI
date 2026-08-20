@@ -1,4 +1,5 @@
 import { apiClient } from '../lib/axios';
+import { supabase } from '../lib/supabase';
 
 export interface UserProfile {
   id: string;
@@ -16,28 +17,64 @@ export interface UserProfile {
 
 export const authService = {
   async register(data: { display_name: string; email: string; password: string }) {
-    const res = await apiClient.post('/auth/register', data);
-    return res.data;
+    const { data: resData, error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: { full_name: data.display_name },
+      },
+    });
+    if (error) throw error;
+    return resData;
   },
 
   async login(data: { email: string; password: string }) {
-    const res = await apiClient.post('/auth/login', data);
-    return res.data;
+    const { data: resData, error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+    if (error) throw error;
+    return resData;
   },
 
   async verifyEmail(email: string, otpCode: string) {
-    const res = await apiClient.post('/auth/verify-email/confirm', { email, otp_code: otpCode });
-    return res.data;
+    let { data, error } = await supabase.auth.verifyOtp({
+      email,
+      token: otpCode,
+      type: 'signup',
+    });
+    if (error) {
+      const res = await supabase.auth.verifyOtp({
+        email,
+        token: otpCode,
+        type: 'email',
+      });
+      if (res.error) throw res.error;
+      return res.data;
+    }
+    return data;
   },
 
   async forgotPassword(email: string) {
-    const res = await apiClient.post('/auth/password/forgot', { email });
-    return res.data;
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) throw error;
+    return data;
   },
 
   async resetPassword(data: { email: string; otp_code: string; new_password: string }) {
-    const res = await apiClient.post('/auth/password/reset', data);
-    return res.data;
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email: data.email,
+      token: data.otp_code,
+      type: 'recovery',
+    });
+    if (verifyError) throw verifyError;
+    const { data: resData, error: updateError } = await supabase.auth.updateUser({
+      password: data.new_password,
+    });
+    if (updateError) throw updateError;
+    return resData;
   },
 
   async getProfile(): Promise<UserProfile> {

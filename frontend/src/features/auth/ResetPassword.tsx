@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { apiClient } from '../../lib/axios';
+import { supabase } from '../../lib/supabase';
 import { ShieldCheck, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { AuthShell } from '../../components/auth/AuthShell';
 import { Button } from '../../components/ui/button';
@@ -23,15 +23,24 @@ export const ResetPassword: React.FC = () => {
     setError('');
     setMessage('');
     try {
-      await apiClient.post('/auth/password/reset', {
+      // 1. Verify the recovery OTP token
+      const { error: verifyError } = await supabase.auth.verifyOtp({
         email,
-        otp_code: otpCode,
-        new_password: newPassword,
+        token: otpCode,
+        type: 'recovery',
       });
+      if (verifyError) throw verifyError;
+
+      // 2. Update user password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+      if (updateError) throw updateError;
+
       setMessage('Password reset successfully! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Failed to reset password. Verify OTP.');
+      setError(err.message || 'Failed to reset password. Please check your OTP code.');
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { apiClient } from '../../lib/axios';
+import { supabase } from '../../lib/supabase';
 import { KeyRound, CheckCircle } from 'lucide-react';
 import { AuthShell } from '../../components/auth/AuthShell';
 import { Button } from '../../components/ui/button';
@@ -22,14 +22,23 @@ export const VerifyEmail: React.FC = () => {
     setError('');
     setMessage('');
     try {
-      await apiClient.post('/auth/verify-email/confirm', {
+      let { data, error } = await supabase.auth.verifyOtp({
         email,
-        otp_code: otpCode,
+        token: otpCode,
+        type: 'signup',
       });
+      if (error) {
+        const fallback = await supabase.auth.verifyOtp({
+          email,
+          token: otpCode,
+          type: 'email',
+        });
+        if (fallback.error) throw fallback.error;
+      }
       setMessage('Email verified! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Invalid or expired OTP.');
+      setError(err.message || 'Invalid or expired OTP code.');
     } finally {
       setLoading(false);
     }

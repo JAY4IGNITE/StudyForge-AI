@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { apiClient } from '../../lib/axios';
+import { supabase } from '../../lib/supabase';
 import { KeyRound, ArrowRight, ArrowLeft } from 'lucide-react';
 import { AuthShell } from '../../components/auth/AuthShell';
 import { Button } from '../../components/ui/button';
@@ -20,13 +20,16 @@ export const ForgotPassword: React.FC = () => {
     setError('');
     setMessage('');
     try {
-      await apiClient.post('/auth/password/forgot', { email });
-      setMessage('Password reset OTP sent to your email!');
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      setMessage('Password reset code / OTP sent to your email!');
       setTimeout(() => {
         navigate('/reset-password', { state: { email } });
       }, 1500);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Failed to send OTP code.');
+      setError(err.message || 'Failed to send reset code.');
     } finally {
       setLoading(false);
     }
