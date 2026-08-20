@@ -39,7 +39,7 @@
     "react-router-dom": "^7.18.2",
     "recharts": "^2.12.3",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^2.2.2",
+    "tailwind-merge": "^3.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
