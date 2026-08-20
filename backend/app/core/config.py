@@ -57,7 +57,7 @@ class Settings(BaseSettings):
         return v
 
     BREVO_API_KEY: Optional[str] = None
-    BREVO_SENDER_EMAIL: str = "no-reply@studyforge.ai"
+    BREVO_SENDER_EMAIL: str = "aistudyforge@gmail.com"
     BREVO_SENDER_NAME: str = "StudyForge AI"
 
     OMNIROUTE_BASE_URL: Optional[str] = None

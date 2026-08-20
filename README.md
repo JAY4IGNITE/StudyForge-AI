@@ -8,7 +8,7 @@
     <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-18.0-blue.svg?logo=react&logoColor=white" alt="React" /></a>
     <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/FastAPI-0.110+-009688.svg?logo=fastapi&logoColor=white" alt="FastAPI" /></a>
     <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.0-3178C6.svg?logo=typescript&logoColor=white" alt="TypeScript" /></a>
-    <a href="https://www.mongodb.com/"><img src="https://img.shields.io/badge/PostgreSQL-Atlas-47A248.svg?logo=mongodb&logoColor=white" alt="PostgreSQL" /></a>
+    <a href="https://supabase.com/"><img src="https://img.shields.io/badge/PostgreSQL-Supabase-3ECF8E.svg?logo=supabase&logoColor=white" alt="PostgreSQL" /></a>
     <a href="https://developer.nvidia.com/nim"><img src="https://img.shields.io/badge/NVIDIA_NIM-Llama_3.1-76B900.svg?logo=nvidia&logoColor=white" alt="NVIDIA" /></a>
   </p>
 </div>
@@ -116,8 +116,7 @@ Create a `.env` file in the project root containing the following configurations
 # Core API & Database
 APP_NAME="StudyForge AI"
 API_VERSION="v1"
-MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.mongodb.net/?appName=Cluster0"
-MONGODB_DATABASE="studyforge"
+DATABASE_URL="postgresql+asyncpg://<username>:<password>@<host>:6543/postgres"
 
 # Security (JWT & OAuth)
 JWT_ACCESS_SECRET="your-access-secret-key"

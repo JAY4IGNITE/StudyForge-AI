@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from app.models.coding_profile import (
     PlatformConnection,
     ConnectedPlatforms,
@@ -42,8 +42,7 @@ class CodingProfileResponse(BaseModel):
     projects: List[Project]
     social_links: SocialLinks
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PublicCodingProfileResponse(CodingProfileResponse):

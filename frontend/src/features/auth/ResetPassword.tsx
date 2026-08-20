@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { apiClient } from '../../lib/axios';
+import { supabase } from '../../lib/supabase';
 import { ShieldCheck, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { AuthShell } from '../../components/auth/AuthShell';
 import { Button } from '../../components/ui/button';
@@ -16,29 +16,94 @@ export const ResetPassword: React.FC = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [hasRecoverySession, setHasRecoverySession] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  React.useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setHasRecoverySession(true);
+      }
+    });
+
+    const handleUrlTokens = async () => {
+      try {
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get('code');
+        const tokenHash = searchParams.get('token_hash');
+        const type = searchParams.get('type');
+
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error) {
+            setHasRecoverySession(true);
+            return;
+          }
+        } else if (tokenHash && type === 'recovery') {
+          const { error } = await supabase.auth.verifyOtp({
+            token_hash: tokenHash,
+            type: 'recovery',
+          });
+          if (!error) {
+            setHasRecoverySession(true);
+            return;
+          }
+        }
+      } catch (err) {
+        // ignore initialization errors
+      } finally {
+        setIsInitializing(false);
+      }
+    };
+
+    handleUrlTokens();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isInitializing) return;
+
     setLoading(true);
     setError('');
     setMessage('');
     try {
-      await apiClient.post('/auth/password/reset', {
-        email,
-        otp_code: otpCode,
-        new_password: newPassword,
+      // 1. If no active recovery session yet and init complete, verify OTP code provided by user
+      if (!hasRecoverySession && otpCode) {
+        const { error: verifyError } = await supabase.auth.verifyOtp({
+          email,
+          token: otpCode,
+          type: 'recovery',
+        });
+        if (verifyError) throw verifyError;
+      }
+
+      // 2. Update user password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
       });
+      if (updateError) throw updateError;
+
       setMessage('Password reset successfully! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Failed to reset password. Verify OTP.');
+      setError(err.message || 'Failed to reset password. Please check your OTP code or link.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthShell icon={ShieldCheck} title="Set new password" subtitle="Enter your OTP code and new account password">
+    <AuthShell
+      icon={ShieldCheck}
+      title="Set new password"
+      subtitle={hasRecoverySession ? "Enter your new account password" : "Enter your email, OTP code, and new account password"}
+    >
       {error && (
         <div className="mb-6 rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive">
           {error}
@@ -52,28 +117,32 @@ export const ResetPassword: React.FC = () => {
       )}
 
       <form onSubmit={handleReset} className="space-y-4">
-        <div>
-          <Label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground">
-            Email address
-          </Label>
-          <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
-        </div>
+        {!isInitializing && !hasRecoverySession && (
+          <>
+            <div>
+              <Label htmlFor="email" className="mb-1.5 block text-sm font-medium text-foreground">
+                Email address
+              </Label>
+              <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
+            </div>
 
-        <div>
-          <Label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-foreground">
-            6-digit reset OTP code
-          </Label>
-          <Input
-            id="otp"
-            type="text"
-            required
-            maxLength={6}
-            value={otpCode}
-            onChange={(e) => setOtpCode(e.target.value)}
-            placeholder="123456"
-            className="h-14 text-center font-mono text-2xl tracking-widest"
-          />
-        </div>
+            <div>
+              <Label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-foreground">
+                6-digit reset OTP code
+              </Label>
+              <Input
+                id="otp"
+                type="text"
+                required
+                maxLength={6}
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value)}
+                placeholder="123456"
+                className="h-14 text-center font-mono text-2xl tracking-widest"
+              />
+            </div>
+          </>
+        )}
 
         <div>
           <Label htmlFor="new-password" className="mb-1.5 block text-sm font-medium text-foreground">
@@ -90,8 +159,8 @@ export const ResetPassword: React.FC = () => {
           />
         </div>
 
-        <Button type="submit" disabled={loading} className="h-12 w-full">
-          {loading ? 'Resetting password...' : 'Reset password'}
+        <Button type="submit" disabled={loading || isInitializing} className="h-12 w-full">
+          {isInitializing ? 'Verifying session...' : loading ? 'Resetting password...' : 'Reset password'}
         </Button>
       </form>
 
