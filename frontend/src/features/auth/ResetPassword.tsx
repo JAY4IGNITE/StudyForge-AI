@@ -16,6 +16,40 @@ export const ResetPassword: React.FC = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [hasRecoverySession, setHasRecoverySession] = useState(false);
+
+  React.useEffect(() => {
+    const handleUrlTokens = async () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = searchParams.get('code');
+      const tokenHash = searchParams.get('token_hash');
+      const type = searchParams.get('type');
+
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+          setHasRecoverySession(true);
+          return;
+        }
+      } else if (tokenHash && type === 'recovery') {
+        const { error } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type: 'recovery',
+        });
+        if (!error) {
+          setHasRecoverySession(true);
+          return;
+        }
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setHasRecoverySession(true);
+      }
+    };
+
+    handleUrlTokens();
+  }, []);
 
   const handleReset = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,13 +57,15 @@ export const ResetPassword: React.FC = () => {
     setError('');
     setMessage('');
     try {
-      // 1. Verify the recovery OTP token
-      const { error: verifyError } = await supabase.auth.verifyOtp({
-        email,
-        token: otpCode,
-        type: 'recovery',
-      });
-      if (verifyError) throw verifyError;
+      // 1. If no active recovery session yet, verify OTP code provided by user
+      if (!hasRecoverySession && otpCode) {
+        const { error: verifyError } = await supabase.auth.verifyOtp({
+          email,
+          token: otpCode,
+          type: 'recovery',
+        });
+        if (verifyError) throw verifyError;
+      }
 
       // 2. Update user password
       const { error: updateError } = await supabase.auth.updateUser({
@@ -40,7 +76,7 @@ export const ResetPassword: React.FC = () => {
       setMessage('Password reset successfully! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err: any) {
-      setError(err.message || 'Failed to reset password. Please check your OTP code.');
+      setError(err.message || 'Failed to reset password. Please check your OTP code or link.');
     } finally {
       setLoading(false);
     }
@@ -68,21 +104,23 @@ export const ResetPassword: React.FC = () => {
           <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="h-12" />
         </div>
 
-        <div>
-          <Label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-foreground">
-            6-digit reset OTP code
-          </Label>
-          <Input
-            id="otp"
-            type="text"
-            required
-            maxLength={6}
-            value={otpCode}
-            onChange={(e) => setOtpCode(e.target.value)}
-            placeholder="123456"
-            className="h-14 text-center font-mono text-2xl tracking-widest"
-          />
-        </div>
+        {!hasRecoverySession && (
+          <div>
+            <Label htmlFor="otp" className="mb-1.5 block text-sm font-medium text-foreground">
+              6-digit reset OTP code
+            </Label>
+            <Input
+              id="otp"
+              type="text"
+              required={!hasRecoverySession}
+              maxLength={6}
+              value={otpCode}
+              onChange={(e) => setOtpCode(e.target.value)}
+              placeholder="123456"
+              className="h-14 text-center font-mono text-2xl tracking-widest"
+            />
+          </div>
+        )}
 
         <div>
           <Label htmlFor="new-password" className="mb-1.5 block text-sm font-medium text-foreground">
