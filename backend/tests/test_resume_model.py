@@ -120,21 +120,15 @@ def test_validate_resume_upload_rejects_oversized_file():
 
 
 def test_resume_model_defaults():
-    from datetime import datetime, timezone
-
     from app.models.resume import Resume
 
-    resume = Resume.model_construct(
-        user_id="user-1",
-        original_filename="resume.pdf",
-        content_type="application/pdf",
-        file_size=1024,
-        r2_key="resumes/user-1/resume-1/original/resume.pdf",
-    )
+    # Resume is a SQLAlchemy model: column defaults are applied at flush time,
+    # not on instance construction, so assert they're configured on the schema.
+    columns = Resume.__table__.c
 
-    assert resume.status == "uploaded"
-    assert resume.parse_status == "pending"
-    assert resume.parse_quality is None
-    assert resume.deleted_at is None
-    assert resume.uploaded_at.tzinfo is not None
-    assert resume.uploaded_at <= datetime.now(timezone.utc)
+    assert columns.status.default.arg == "uploaded"
+    assert columns.parse_status.default.arg == "pending"
+    assert columns.parse_quality.nullable is True
+    assert columns.deleted_at.nullable is True
+    assert columns.uploaded_at.default.is_callable
+    assert columns.uploaded_at.type.timezone is True
