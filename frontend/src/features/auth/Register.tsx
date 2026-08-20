@@ -51,6 +51,7 @@ export const Register: React.FC = () => {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/verify-email`,
           data: {
             full_name: displayName,
           },

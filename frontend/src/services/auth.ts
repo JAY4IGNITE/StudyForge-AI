@@ -21,6 +21,7 @@ export const authService = {
       email: data.email,
       password: data.password,
       options: {
+        emailRedirectTo: `${window.location.origin}/verify-email`,
         data: { full_name: data.display_name },
       },
     });

@@ -20,6 +20,14 @@ export const ResetPassword: React.FC = () => {
   const [isInitializing, setIsInitializing] = useState(true);
 
   React.useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setHasRecoverySession(true);
+      }
+    });
+
     const handleUrlTokens = async () => {
       try {
         const searchParams = new URLSearchParams(window.location.search);
@@ -43,11 +51,6 @@ export const ResetPassword: React.FC = () => {
             return;
           }
         }
-
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          setHasRecoverySession(true);
-        }
       } catch (err) {
         // ignore initialization errors
       } finally {
@@ -56,6 +59,10 @@ export const ResetPassword: React.FC = () => {
     };
 
     handleUrlTokens();
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleReset = async (e: React.FormEvent) => {
