@@ -10,7 +10,6 @@ import {
   BarChart2,
   User as UserIcon,
   LogOut,
-  Flame,
   Map,
   MessageSquare,
   Code2,
@@ -86,9 +85,11 @@ function initials(name?: string) {
 
 const Logo: React.FC = () => (
   <Link to="/dashboard" className="group flex items-center gap-3">
-    <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--primary)/0.4),0_8px_20px_-6px_hsl(var(--primary)/0.6)] transition-transform duration-300 group-hover:scale-105 group-hover:rotate-6">
-      <Flame className="h-5 w-5 text-white" strokeWidth={2.25} />
-    </div>
+    <img
+      src="/branding/studyforge-logo.svg"
+      alt="StudyForge Logo"
+      className="h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+    />
     <div className="leading-tight">
       <div className="font-display text-lg font-medium tracking-tight text-foreground">
         StudyForge<span className="text-ember">.</span>
