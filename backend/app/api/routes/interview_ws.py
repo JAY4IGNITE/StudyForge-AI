@@ -151,7 +151,7 @@ async def _handle_interview_websocket(websocket: WebSocket, session_id: str):
                 except Exception:
                     vision_telem = None
 
-                # Persist turn to MongoDB
+                # Persist turn to PostgreSQL
                 turn = TurnTurnData(
                     turn_index=len(session.turns),
                     question=asked_question,

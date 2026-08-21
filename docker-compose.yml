@@ -1,18 +1,6 @@
 version: "3.9"
 
 services:
-  mongodb:
-    image: mongo:8
-    container_name: mongodb
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
-    volumes:
-      - mongo_data:/data/db
-
   backend:
     build:
       context: ./backend
@@ -24,8 +12,6 @@ services:
     environment:
       - APP_ENV=production
       - REDIS_URL=redis://redis:6379
-      - MONGODB_URI=mongodb://admin:password@mongodb:27017/?authSource=admin
-      - MONGODB_DATABASE=studyforge
     depends_on:
       - redis
 
@@ -67,6 +53,5 @@ services:
       - grafana_data:/var/lib/grafana
 
 volumes:
-  mongo_data:
   prometheus_data:
   grafana_data:

@@ -14,8 +14,7 @@ This directory and the root [`render.yaml`](../render.yaml) blueprint make **Stu
    - **`studyforge-backend`** (Python Web Service)
    - **`studyforge-frontend`** (Static Site)
 6. Enter required Environment Variables in Render Dashboard when prompted:
-   - `MONGODB_URI`: Your Supabase PostgreSQL Connection String (`postgresql+asyncpg://...`)
-   - `BREVO_API_KEY`: Your Brevo API Key
+   - `DATABASE_URL`: Your Supabase PostgreSQL Connection String (`postgresql+asyncpg://...`)
 7. Click **Apply**. Render will build and deploy both services automatically!
 
 ---
@@ -24,8 +23,8 @@ This directory and the root [`render.yaml`](../render.yaml) blueprint make **Stu
 
 ### 1. Database (Supabase PostgreSQL)
 Render does not host Supabase natively. Use a free **Supabase PostgreSQL** cluster:
-1. Create a free cluster on [Supabase PostgreSQL](https://www.mongodb.com/cloud/atlas).
-2. Get your connection URI string.
+1. Create a free project on [Supabase](https://supabase.com/).
+2. Get your connection URI string (`postgresql+asyncpg://...`).
 
 ### 2. Backend Service (FastAPI)
 1. In Render Dashboard, click **New +** $\rightarrow$ **Web Service**.
@@ -36,11 +35,9 @@ Render does not host Supabase natively. Use a free **Supabase PostgreSQL** clust
    - **Build Command:** `pip install -r requirements.txt`
    - **Start Command:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 4. Add Environment Variables:
-   - `MONGODB_URI` = `mongodb+srv://...`
-   - `MONGODB_DATABASE` = `studyforge`
+   - `DATABASE_URL` = `postgresql+asyncpg://...`
    - `JWT_ACCESS_SECRET` = `your-secure-random-key`
    - `JWT_REFRESH_SECRET` = `your-secure-random-key`
-   - `BREVO_API_KEY` = `xkeysib-...`
    - `CORS_ORIGINS` = `*`
 
 ### 3. Frontend Service (React + Vite)

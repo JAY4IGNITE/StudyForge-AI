@@ -50,8 +50,6 @@ services:
           envVarKey: RENDER_EXTERNAL_URL
       - key: DATABASE_URL
         value: "postgresql+asyncpg://postgres.bhdmngifohucafjlvcpo:STUDYforge%40123@aws-0-ap-southeast-2.pooler.supabase.com:6543/postgres"
-      - key: MONGODB_DATABASE
-        value: studyforge
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET

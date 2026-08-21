@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../app/AuthProvider';
 import { supabase } from '../../lib/supabase';
-import { Flame, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -10,6 +10,8 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { PasswordInput } from '../../components/ui/PasswordInput';
+
+import { AnimatedGradient } from '../../components/landing/AnimatedGradient';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -80,8 +82,10 @@ export const Login: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6"
+      className="relative flex min-h-screen items-center justify-center bg-background p-4 sm:p-6 overflow-hidden"
     >
+      <AnimatedGradient className="fixed inset-0 z-0 h-full w-full" />
+
       <AnimatePresence>
         {loading && (
           <motion.div
@@ -112,16 +116,18 @@ export const Login: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <Card className="w-full max-w-lg p-8 shadow-2xl overflow-hidden">
+      <Card className="relative z-10 w-full max-w-lg p-8 sm:p-10 shadow-2xl overflow-hidden border border-border/60 bg-card/85 backdrop-blur-xl hover:border-ember/40">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
           <motion.div variants={itemVariants} className="mb-6 flex flex-col items-center text-center">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
-              <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
-            </div>
+            <img
+              src="/branding/studyforge-logo.svg"
+              alt="StudyForge Logo"
+              className="mb-3 h-14 w-auto object-contain drop-shadow-md"
+            />
             <h1 className="font-display text-2xl font-medium tracking-tight text-foreground">
               StudyForge<span className="text-ember">.</span>
             </h1>
