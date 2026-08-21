@@ -16,11 +16,11 @@ export const OAuthCallback: React.FC = () => {
 
     const hashParams = new URLSearchParams(initialHash.slice(1));
     const errorParam = hashParams.get('error_description') || hashParams.get('error');
-    
+
     if (errorParam) {
       setError(errorParam);
-      setTimeout(() => navigate('/login'), 3000);
-      return;
+      const errorTimeout = setTimeout(() => navigate('/login'), 3000);
+      return () => clearTimeout(errorTimeout);
     }
 
     // Listen to Supabase auth state changes as AuthProvider might take a moment to fetch user data
@@ -34,22 +34,21 @@ export const OAuthCallback: React.FC = () => {
     });
 
     // Fallback if nothing happens after 5 seconds
-    const timeout = setTimeout(() => {
+    if (!loading) {
       navigate('/login');
-    }, 5000);
+      return;
+    }
 
     return () => {
       subscription.unsubscribe();
-      clearTimeout(timeout);
     };
-  }, [user, navigate, initialHash]);
-
+  }, [user, loading, navigate, initialHash]);
   return (
     <div className="bg-blueprint bg-forge-glow relative flex min-h-screen flex-col items-center justify-center bg-background p-6">
       <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_30px_-6px_hsl(var(--ember)/0.6)]">
         <Flame className="h-8 w-8 animate-pulse text-ember-foreground" strokeWidth={2.25} />
       </div>
-      
+
       {error ? (
         <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-6 py-4 text-center">
           <p className="font-semibold text-destructive">{error}</p>
