@@ -1,10 +1,10 @@
 import logging
 import jwt
+import httpx
 from fastapi import Depends, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.models.user import User
 from app.core.errors import StudyForgeException
-from app.core.supabase import get_supabase_client
 from app.core.config import settings
 from datetime import datetime, timezone
 
@@ -20,6 +20,7 @@ async def get_current_user(
     user_email = None
     user_metadata = {}
     is_email_verified = False
+    validation_error_reason = "Unknown error"
 
     # 1. Fast local verification if SUPABASE_JWT_SECRET is configured
     if settings.SUPABASE_JWT_SECRET:
@@ -38,26 +39,59 @@ async def get_current_user(
                 or payload.get("app_metadata", {}).get("email_verified")
             )
         except Exception as e:
-            logger.debug(f"Local JWT verification failed: {e}")
+            validation_error_reason = f"Local JWT decode failed: {e}"
+            logger.warning(validation_error_reason)
 
-    # 2. Fallback to Supabase Auth API verification
+    # 2. Async verification via Supabase REST API endpoint (/auth/v1/user)
     if not user_id or not user_email:
+        if settings.SUPABASE_URL and settings.SUPABASE_ANON_KEY:
+            try:
+                base_url = str(settings.SUPABASE_URL).rstrip("/")
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    resp = await client.get(
+                        f"{base_url}/auth/v1/user",
+                        headers={
+                            "Authorization": f"Bearer {token}",
+                            "apikey": settings.SUPABASE_ANON_KEY,
+                        },
+                    )
+                    if resp.status_code == 200:
+                        sb_user = resp.json()
+                        user_id = sb_user.get("id")
+                        user_email = sb_user.get("email")
+                        user_metadata = sb_user.get("user_metadata", {}) or {}
+                        is_email_verified = bool(sb_user.get("email_confirmed_at"))
+                    else:
+                        validation_error_reason = (
+                            f"Supabase Auth API returned {resp.status_code}: {resp.text}"
+                        )
+                        logger.error(validation_error_reason)
+            except Exception as e:
+                validation_error_reason = f"Network error connecting to Supabase: {e}"
+                logger.error(validation_error_reason)
+        else:
+            validation_error_reason = (
+                "Neither SUPABASE_JWT_SECRET nor (SUPABASE_URL and SUPABASE_ANON_KEY) are configured."
+            )
+            logger.error(validation_error_reason)
+
+    if not user_id or not user_email:
+        # Check unverified token for diagnostic clues
         try:
-            supabase = get_supabase_client()
-            user_response = supabase.auth.get_user(token)
-            sb_user = user_response.user
-            if sb_user:
-                user_id = sb_user.id
-                user_email = sb_user.email
-                user_metadata = sb_user.user_metadata or {}
-                is_email_verified = bool(getattr(sb_user, "email_confirmed_at", None))
-        except Exception as e:
-            logger.error(f"Supabase Auth API verification failed: {e}")
+            unverified = jwt.decode(token, options={"verify_signature": False})
+            logger.error(
+                f"Token validation failed. Token issuer: {unverified.get('iss')}, "
+                f"expected Supabase URL: {settings.SUPABASE_URL}. Reason: {validation_error_reason}"
+            )
+        except Exception:
+            pass
 
-    if not user_id or not user_email:
         raise StudyForgeException(
             code="INVALID_TOKEN",
             message="Could not validate credentials",
+            details={"reason": validation_error_reason}
+            if settings.APP_ENV == "development"
+            else None,
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
 
