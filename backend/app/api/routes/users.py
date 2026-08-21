@@ -15,7 +15,7 @@ async def get_me(user: User = Depends(get_current_user)):
         "display_name": user.display_name,
         "role": user.role,
         "email_verified": user.email_verified_at is not None,
-        "goals": user.goals,
+        "goals": user.goals if user.goals is not None else [],
         "target_role": user.target_role,
         "preferences": user.preferences if user.preferences else {},
     }

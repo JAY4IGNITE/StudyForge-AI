@@ -28,7 +28,7 @@ const itemVariants: Variants = {
 };
 
 export const Register: React.FC = () => {
-  const { user } = useAuth();
+  const { user, login } = useAuth();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -76,6 +76,7 @@ export const Register: React.FC = () => {
       if (error) throw error;
       
       if (data.session) {
+        await login({ access_token: data.session.access_token });
         navigate('/dashboard');
       } else {
         navigate('/verify-email', { state: { email } });

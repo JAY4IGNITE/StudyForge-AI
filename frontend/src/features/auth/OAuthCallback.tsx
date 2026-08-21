@@ -16,9 +16,13 @@ export const OAuthCallback: React.FC = () => {
   const initialSearch = useRef(window.location.search).current;
 
   useEffect(() => {
-    // If we have a user, authentication is successful, navigate to verify-email!
+    // If we have a user, authentication is successful!
     if (user) {
-      navigate('/verify-email', { state: { email: user.email } });
+      if (user.email_verified) {
+        navigate('/dashboard');
+      } else {
+        navigate('/verify-email', { state: { email: user.email } });
+      }
       return;
     }
 

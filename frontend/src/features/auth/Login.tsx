@@ -29,7 +29,7 @@ const itemVariants: Variants = {
 };
 
 export const Login: React.FC = () => {
-  const { user } = useAuth();
+  const { user, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -49,12 +49,14 @@ export const Login: React.FC = () => {
     setLoading(true);
     setError('');
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
-      // We don't need to manually set login since AuthProvider listens to session changes.
+      if (data?.session) {
+        await login({ access_token: data.session.access_token });
+      }
       navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Failed to login. Check credentials.');

@@ -77,7 +77,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (tokens: { access_token: string }) => {
     setAccessToken(tokens.access_token);
     setToken(tokens.access_token);
-    await fetchUser();
+    await fetchUser(tokens.access_token);
   };
 
   const logout = async () => {
