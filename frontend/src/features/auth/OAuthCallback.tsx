@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../app/AuthProvider';
 import { Flame, Loader2 } from 'lucide-react';
+import { AnimatedGradient } from '../../components/landing/AnimatedGradient';
 
 export const OAuthCallback: React.FC = () => {
   const { user, loading } = useAuth();
@@ -32,10 +33,12 @@ export const OAuthCallback: React.FC = () => {
   }, [user, loading, navigate]);
 
   return (
-    <div className="bg-blueprint bg-forge-glow relative flex min-h-screen flex-col items-center justify-center bg-background p-6">
-      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_30px_-6px_hsl(var(--ember)/0.6)]">
-        <Flame className="h-8 w-8 animate-pulse text-ember-foreground" strokeWidth={2.25} />
-      </div>
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-background p-6 overflow-hidden">
+      <AnimatedGradient className="fixed inset-0 z-0 h-full w-full" />
+      <div className="relative z-10 flex flex-col items-center">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_30px_-6px_hsl(var(--ember)/0.6)]">
+          <Flame className="h-8 w-8 animate-pulse text-ember-foreground" strokeWidth={2.25} />
+        </div>
       
       {error ? (
         <div className="rounded-xl border border-destructive/30 bg-destructive/10 px-6 py-4 text-center">
@@ -49,6 +52,7 @@ export const OAuthCallback: React.FC = () => {
           <p className="text-sm text-secondary">Please wait while we set up your workspace.</p>
         </div>
       )}
+      </div>
     </div>
   );
 };

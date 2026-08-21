@@ -11,6 +11,8 @@ import { Label } from '../../components/ui/label';
 import { Separator } from '../../components/ui/separator';
 import { PasswordInput } from '../../components/ui/PasswordInput';
 
+import { AnimatedGradient } from '../../components/landing/AnimatedGradient';
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -80,8 +82,10 @@ export const Login: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="bg-blueprint bg-forge-glow relative flex min-h-screen items-center justify-center bg-background p-6"
+      className="relative flex min-h-screen items-center justify-center bg-background p-4 sm:p-6 overflow-hidden"
     >
+      <AnimatedGradient className="fixed inset-0 z-0 h-full w-full" />
+
       <AnimatePresence>
         {loading && (
           <motion.div
@@ -112,7 +116,7 @@ export const Login: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <Card className="w-full max-w-lg p-8 shadow-2xl overflow-hidden">
+      <Card className="relative z-10 w-full max-w-lg p-8 sm:p-10 shadow-2xl overflow-hidden border border-border/60 bg-card/85 backdrop-blur-xl hover:border-ember/40">
         <motion.div
           variants={containerVariants}
           initial="hidden"
