@@ -17,7 +17,7 @@ async def get_me(user: User = Depends(get_current_user)):
         "email_verified": user.email_verified_at is not None,
         "goals": user.goals,
         "target_role": user.target_role,
-        "preferences": user.preferences.dict() if user.preferences else {},
+        "preferences": user.preferences if user.preferences else {},
     }
 
 
@@ -30,9 +30,9 @@ async def update_me(req: UserProfileUpdate, user: User = Depends(get_current_use
     if req.goals is not None:
         user.goals = req.goals
     if req.preferred_subjects is not None:
-        user.preferences.preferred_subjects = req.preferred_subjects
+        user.preferences["preferred_subjects"] = req.preferred_subjects
     if req.difficulty_preference is not None:
-        user.preferences.difficulty_preference = req.difficulty_preference
+        user.preferences["difficulty_preference"] = req.difficulty_preference
 
     await user.save()
     return {"message": "Profile updated successfully"}
