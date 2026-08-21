@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
 
   const fetchUser = async (accessToken?: string) => {
+    setLoading(true);
     try {
       if (accessToken) setAccessToken(accessToken);
       const res = await apiClient.get('/me');
