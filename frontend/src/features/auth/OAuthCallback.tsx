@@ -22,9 +22,14 @@ export const OAuthCallback: React.FC = () => {
       return;
     }
 
-    // Parse the captured hash
+    // Parse the captured hash and search params
     const hashParams = new URLSearchParams(initialHash.slice(1));
-    const errorParam = hashParams.get('error_description') || hashParams.get('error');
+    const searchParams = new URLSearchParams(initialSearch);
+    const errorParam = 
+      hashParams.get('error_description') || 
+      hashParams.get('error') || 
+      searchParams.get('error_description') || 
+      searchParams.get('error');
     
     // If the provider returned an explicit error
     if (errorParam) {
@@ -43,7 +48,7 @@ export const OAuthCallback: React.FC = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, [user, navigate, initialHash]);
+  }, [user, navigate, initialHash, initialSearch]);
 
   // Handle intermediate loading fallback: 
   // If loading finishes, we still have no user, AND we aren't processing an access token or code from the URL, auth failed.
