@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
 import { fadeDownVariants } from '../../lib/motion';
@@ -30,9 +29,11 @@ export const LandingNavbar: React.FC = () => {
     >
       <nav className="container flex h-16 items-center justify-between">
         <Link to="/" className="group flex items-center gap-2 font-display text-xl font-semibold tracking-tight">
-          <span className="flex h-9 w-9 items-center justify-center rounded-md border border-ember/20 bg-ember/10">
-            <Flame className="h-5 w-5 text-ember transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12" />
-          </span>
+          <img
+            src="/branding/studyforge-logo.svg"
+            alt="StudyForge Logo"
+            className="h-8 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+          />
           <span className="bg-gradient-to-r from-ember to-gold bg-clip-text text-transparent transition-all duration-500 group-hover:from-gold group-hover:to-ember">
             StudyForge
           </span>

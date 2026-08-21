@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../app/AuthProvider';
 import { supabase } from '../../lib/supabase';
-import { User, Mail, Lock, ArrowRight, Flame, Loader2 } from 'lucide-react';
+import { User, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { Card } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
@@ -134,9 +134,11 @@ export const Register: React.FC = () => {
           animate="visible"
         >
           <motion.div variants={itemVariants} className="mb-6 flex flex-col items-center text-center">
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ember-gradient shadow-[0_0_0_1px_hsl(var(--ember)/0.4),0_8px_20px_-6px_hsl(var(--ember)/0.6)]">
-              <Flame className="h-6 w-6 text-ember-foreground" strokeWidth={2.25} />
-            </div>
+            <img
+              src="/branding/studyforge-logo.svg"
+              alt="StudyForge Logo"
+              className="mb-3 h-14 w-auto object-contain drop-shadow-md"
+            />
             <h1 className="font-display text-2xl font-medium tracking-tight text-foreground">
               StudyForge<span className="text-ember">.</span>
             </h1>
