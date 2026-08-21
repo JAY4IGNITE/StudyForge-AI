@@ -4,32 +4,49 @@ import { useAuth } from '../../app/AuthProvider';
 import { Loader2 } from 'lucide-react';
 import { AnimatedGradient } from '../../components/landing/AnimatedGradient';
 
+import { supabase } from '../../lib/supabase';
+
 export const OAuthCallback: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const initialHash = useRef(window.location.hash).current;
 
   useEffect(() => {
-    if (!loading) {
-      if (user) {
-        navigate('/dashboard');
-      } else {
-        const hashParams = new URLSearchParams(window.location.hash.slice(1));
-        const errorParam = hashParams.get('error_description') || hashParams.get('error');
-        const accessToken = hashParams.get('access_token');
-        
-        if (errorParam) {
-          setError(errorParam);
-          setTimeout(() => navigate('/login'), 3000);
-        } else if (accessToken) {
-          // Tokens are present in URL hash, Supabase auth is still processing
-          // Do nothing, wait for AuthProvider to update user state
-        } else {
-           navigate('/login');
-        }
-      }
+    if (user) {
+      navigate('/dashboard');
+      return;
     }
-  }, [user, loading, navigate]);
+
+    const hashParams = new URLSearchParams(initialHash.slice(1));
+    const errorParam = hashParams.get('error_description') || hashParams.get('error');
+    
+    if (errorParam) {
+      setError(errorParam);
+      setTimeout(() => navigate('/login'), 3000);
+      return;
+    }
+
+    // Listen to Supabase auth state changes as AuthProvider might take a moment to fetch user data
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || session) {
+        // We don't navigate immediately here; we let AuthProvider fetch the user.
+        // The `if (user)` block above will catch it once it's populated.
+      } else if (event === 'SIGNED_OUT') {
+        navigate('/login');
+      }
+    });
+
+    // Fallback if nothing happens after 5 seconds
+    const timeout = setTimeout(() => {
+      navigate('/login');
+    }, 5000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, [user, navigate, initialHash]);
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-background p-6 overflow-hidden">
