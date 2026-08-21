@@ -1,15 +1,12 @@
 import axios from 'axios';
+import { supabase } from './supabase';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
   ? `${import.meta.env.VITE_API_BASE_URL}/api/v1`
   : (import.meta.env.PROD ? '/api/v1' : 'http://localhost:8000/api/v1');
 
-// The access token lives ONLY in memory (this module-level variable), never
-// in localStorage/sessionStorage. It's short-lived (15 min) and lost on a
-// hard page refresh by design -- AuthProvider silently re-fetches a fresh one
-// on mount via the httpOnly refresh cookie (see /auth/refresh below).
-// This means an XSS payload can't read a long-lived credential out of
-// browser storage; at worst it can use the token while it's live in memory.
+// The access token lives in memory (this module-level variable) and falls back
+// directly to Supabase's active session if not yet initialized.
 let inMemoryAccessToken: string | null = null;
 
 export function getAccessToken(): string | null {
@@ -30,9 +27,24 @@ export const apiClient = axios.create({
   withCredentials: true,
 });
 
-apiClient.interceptors.request.use((config) => {
-  if (inMemoryAccessToken && config.headers) {
-    config.headers.Authorization = `Bearer ${inMemoryAccessToken}`;
+apiClient.interceptors.request.use(async (config) => {
+  let token = inMemoryAccessToken;
+  if (!token) {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        token = session.access_token;
+        inMemoryAccessToken = token;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
